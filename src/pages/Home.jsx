@@ -505,8 +505,8 @@ function AnimatedCounter({ value, duration = 1.5 }) {
 function WhyAltairgo() {
   const cards = [
     { 
-      value: '99.4%', 
-      title: 'Forecast Accuracy', 
+      value: '98%', 
+      title: 'Prediction Accuracy', 
       desc: 'Deep learning forecast modeling',
       icon: (p) => (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}>
@@ -517,8 +517,8 @@ function WhyAltairgo() {
     },
     { 
       value: '24/7', 
-      title: 'Automated Auditing', 
-      desc: 'Real-time compliance checks',
+      title: 'Real-Time Monitoring', 
+      desc: 'Automated policy and fraud audits',
       icon: (p) => (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}>
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
@@ -526,9 +526,9 @@ function WhyAltairgo() {
       )
     },
     { 
-      value: '15x', 
-      title: 'Faster Ledger Close', 
-      desc: 'Smart expense integrations',
+      value: '10K+', 
+      title: 'Monthly Financial Insights', 
+      desc: 'Actionable business intelligence updates',
       icon: (p) => (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}>
           <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
@@ -536,9 +536,9 @@ function WhyAltairgo() {
       )
     },
     { 
-      value: '$2.4M', 
-      title: 'Average Client Savings', 
-      desc: 'Automatic waste detection',
+      value: 'AI Powered', 
+      title: 'Smart Expense Intelligence', 
+      desc: 'Automated cost tracking & categories',
       icon: (p) => (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}>
           <line x1="12" y1="1" x2="12" y2="23"></line>
@@ -555,10 +555,10 @@ function WhyAltairgo() {
         {/* Left Side: Content & Feature Cards */}
         <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
           <h2 style={{ fontSize: 'clamp(36px, 4vw, 48px)', lineHeight: 1.15, letterSpacing: '-0.02em', fontWeight: 500, margin: '0 0 24px 0', color: 'var(--ink)' }}>
-            Unlock Smarter Expense Predictions
+            Predict Smarter. Spend Better.
           </h2>
           <p style={{ fontSize: 16, lineHeight: 1.65, color: 'var(--ink-soft)', margin: '0 0 48px 0', maxWidth: 480 }}>
-            AltairGO helps you manage, forecast, and optimize corporate spend with real-time financial intelligence. From predicting seasonal budget fluctuations and smart routing expense validation to real-time risk scoring, empower your finance team with actionable AI insights built for fast-growing businesses.
+            Transform financial uncertainty into intelligent decision-making with AI-powered insights, predictive analytics, and beautifully organized expense intelligence designed for modern users.
           </p>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20 }}>
