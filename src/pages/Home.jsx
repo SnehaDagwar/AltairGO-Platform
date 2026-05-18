@@ -873,17 +873,20 @@ function ExploreJourneys() {
 
 
 
-/* ---------- Tour Selection / Destinations Carousel ---------- */
+/* ---------- Explore India / Indian Destinations Carousel ---------- */
 const TOURS = [
-  { id: '88', title: 'Mont Saint-Michel, France.', img: 'https://images.unsplash.com/photo-1543003444-245f782cb200?q=80&w=600&auto=format&fit=crop' },
-  { id: '15', title: 'Santorini, Greece.', img: 'https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?q=80&w=600&auto=format&fit=crop' },
-  { id: '01', title: 'The Eiffel Tower, Paris.', img: 'https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?q=80&w=600&auto=format&fit=crop' },
-  { id: '42', title: 'Machu Picchu, Peru.', img: 'https://images.unsplash.com/photo-1526392060635-9d6019884377?q=80&w=600&auto=format&fit=crop' },
-  { id: '106', title: 'Great Wall of China.', img: 'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?q=80&w=600&auto=format&fit=crop' }
+  { id: '01', title: 'Kashmir', img: destKashmir },
+  { id: '02', title: 'Jaipur, Rajasthan', img: destRajasthan },
+  { id: '03', title: 'Kerala Backwaters', img: destKerala },
+  { id: '04', title: 'Goa Beaches', img: destGoa },
+  { id: '05', title: 'Ladakh', img: 'https://images.unsplash.com/photo-1581793745862-99fde7fa73d2?q=80&w=600&auto=format&fit=crop' },
+  { id: '06', title: 'Taj Mahal, Agra', img: 'https://images.unsplash.com/photo-1548013146-72479768bada?q=80&w=600&auto=format&fit=crop' },
+  { id: '07', title: 'Varanasi Ghats', img: journalVaranasi },
+  { id: '08', title: 'Andaman Islands', img: 'https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?q=80&w=600&auto=format&fit=crop' }
 ];
 
 function TourSelection() {
-  const [active, setActive] = useState(2);
+  const [active, setActive] = useState(3);
 
   const handleNext = () => setActive(p => Math.min(p + 1, TOURS.length - 1));
   const handlePrev = () => setActive(p => Math.max(p - 1, 0));
@@ -895,9 +898,9 @@ function TourSelection() {
         viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
         style={{ textAlign: 'center', marginBottom: 60 }}
       >
-        <div className={styles.mono} style={{ marginBottom: 16 }}>{'{ 02 · tour selection }'}</div>
+        <div className={styles.mono} style={{ marginBottom: 16 }}>{'{ 02 · explore india }'}</div>
         <h2 className={styles.sectionHeadline} style={{ fontSize: 52, lineHeight: 1.05, letterSpacing: '-0.03em', fontWeight: 500, margin: 0, maxWidth: 760, marginInline: 'auto' }}>
-          Explore our <span style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', color: 'var(--a3)' }}>featured</span> destinations
+          Explore our <span style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', color: 'var(--a3)' }}>Indian</span> destinations
         </h2>
       </motion.div>
 
@@ -967,7 +970,7 @@ function TourSelection() {
           onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.03)'}
           onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
         >
-          View tour 
+          Explore Now 
           <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--ink)', color: 'var(--card)', display: 'grid', placeItems: 'center' }}>
              <I.arrow style={{ width: 14, height: 14 }} />
           </div>
