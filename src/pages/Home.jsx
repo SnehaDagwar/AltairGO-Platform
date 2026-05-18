@@ -506,7 +506,7 @@ function WhyAltairgo() {
   const cards = [
     { 
       value: '98%', 
-      title: 'Prediction Accuracy', 
+      title: 'Expense Prediction Accuracy', 
       desc: 'Deep learning forecast modeling',
       icon: (p) => (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}>
@@ -517,7 +517,7 @@ function WhyAltairgo() {
     },
     { 
       value: '24/7', 
-      title: 'Real-Time Monitoring', 
+      title: 'Real-Time Financial Monitoring', 
       desc: 'Automated policy and fraud audits',
       icon: (p) => (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}>
@@ -526,8 +526,8 @@ function WhyAltairgo() {
       )
     },
     { 
-      value: '10K+', 
-      title: 'Monthly Financial Insights', 
+      value: 'Real-Time', 
+      title: 'Spending Analytics', 
       desc: 'Actionable business intelligence updates',
       icon: (p) => (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}>
@@ -537,7 +537,7 @@ function WhyAltairgo() {
     },
     { 
       value: 'AI Powered', 
-      title: 'Smart Expense Intelligence', 
+      title: 'Personalized Budget Intelligence', 
       desc: 'Automated cost tracking & categories',
       icon: (p) => (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}>
@@ -555,10 +555,10 @@ function WhyAltairgo() {
         {/* Left Side: Content & Feature Cards */}
         <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
           <h2 style={{ fontSize: 'clamp(36px, 4vw, 48px)', lineHeight: 1.15, letterSpacing: '-0.02em', fontWeight: 500, margin: '0 0 24px 0', color: 'var(--ink)' }}>
-            Predict Smarter. Spend Better.
+            Take Control of Your Financial Future
           </h2>
           <p style={{ fontSize: 16, lineHeight: 1.65, color: 'var(--ink-soft)', margin: '0 0 48px 0', maxWidth: 480 }}>
-            Transform financial uncertainty into intelligent decision-making with AI-powered insights, predictive analytics, and beautifully organized expense intelligence designed for modern users.
+            Altair GO transforms everyday spending into intelligent financial planning using AI-powered expense prediction, smart analytics, and personalized budgeting insights designed for modern lifestyles.
           </p>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20 }}>
