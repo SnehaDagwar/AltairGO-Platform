@@ -361,7 +361,7 @@ function Hero({ onPlan }) {
                 </h3>
                 <span style={{ 
                   fontFamily: 'var(--font-accent)', display: 'block', fontWeight: 400, 
-                  color: '#2c4661', fontSize: 'clamp(34px, 4.5vw, 48px)', 
+                  color: '#A1CAF1', fontSize: 'clamp(34px, 4.5vw, 48px)', 
                   margin: '-4px 0 0 8px', textTransform: 'none', 
                   textShadow: '0 4px 16px rgba(0,0,0,0.2)' 
                 }}>
