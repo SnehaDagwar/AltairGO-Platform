@@ -555,10 +555,10 @@ function WhyAltairgo() {
         {/* Left Side: Content & Feature Cards */}
         <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
           <h2 style={{ fontSize: 'clamp(36px, 4vw, 48px)', lineHeight: 1.15, letterSpacing: '-0.02em', fontWeight: 500, margin: '0 0 24px 0', color: 'var(--ink)' }}>
-            Take Control of Your Financial Future
+            Unlock Your Dream Destination
           </h2>
           <p style={{ fontSize: 16, lineHeight: 1.65, color: 'var(--ink-soft)', margin: '0 0 48px 0', maxWidth: 480 }}>
-            Altair GO transforms everyday spending into intelligent financial planning using AI-powered expense prediction, smart analytics, and personalized budgeting insights designed for modern lifestyles.
+            We are committed to creating unforgettable experiences throughout your journey of exploration. Our team of expert travel advisors is ready to help you discover your ideal destination.
           </p>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20 }}>
