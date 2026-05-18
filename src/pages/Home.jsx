@@ -505,44 +505,45 @@ function AnimatedCounter({ value, duration = 1.5 }) {
 function WhyAltairgo() {
   const cards = [
     { 
-      value: '98%', 
-      title: 'Expense Prediction Accuracy', 
-      desc: 'Deep learning forecast modeling',
+      value: '4k+', 
+      title: 'Satisfied Customers', 
+      desc: 'Happy travelers across India',
       icon: (p) => (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}>
-          <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-          <polyline points="17 6 23 6 23 12"></polyline>
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+      )
+    },
+    { 
+      value: '1000+', 
+      title: 'Munnar tea plantations', 
+      desc: 'Curated hill station experiences',
+      icon: (p) => (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}>
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
         </svg>
       )
     },
     { 
       value: '24/7', 
-      title: 'Real-Time Financial Monitoring', 
-      desc: 'Automated policy and fraud audits',
+      title: 'Customer Support', 
+      desc: 'Dedicated assistance anytime',
+      icon: (p) => (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}>
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+        </svg>
+      )
+    },
+    { 
+      value: '100%', 
+      title: 'Dedication', 
+      desc: 'Bespoke custom travel planning',
       icon: (p) => (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}>
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-        </svg>
-      )
-    },
-    { 
-      value: 'Real-Time', 
-      title: 'Spending Analytics', 
-      desc: 'Actionable business intelligence updates',
-      icon: (p) => (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}>
-          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-        </svg>
-      )
-    },
-    { 
-      value: 'AI Powered', 
-      title: 'Personalized Budget Intelligence', 
-      desc: 'Automated cost tracking & categories',
-      icon: (p) => (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}>
-          <line x1="12" y1="1" x2="12" y2="23"></line>
-          <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path>
         </svg>
       )
     }
