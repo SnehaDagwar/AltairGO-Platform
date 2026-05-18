@@ -873,51 +873,121 @@ function ExploreJourneys() {
 
 
 
-/* ---------- How It Works (4-step process) ---------- */
-function HowItWorks() {
-  const steps = [
-    { n: '01', t: 'Tell us your dream trip', d: 'Destination, days, style, budget — the AI reads shorthand and ordinary sentences.' },
-    { n: '02', t: 'AI builds your itinerary', d: 'A day-by-day plan with real costs in ₹, live weather, and bookable experiences.' },
-    { n: '03', t: 'Customize every detail', d: 'Swap hotels, stretch days, add a side trip — the trip editor rebuilds around you.' },
-    { n: '04', t: 'Track, book, and go', d: 'One-tap bookings for flights, trains, stays. Offline-ready when you land.' }
-  ];
+/* ---------- Tour Selection / Destinations Carousel ---------- */
+const TOURS = [
+  { id: '88', title: 'Mont Saint-Michel, France.', img: 'https://images.unsplash.com/photo-1543003444-245f782cb200?q=80&w=600&auto=format&fit=crop' },
+  { id: '15', title: 'Santorini, Greece.', img: 'https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?q=80&w=600&auto=format&fit=crop' },
+  { id: '01', title: 'The Eiffel Tower, Paris.', img: 'https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?q=80&w=600&auto=format&fit=crop' },
+  { id: '42', title: 'Machu Picchu, Peru.', img: 'https://images.unsplash.com/photo-1526392060635-9d6019884377?q=80&w=600&auto=format&fit=crop' },
+  { id: '106', title: 'Great Wall of China.', img: 'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?q=80&w=600&auto=format&fit=crop' }
+];
+
+function TourSelection() {
+  const [active, setActive] = useState(2);
+
+  const handleNext = () => setActive(p => Math.min(p + 1, TOURS.length - 1));
+  const handlePrev = () => setActive(p => Math.max(p - 1, 0));
 
   return (
-    <section id="how" className={styles.sectionContainer} style={{ paddingBlock: '110px', borderTop: '1px solid var(--line)', background: 'var(--page-bg)', position: 'relative' }}>
+    <section id="tour-selection" className={styles.sectionContainer} style={{ paddingBlock: '110px', borderTop: '1px solid var(--line)', background: 'var(--page-bg)', position: 'relative', overflow: 'hidden' }}>
       <motion.div
         initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-        style={{ textAlign: 'center', marginBottom: 70 }}
+        style={{ textAlign: 'center', marginBottom: 60 }}
       >
-        <div className={styles.mono} style={{ marginBottom: 16 }}>{'{ 02 · how it works }'}</div>
+        <div className={styles.mono} style={{ marginBottom: 16 }}>{'{ 02 · tour selection }'}</div>
         <h2 className={styles.sectionHeadline} style={{ fontSize: 52, lineHeight: 1.05, letterSpacing: '-0.03em', fontWeight: 500, margin: 0, maxWidth: 760, marginInline: 'auto' }}>
-          From idea to <span style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', color: 'var(--a3)' }}>boarding pass</span> in four steps
+          Explore our <span style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', color: 'var(--a3)' }}>featured</span> destinations
         </h2>
       </motion.div>
 
-      <div className={styles.responsiveGrid4} style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 0, position: 'relative' }}>
-        {/* connecting line */}
-        <div style={{ position: 'absolute', top: 28, left: '12.5%', right: '12.5%', height: 1, borderTop: '1px dashed var(--line)' }} />
-        {steps.map((s, i) =>
-          <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.1 }} transition={{ duration: 0.5, delay: i * 0.15, ease: "easeOut" }} style={{ padding: '0 20px', position: 'relative' }}>
-            <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', marginBottom: 28 }}>
-              <div style={{
-                width: 56, height: 56, borderRadius: '50%',
-                background: i === 0 ? 'var(--ink)' : 'var(--card)',
-                color: i === 0 ? 'var(--a2)' : 'var(--a3)',
-                border: i === 0 ? 'none' : '1px solid var(--line)',
-                display: 'grid', placeItems: 'center',
-                fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 22, fontWeight: 400,
-                boxShadow: '0 4px 16px -6px rgba(60,30,15,0.15)',
-                position: 'relative', zIndex: 2
-              }}>{s.n}</div>
-            </div>
-            <h3 style={{ fontSize: 18, fontWeight: 500, letterSpacing: '-0.01em', margin: 0, marginBottom: 10, textAlign: 'center' }}>{s.t}</h3>
-            <p style={{ fontSize: 13.5, color: 'var(--ink-soft)', lineHeight: 1.6, margin: 0, textAlign: 'center', maxWidth: 240, marginInline: 'auto' }}>{s.d}</p>
-          </motion.div>
-        )}
+      <div style={{ position: 'relative', height: 460, display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', maxWidth: '100vw', margin: '0 auto' }}>
+        {TOURS.map((tour, i) => {
+          const diff = i - active;
+          const absDiff = Math.abs(diff);
+          const isActive = diff === 0;
+          
+          let x = diff * 180;
+          let scale = 1 - (absDiff * 0.15);
+          let zIndex = 10 - absDiff;
+          let opacity = 1 - (absDiff * 0.15);
+          let blur = absDiff > 0 ? 2 : 0;
+
+          if (absDiff > 2) opacity = 0;
+
+          return (
+            <motion.div
+              key={tour.id}
+              animate={{ x, scale, zIndex, opacity, filter: `blur(${blur}px)` }}
+              transition={{ type: 'spring', stiffness: 260, damping: 25 }}
+              onClick={() => setActive(i)}
+              style={{
+                position: 'absolute', width: 320, height: 440, borderRadius: 'var(--radius-xl)', overflow: 'hidden',
+                cursor: isActive ? 'default' : 'pointer',
+                boxShadow: isActive ? '0 24px 48px rgba(0,0,0,0.2)' : '0 8px 24px rgba(0,0,0,0.1)',
+                border: '1px solid rgba(255,255,255,0.1)'
+              }}
+            >
+              <img src={tour.img} alt={tour.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 100%)', padding: '24px 16px 40px', textAlign: 'center' }}>
+                <h3 style={{ color: '#fff', margin: 0, fontSize: 18, fontWeight: 500, letterSpacing: '0.01em', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>{tour.title}</h3>
+              </div>
+              
+              <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', mixBlendMode: 'overlay' }}>
+                <span style={{ fontSize: 180, fontWeight: 300, color: 'transparent', WebkitTextStroke: '2px rgba(255,255,255,0.9)', fontFamily: 'var(--font-display)' }}>
+                  {tour.id}
+                </span>
+              </div>
+            </motion.div>
+          );
+        })}
       </div>
-    </section>);
+
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 60, marginTop: 40 }}>
+        <button 
+          onClick={handlePrev} disabled={active === 0}
+          style={{ 
+            all: 'unset', cursor: active === 0 ? 'not-allowed' : 'pointer', width: 56, height: 56, 
+            borderRadius: '50%', border: '1px solid var(--line)', display: 'grid', placeItems: 'center', 
+            color: 'var(--ink)', opacity: active === 0 ? 0.3 : 1, transition: 'all 0.2s ease', background: 'var(--card)', boxShadow: 'var(--shadow-sm)'
+          }}
+          onMouseEnter={(e) => { if(active !== 0) e.currentTarget.style.background = 'var(--a1)'; }}
+          onMouseLeave={(e) => { if(active !== 0) e.currentTarget.style.background = 'var(--card)'; }}
+        >
+          <I.arrow style={{ transform: 'rotate(180deg)', width: 18, height: 18 }} />
+        </button>
+
+        <button 
+          style={{ 
+            all: 'unset', cursor: 'pointer', padding: '6px 6px 6px 24px', background: 'var(--card)', color: 'var(--ink)', borderRadius: 999, 
+            border: '1px solid var(--line)', fontSize: 15, fontWeight: 500, display: 'flex', alignItems: 'center', gap: 20,
+            boxShadow: 'var(--shadow-md)', transition: 'transform 0.2s ease'
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.03)'}
+          onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+        >
+          View tour 
+          <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--ink)', color: 'var(--card)', display: 'grid', placeItems: 'center' }}>
+             <I.arrow style={{ width: 14, height: 14 }} />
+          </div>
+        </button>
+
+        <button 
+          onClick={handleNext} disabled={active === TOURS.length - 1}
+          style={{ 
+            all: 'unset', cursor: active === TOURS.length - 1 ? 'not-allowed' : 'pointer', width: 56, height: 56, 
+            borderRadius: '50%', border: '1px solid var(--line)', display: 'grid', placeItems: 'center', 
+            color: 'var(--ink)', opacity: active === TOURS.length - 1 ? 0.3 : 1, transition: 'all 0.2s ease', background: 'var(--card)', boxShadow: 'var(--shadow-sm)'
+          }}
+          onMouseEnter={(e) => { if(active !== TOURS.length - 1) e.currentTarget.style.background = 'var(--a1)'; }}
+          onMouseLeave={(e) => { if(active !== TOURS.length - 1) e.currentTarget.style.background = 'var(--card)'; }}
+        >
+          <I.arrow style={{ width: 18, height: 18 }} />
+        </button>
+      </div>
+    </section>
+  );
 }
 
 /* ---------- Platform Capabilities ---------- */
@@ -1176,7 +1246,7 @@ export default function Home() {
     <div className={styles.homeWrapper}>
       <Hero onPlan={handlePlan} />
       <WhyAltairgo />
-      <HowItWorks />
+      <TourSelection />
       <Destinations />
       <Capabilities />
       <Packages />
