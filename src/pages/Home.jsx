@@ -630,15 +630,15 @@ function WhyAltairgo() {
              <motion.img 
               whileHover={{ scale: 1.02, y: -4 }}
               transition={{ duration: 0.4 }}
-              src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=600&auto=format&fit=crop" 
-              alt="Analytics Dashboard" 
+              src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?q=80&w=600&auto=format&fit=crop" 
+              alt="Kerala Backwaters Houseboat" 
               style={{ width: '100%', height: 280, objectFit: 'cover', borderRadius: 32, boxShadow: 'var(--shadow-lg)', border: '1px solid var(--line)' }}
              />
              <motion.img 
               whileHover={{ scale: 1.02, y: -4 }}
               transition={{ duration: 0.4 }}
-              src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=600&auto=format&fit=crop" 
-              alt="AI Core Node Visualization" 
+              src="https://images.unsplash.com/photo-1593693397690-362cb9666fc2?q=80&w=600&auto=format&fit=crop" 
+              alt="Misty Munnar Tea Plantations" 
               style={{ width: '100%', height: 280, objectFit: 'cover', borderRadius: 32, boxShadow: 'var(--shadow-lg)', border: '1px solid var(--line)' }}
              />
           </div>
@@ -648,8 +648,8 @@ function WhyAltairgo() {
              <motion.img 
               whileHover={{ scale: 1.02, y: -4 }}
               transition={{ duration: 0.4 }}
-              src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=600&auto=format&fit=crop" 
-              alt="Financial Predictive Analysis Graph" 
+              src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=600&auto=format&fit=crop" 
+              alt="Cinematic Kerala Coastal Sunset" 
               style={{ width: '100%', height: 460, objectFit: 'cover', borderRadius: 32, boxShadow: 'var(--shadow-lg)', border: '1px solid var(--line)' }}
              />
           </div>
