@@ -441,13 +441,111 @@ function Hero({ onPlan }) {
   );
 }
 
+/* ---------- Animated Counter component for Stats ---------- */
+function AnimatedCounter({ value, duration = 1.5 }) {
+  const [count, setCount] = useState('');
+  const ref = useRef(null);
+  const [isIntersecting, setIsIntersecting] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsIntersecting(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!isIntersecting) {
+      setCount(value);
+      return;
+    }
+    
+    const match = value.match(/^([$]?)([0-9.]+)([a-zA-Z%+]*)$/);
+    if (!match) {
+      setCount(value);
+      return;
+    }
+    const [_, prefix, numStr, suffix] = match;
+    const target = parseFloat(numStr);
+    let start = 0;
+    const startTime = performance.now();
+
+    const animate = (currentTime) => {
+      const elapsed = (currentTime - startTime) / 1000;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      const easeProgress = progress * (2 - progress);
+      const currentVal = start + easeProgress * (target - start);
+      
+      const formatted = numStr.includes('.') 
+        ? currentVal.toFixed(1) 
+        : Math.floor(currentVal).toString();
+
+      setCount(`${prefix}${formatted}${suffix}`);
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+
+    requestAnimationFrame(animate);
+  }, [isIntersecting, value, duration]);
+
+  return <span ref={ref}>{count || value}</span>;
+}
+
 /* ---------- Why Altairgo ---------- */
 function WhyAltairgo() {
   const cards = [
-    { title: 'AI-Powered Itineraries', sub: 'Built for Indian travel' },
-    { title: '28 States Covered', sub: 'Real-world route planning' },
-    { title: 'Train + Roadtrip Smart Routing', sub: 'Smarter recommendations' },
-    { title: 'Season & Weather Aware', sub: 'Personalized experiences' }
+    { 
+      value: '99.4%', 
+      title: 'Forecast Accuracy', 
+      desc: 'Deep learning forecast modeling',
+      icon: (p) => (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}>
+          <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+          <polyline points="17 6 23 6 23 12"></polyline>
+        </svg>
+      )
+    },
+    { 
+      value: '24/7', 
+      title: 'Automated Auditing', 
+      desc: 'Real-time compliance checks',
+      icon: (p) => (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}>
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+        </svg>
+      )
+    },
+    { 
+      value: '15x', 
+      title: 'Faster Ledger Close', 
+      desc: 'Smart expense integrations',
+      icon: (p) => (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}>
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+        </svg>
+      )
+    },
+    { 
+      value: '$2.4M', 
+      title: 'Average Client Savings', 
+      desc: 'Automatic waste detection',
+      icon: (p) => (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}>
+          <line x1="12" y1="1" x2="12" y2="23"></line>
+          <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path>
+        </svg>
+      )
+    }
   ];
 
   return (
@@ -457,10 +555,10 @@ function WhyAltairgo() {
         {/* Left Side: Content & Feature Cards */}
         <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
           <h2 style={{ fontSize: 'clamp(36px, 4vw, 48px)', lineHeight: 1.15, letterSpacing: '-0.02em', fontWeight: 500, margin: '0 0 24px 0', color: 'var(--ink)' }}>
-            Unlock Smarter Travel Across India
+            Unlock Smarter Expense Predictions
           </h2>
           <p style={{ fontSize: 16, lineHeight: 1.65, color: 'var(--ink-soft)', margin: '0 0 48px 0', maxWidth: 480 }}>
-            Altairgo helps you plan journeys the way India actually travels — from train adventures and spontaneous road trips to spiritual circuits, monsoon escapes, and luxury getaways. Build intelligent itineraries in minutes with AI-powered travel intelligence designed specifically for India.
+            AltairGO helps you manage, forecast, and optimize corporate spend with real-time financial intelligence. From predicting seasonal budget fluctuations and smart routing expense validation to real-time risk scoring, empower your finance team with actionable AI insights built for fast-growing businesses.
           </p>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20 }}>
@@ -472,27 +570,41 @@ function WhyAltairgo() {
                 viewport={{ once: true, amount: 0.1 }}
                 transition={{ duration: 0.5, delay: i * 0.1, ease: "easeOut" }}
                 style={{ 
-                  background: '#ffffff', 
+                  background: 'var(--card)', 
                   borderRadius: 24, 
                   padding: '32px 24px', 
-                  boxShadow: '0 8px 30px rgba(0,0,0,0.04)',
-                  border: '1px solid rgba(0,0,0,0.03)',
-                  textAlign: 'center',
+                  boxShadow: 'var(--shadow-md)',
+                  border: '1px solid var(--line)',
+                  textAlign: 'left',
                   display: 'flex',
                   flexDirection: 'column',
-                  alignItems: 'center',
+                  alignItems: 'flex-start',
                   justifyContent: 'center',
                   transition: 'transform 0.4s ease, box-shadow 0.4s ease',
                   cursor: 'default'
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-6px)'; e.currentTarget.style.boxShadow = '0 16px 40px rgba(0,0,0,0.08)'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 30px rgba(0,0,0,0.04)'; }}
+                onMouseEnter={(e) => { 
+                  e.currentTarget.style.transform = 'translateY(-6px)'; 
+                  e.currentTarget.style.boxShadow = 'var(--shadow-lg)'; 
+                }}
+                onMouseLeave={(e) => { 
+                  e.currentTarget.style.transform = 'translateY(0)'; 
+                  e.currentTarget.style.boxShadow = 'var(--shadow-md)'; 
+                }}
               >
-                <div style={{ fontSize: 18, fontWeight: 500, color: 'var(--a3)', marginBottom: 12, lineHeight: 1.3 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, borderRadius: '50%', background: 'var(--a1)', color: 'var(--a3)' }}>
+                    <card.icon />
+                  </div>
+                  <div style={{ fontSize: 'clamp(22px, 2.8vw, 30px)', fontFamily: 'var(--serif)', fontWeight: 600, color: 'var(--a3)', letterSpacing: '-0.02em', margin: 0, lineHeight: 1 }}>
+                    <AnimatedCounter value={card.value} />
+                  </div>
+                </div>
+                <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--ink)', marginBottom: 6, lineHeight: 1.3 }}>
                   {card.title}
                 </div>
-                <div style={{ fontSize: 13, color: 'var(--ink-muted)', fontWeight: 400 }}>
-                  {card.sub}
+                <div style={{ fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 400, lineHeight: 1.4 }}>
+                  {card.desc}
                 </div>
               </motion.div>
             ))}
@@ -504,41 +616,41 @@ function WhyAltairgo() {
           initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           style={{ position: 'relative', height: 640, display: 'flex', gap: 24, padding: '20px' }}
         >
-          {/* Subtle decorative dashed plane path overlay */}
+          {/* Subtle decorative dashed data path overlay */}
           <svg style={{ position: 'absolute', top: '-10%', left: '-20%', width: '140%', height: '120%', pointerEvents: 'none', zIndex: 0 }} viewBox="0 0 500 500">
-            <path d="M 0 100 Q 200 -50 400 150 T 500 450" fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth="2" strokeDasharray="6 8" strokeLinecap="round" />
-            <path d="M 100 450 Q 300 550 450 300 T 500 100" fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth="2" strokeDasharray="6 8" strokeLinecap="round" />
+            <path d="M 0 100 Q 200 -50 400 150 T 500 450" fill="none" stroke="var(--a1)" strokeWidth="1.5" strokeDasharray="6 8" strokeLinecap="round" style={{ opacity: 0.3 }} />
+            <path d="M 100 450 Q 300 550 450 300 T 500 100" fill="none" stroke="var(--a1)" strokeWidth="1.5" strokeDasharray="6 8" strokeLinecap="round" style={{ opacity: 0.3 }} />
             <g transform="translate(380, 140) rotate(45)">
-              <I.plane style={{ color: 'rgba(0,0,0,0.1)' }} />
+              <I.spark style={{ color: 'var(--a3)', filter: 'drop-shadow(0 0 8px var(--a3))', animation: 'spin 12s linear infinite' }} />
             </g>
           </svg>
 
           {/* Left Column (Two Stacked Images) */}
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 24, position: 'relative', zIndex: 1 }}>
              <motion.img 
-              whileHover={{ scale: 1.02 }}
+              whileHover={{ scale: 1.02, y: -4 }}
               transition={{ duration: 0.4 }}
-              src="https://images.unsplash.com/photo-1593693397690-362cb9666fc2?q=80&w=600&auto=format&fit=crop" 
-              alt="Kerala Backwaters" 
-              style={{ width: '100%', height: 280, objectFit: 'cover', borderRadius: 32, boxShadow: '0 24px 48px rgba(0,0,0,0.08)' }}
+              src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=600&auto=format&fit=crop" 
+              alt="Analytics Dashboard" 
+              style={{ width: '100%', height: 280, objectFit: 'cover', borderRadius: 32, boxShadow: 'var(--shadow-lg)', border: '1px solid var(--line)' }}
              />
              <motion.img 
-              whileHover={{ scale: 1.02 }}
+              whileHover={{ scale: 1.02, y: -4 }}
               transition={{ duration: 0.4 }}
-              src="https://images.unsplash.com/photo-1626014903706-5a48d8e578ce?q=80&w=600&auto=format&fit=crop" 
-              alt="Kashmir Valley" 
-              style={{ width: '100%', height: 280, objectFit: 'cover', borderRadius: 32, boxShadow: '0 24px 48px rgba(0,0,0,0.08)' }}
+              src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=600&auto=format&fit=crop" 
+              alt="AI Core Node Visualization" 
+              style={{ width: '100%', height: 280, objectFit: 'cover', borderRadius: 32, boxShadow: 'var(--shadow-lg)', border: '1px solid var(--line)' }}
              />
           </div>
 
           {/* Right Column (Single Tall Image) */}
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative', zIndex: 1, paddingTop: 60 }}>
              <motion.img 
-              whileHover={{ scale: 1.02 }}
+              whileHover={{ scale: 1.02, y: -4 }}
               transition={{ duration: 0.4 }}
-              src="https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=600&auto=format&fit=crop" 
-              alt="Rajasthan Fort" 
-              style={{ width: '100%', height: 460, objectFit: 'cover', borderRadius: 32, boxShadow: '0 24px 48px rgba(0,0,0,0.08)' }}
+              src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=600&auto=format&fit=crop" 
+              alt="Financial Predictive Analysis Graph" 
+              style={{ width: '100%', height: 460, objectFit: 'cover', borderRadius: 32, boxShadow: 'var(--shadow-lg)', border: '1px solid var(--line)' }}
              />
           </div>
         </motion.div>
