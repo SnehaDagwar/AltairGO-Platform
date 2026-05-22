@@ -1073,60 +1073,7 @@ function TourSelection() {
   );
 }
 
-/* ---------- Platform Capabilities ---------- */
-function Capabilities() {
-  const feats = [
-    { icon: 'spark', t: 'AI Itinerary', d: 'Day-by-day trips generated in seconds. Shaped around your pace, budget, and quirks.' },
-    { icon: 'rupee', t: 'Real Costs in ₹', d: 'Live rates for hotels, trains, and entry fees. No hidden conversion markup.' },
-    { icon: 'calendar', t: 'Smart Booking', d: 'One-tap booking for flights, trains, stays, and experiences — IRCTC synced.' },
-    { icon: 'cloud', t: 'Live Weather', d: 'Monsoon-aware planning. Rearranges your day when the forecast shifts.' },
-    { icon: 'tag', t: 'Local Events', d: 'Festivals, melas, and pop-ups you would have missed. Auto-added if you say yes.' },
-    { icon: 'edit', t: 'Trip Editor', d: 'Drag, swap, stretch. The itinerary rebuilds around every change in real time.' }
-  ];
 
-  const renderIcon = (k) => {
-    const common = { width: 22, height: 22, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.6, strokeLinecap: 'round', strokeLinejoin: 'round' };
-    switch (k) {
-      case 'spark': return <svg {...common}><path d="M12 3l2 6l6 2l-6 2l-2 6l-2-6l-6-2l6-2z" /></svg>;
-      case 'rupee': return <svg {...common}><path d="M7 5h10M7 9h10M9 5c3 0 5 2 5 4s-2 4-5 4h-2l6 6" /></svg>;
-      case 'calendar': return <svg {...common}><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4" /></svg>;
-      case 'cloud': return <svg {...common}><path d="M7 18a4 4 0 010-8a5 5 0 019.6-1.4A4 4 0 0117 18H7z" /></svg>;
-      case 'tag': return <svg {...common}><path d="M20 12l-8 8l-9-9V3h8z" /><circle cx="8" cy="8" r="1.2" fill="currentColor" /></svg>;
-      case 'edit': return <svg {...common}><path d="M4 20h4L20 8l-4-4L4 16z" /><path d="M14 6l4 4" /></svg>;
-      default: return null;
-    }
-  };
-  return (
-    <motion.section initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.1 }} transition={{ duration: 0.6, ease: "easeOut" }} style={{ paddingBlock: '110px', borderTop: '1px solid var(--line)', background: 'var(--card)' }} className={styles.sectionContainer}>
-      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 56, flexWrap: 'wrap', gap: 24 }}>
-        <div>
-          <div className={styles.mono} style={{ marginBottom: 16 }}>{'{ 04 · capabilities }'}</div>
-          <h2 style={{ fontSize: 48, lineHeight: 1.05, letterSpacing: '-0.03em', fontWeight: 500, margin: 0, maxWidth: 640 }} className={styles.sectionHeadline}>
-            Six <span style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', color: 'var(--a3)' }}>superpowers</span>, one planner.
-          </h2>
-        </div>
-        <p style={{ fontSize: 15, color: 'var(--ink-soft)', maxWidth: 380, lineHeight: 1.6, margin: 0 }}>
-          Every trip gets the same intelligence — whether it's a 3-day Goa break or a 21-day Himalayan circuit.
-        </p>
-      </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1, background: 'var(--line)', border: '1px solid var(--line)', borderRadius: 20, overflow: 'hidden' }} className={`${styles.responsiveGrid} ${styles.responsiveGrid3}`}>
-        {feats.map((f, i) =>
-          <motion.div key={i}
-            initial={{ opacity: 0, scale: 0.95, y: 15 }} whileInView={{ opacity: 1, scale: 1, y: 0 }} viewport={{ once: true, amount: 0.1 }} transition={{ duration: 0.4, delay: i * 0.08, ease: "easeOut" }}
-            style={{ padding: '36px 32px', background: 'var(--card)', transition: 'background 0.2s' }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--a1)'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--card)'; }}>
-            <div style={{ width: 44, height: 44, borderRadius: 12, background: 'var(--a1)', color: 'var(--a3)', display: 'grid', placeItems: 'center', marginBottom: 22 }}>
-              {renderIcon(f.icon)}
-            </div>
-            <h3 style={{ fontSize: 19, fontWeight: 500, letterSpacing: '-0.01em', margin: 0, marginBottom: 10 }}>{f.t}</h3>
-            <p style={{ fontSize: 13.5, color: 'var(--ink-soft)', lineHeight: 1.6, margin: 0 }}>{f.d}</p>
-          </motion.div>
-        )}
-      </div>
-    </motion.section>
-  );
-}
 
 /* ---------- Packages ---------- */
 const PACKAGES = [
@@ -1403,7 +1350,6 @@ export default function Home() {
       <WhyAltairgo />
       <TourSelection />
       <FAQ />
-      <Capabilities />
       <Packages />
       <TravelInspiration />
       <NewsletterCTA />
