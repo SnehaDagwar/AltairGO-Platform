@@ -265,3 +265,74 @@
     grid-column: 1 / -1 !important;
   }
 }
+
+/* --- Premium Newsletter Waitlist CTA --- */
+.newsletterForm {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto 20px;
+}
+
+.newsletterInput {
+  flex: 1;
+  padding: 16px 24px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #ffffff;
+  color: #141413;
+  border-radius: 999px;
+  font-size: 15px;
+  outline: none;
+  font-family: inherit;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.newsletterInput::placeholder {
+  color: #7b7a76;
+}
+
+.newsletterInput:focus {
+  border-color: var(--a2);
+  box-shadow: 0 0 0 4px rgba(90, 197, 118, 0.25);
+  transform: scale(1.01);
+}
+
+.newsletterButton {
+  all: unset;
+  cursor: pointer;
+  padding: 16px 30px;
+  background: var(--a2);
+  color: var(--ink);
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.newsletterButton:hover {
+  opacity: 0.95;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(90, 197, 118, 0.3);
+}
+
+.newsletterButton:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 640px) {
+  .newsletterForm {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .newsletterButton {
+    justify-content: center;
+    width: 100%;
+  }
+}

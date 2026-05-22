@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { toast } from 'react-hot-toast';
 import styles from './Home.module.css';
 import logoUrl from '../assets/logo.png';
 import heroBg from '../assets/hero-bg.jpg';
@@ -1257,59 +1258,131 @@ function Packages() {
   );
 }
 
-/* ---------- Final CTA Banner ---------- */
-function FinalCTA({ onPlan }) {
-  const navigate = useNavigate();
-  return (
-    <motion.section initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.1 }} transition={{ duration: 0.6, ease: 'easeOut' }} style={{ padding: '0 24px 24px', background: 'var(--page-bg)' }}>
-      <div style={{ position: 'relative', borderRadius: 28, overflow: 'hidden', background: 'var(--ink)', color: 'var(--card)', textAlign: 'center' }} className={styles.finalCtaBox}>
-        {/* terracotta radial glow + grid */}
-        <svg width="100%" height="100%" viewBox="0 0 1200 500" preserveAspectRatio="none" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-          <defs>
-            <radialGradient id="ctag1" cx="0.5" cy="1.1" r="0.7">
-              <stop offset="0" stopColor="#5ac576" stopOpacity="0.28" />
-              <stop offset="0.55" stopColor="#8dd9a0" stopOpacity="0.1" />
-              <stop offset="1" stopColor="#141413" stopOpacity="0" />
-            </radialGradient>
-            <radialGradient id="ctag2" cx="0.18" cy="0.85" r="0.45">
-              <stop offset="0" stopColor="#5ac576" stopOpacity="0.15" />
-              <stop offset="1" stopColor="transparent" stopOpacity="0" />
-            </radialGradient>
-            <radialGradient id="ctag3" cx="0.82" cy="0.85" r="0.4">
-              <stop offset="0" stopColor="#5ac576" stopOpacity="0.12" />
-              <stop offset="1" stopColor="transparent" stopOpacity="0" />
-            </radialGradient>
-            <pattern id="ctaGrid" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M40 0H0V40" stroke="white" strokeOpacity="0.04" fill="none" />
-            </pattern>
-          </defs>
-          <rect width="1200" height="500" fill="url(#ctag1)" />
-          <rect width="1200" height="500" fill="url(#ctag2)" />
-          <rect width="1200" height="500" fill="url(#ctag3)" />
-          <rect width="1200" height="500" fill="url(#ctaGrid)" />
-        </svg>
+/* ---------- Newsletter / Waitlist CTA ---------- */
+function NewsletterCTA() {
+  const [email, setEmail] = useState('');
+  const [submitted, setSubmitted] = useState(false);
 
-        <div style={{ position: 'relative' }}>
-          <div style={{ fontFamily: 'var(--mono)', fontSize: 11.5, color: 'rgba(250,249,245,0.45)', marginBottom: 20, letterSpacing: '0.06em' }}>{'{ ready when you are }'}</div>
-          <h2 className={styles.ctaHeadline} style={{ lineHeight: 1.02, letterSpacing: '-0.035em', fontWeight: 500, margin: 0, marginBottom: 18, color: 'var(--card)' }}>
-            Start planning <span style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', color: 'var(--a2)' }}>for free</span>.
-          </h2>
-          <p style={{ fontSize: 17, color: 'rgba(250,249,245,0.6)', maxWidth: 520, marginInline: 'auto', lineHeight: 1.6, marginBottom: 40 }}>
-            Join thousands of travellers who plan smarter. No credit card. No commitments. Just a plan, built for you.
-          </p>
-          <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 40 }}>
-            <motion.button onClick={onPlan} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} style={{ all: 'unset', cursor: 'pointer', padding: '16px 28px', background: 'var(--a2)', color: 'var(--ink)', borderRadius: 999, fontSize: 15, fontWeight: 500, display: 'inline-flex', alignItems: 'center', gap: 8, boxShadow: '0 0 0 1px var(--a2)' }}>
-              Plan my trip <I.arrow />
-            </motion.button>
-            <motion.button onClick={() => navigate('/discover')} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} style={{ all: 'unset', cursor: 'pointer', padding: '16px 26px', border: '1px solid rgba(255,255,255,0.18)', background: 'rgba(255,255,255,0.04)', borderRadius: 999, fontSize: 15, fontWeight: 500, color: 'rgba(250,249,245,0.85)', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-              Explore destinations <I.arrow />
-            </motion.button>
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!email || !email.trim() || !email.includes('@')) {
+      toast.error('Please enter a valid email address.');
+      return;
+    }
+    setSubmitted(true);
+    toast.success("Welcome aboard! You've joined the waitlist.");
+  };
+
+  return (
+    <motion.section 
+      initial={{ opacity: 0, y: 30 }} 
+      whileInView={{ opacity: 1, y: 0 }} 
+      viewport={{ once: true, amount: 0.15 }} 
+      transition={{ duration: 0.7, ease: 'easeOut' }} 
+      style={{ padding: '0 24px 24px', background: 'var(--page-bg)' }}
+    >
+      <div 
+        style={{ 
+          position: 'relative', 
+          borderRadius: 28, 
+          overflow: 'hidden', 
+          background: '#141413', 
+          color: '#ffffff', 
+          textAlign: 'center',
+          boxShadow: 'var(--shadow-lg)'
+        }} 
+        className={styles.finalCtaBox}
+      >
+        {/* Background cinematic image with slow parallax scale */}
+        <motion.img 
+          src="https://images.unsplash.com/photo-1596176530529-78163a4f7af2?auto=format&fit=crop&q=80&w=2070" 
+          alt="Cinematic Indian Landscape"
+          style={{ 
+            position: 'absolute', 
+            inset: 0, 
+            width: '100%', 
+            height: '100%', 
+            objectFit: 'cover', 
+            zIndex: 0 
+          }} 
+          animate={{ scale: [1, 1.05] }}
+          transition={{ duration: 20, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
+        />
+
+        {/* Soft dark editorial gradient overlay */}
+        <div 
+          style={{ 
+            position: 'absolute', 
+            inset: 0, 
+            background: 'linear-gradient(to bottom, rgba(20, 20, 19, 0.4) 0%, rgba(20, 20, 19, 0.85) 100%)', 
+            zIndex: 1 
+          }} 
+        />
+
+        <div style={{ position: 'relative', zIndex: 2 }}>
+          <div className={styles.mono} style={{ color: 'rgba(255, 255, 255, 0.5)', marginBottom: 20, letterSpacing: '0.08em' }}>
+            {'{ 06 · waitlist }'}
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, fontFamily: 'var(--mono)', fontSize: 11, color: 'rgba(250,249,245,0.35)', letterSpacing: '0.04em' }}>
-            <span style={{ opacity: 0.4 }}>·</span>
-            <span>4.9 ★</span>
+          
+          <h2 className={styles.ctaHeadline} style={{ lineHeight: 1.05, letterSpacing: '-0.03em', fontWeight: 500, margin: '0 auto 18px', color: '#ffffff', maxWidth: 800 }}>
+            Plan better journeys <span style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', color: 'var(--a2)' }}>across India</span>.
+          </h2>
+          
+          <p style={{ fontSize: 16.5, color: 'rgba(255, 255, 255, 0.75)', maxWidth: 600, marginInline: 'auto', lineHeight: 1.6, marginBottom: 36 }}>
+            Join Altairgo for AI-powered itineraries, destination inspiration, seasonal travel ideas, and early access to smarter India-first trip planning.
+          </p>
+
+          {submitted ? (
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.96 }} 
+              animate={{ opacity: 1, scale: 1 }} 
+              transition={{ duration: 0.4, ease: 'easeOut' }}
+              style={{ 
+                marginInline: 'auto', 
+                maxWidth: 480, 
+                padding: '24px 32px', 
+                background: 'rgba(20, 20, 19, 0.75)', 
+                backdropFilter: 'blur(10px)', 
+                border: '1px solid rgba(90, 197, 118, 0.25)', 
+                borderRadius: 20,
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)'
+              }}
+            >
+              <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'rgba(90, 197, 118, 0.15)', display: 'grid', placeItems: 'center', marginInline: 'auto', marginBottom: 16 }}>
+                <svg width="20" height="20" viewBox="0 0 14 14" fill="none">
+                  <path d="M2.5 7.5l3 3 6.5-6.5" stroke="var(--a2)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+              <h3 style={{ fontSize: 20, fontWeight: 500, color: '#ffffff', margin: '0 0 6px' }}>Welcome aboard!</h3>
+              <p style={{ fontSize: 13.5, color: 'rgba(255, 255, 255, 0.65)', lineHeight: 1.5, margin: 0 }}>
+                You've successfully joined the waitlist. We will notify you at <strong style={{ color: '#ffffff' }}>{email}</strong> when we launch.
+              </p>
+            </motion.div>
+          ) : (
+            <form onSubmit={handleSubmit} className={styles.newsletterForm}>
+              <input 
+                type="email" 
+                placeholder="Enter your email" 
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)} 
+                className={styles.newsletterInput}
+                required 
+              />
+              <button type="submit" className={styles.newsletterButton}>
+                Join Waitlist <I.arrow />
+              </button>
+            </form>
+          )}
+
+          <p style={{ fontSize: 12, color: 'rgba(255, 255, 255, 0.45)', margin: '20px 0 0', lineHeight: 1.5 }}>
+            No spam. Just smarter travel ideas, curated journeys, and product updates from Altairgo.
+          </p>
+
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, fontFamily: 'var(--mono)', fontSize: 11, color: 'rgba(255, 255, 255, 0.3)', letterSpacing: '0.04em', marginTop: 32 }}>
             <span style={{ opacity: 0.4 }}>·</span>
             <span>28 states</span>
+            <span style={{ opacity: 0.4 }}>·</span>
+            <span>8 union territories</span>
             <span style={{ opacity: 0.4 }}>·</span>
             <span>made in India</span>
           </div>
@@ -1334,7 +1407,7 @@ export default function Home() {
       <Capabilities />
       <Packages />
       <TravelInspiration />
-      <FinalCTA onPlan={handlePlan} />
+      <NewsletterCTA />
     </div>
   );
 }
