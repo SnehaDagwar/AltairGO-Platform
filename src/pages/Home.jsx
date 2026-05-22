@@ -881,7 +881,7 @@ function TravelInspiration() {
             Explore with AltairGO
           </div>
           <h2 style={{ fontSize: 'clamp(40px, 4.5vw, 56px)', lineHeight: 1.1, letterSpacing: '-0.02em', fontWeight: 500, margin: '0 0 24px 0', color: 'var(--ink)' }}>
-            Travel India <br/><span style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', color: 'var(--a3)' }}>Your Way</span>
+            Travel India <br/><span style={{ fontFamily: 'var(--font-accent)', color: '#17A1CF', textTransform: 'none' }}>Your Way</span>
           </h2>
           <p style={{ fontSize: 17, lineHeight: 1.6, color: 'var(--ink-soft)', margin: '0 0 40px 0', maxWidth: 460 }}>
             From Himalayan adventures and spiritual trails to luxury escapes and coastal getaways, AltairGO helps you discover journeys tailored to your vibe, budget, season, and travel style.
@@ -979,9 +979,8 @@ function TourSelection() {
         viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
         style={{ textAlign: 'center', marginBottom: 60 }}
       >
-        <div className={styles.mono} style={{ marginBottom: 16 }}>{'{ 02 · explore india }'}</div>
         <h2 className={styles.sectionHeadline} style={{ fontSize: 52, lineHeight: 1.05, letterSpacing: '-0.03em', fontWeight: 500, margin: 0, maxWidth: 760, marginInline: 'auto' }}>
-          Explore our <span style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', color: 'var(--a3)' }}>Indian</span> destinations
+          Explore our <span style={{ fontFamily: 'var(--font-accent)', color: '#17A1CF', textTransform: 'none' }}>Indian</span> destinations
         </h2>
       </motion.div>
 
