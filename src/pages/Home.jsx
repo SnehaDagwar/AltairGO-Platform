@@ -836,95 +836,119 @@ function FAQ() {
   );
 }
 
-/* ---------- Explore Journeys ---------- */
-const JOURNEYS = [
-  { 
-    loc: 'Jaipur, Rajasthan', 
-    title: '48 Hours in Jaipur with AI Planning', 
-    img: journalJaipur 
+/* ---------- Travel Inspiration ---------- */
+const INSPIRATION_CARDS = [
+  {
+    id: 'adventure',
+    title: 'Adventure Trails',
+    subtitle: 'Himalayan hikes, Ladakh roads, Meghalaya escapes',
+    img: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=800&auto=format&fit=crop',
+    gridClass: styles.inspirationCardVertical
   },
-  { 
-    loc: 'Kerala', 
-    title: 'How to Plan a Monsoon Roadtrip in Kerala', 
-    img: journalKerala 
+  {
+    id: 'beach',
+    title: 'Beach Escapes',
+    subtitle: 'Goa, Andaman, Gokarna, Kerala coastlines',
+    img: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?q=80&w=1200&auto=format&fit=crop',
+    gridClass: styles.inspirationCardHorizontal
   },
-  { 
-    loc: 'Himachal Pradesh', 
-    title: 'Smart Budget Travel Across Himachal', 
-    img: journalHimachal 
+  {
+    id: 'cultural',
+    title: 'Cultural Journeys',
+    subtitle: 'Jaipur, Varanasi, Hampi, spiritual circuits',
+    img: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=600&auto=format&fit=crop',
+    gridClass: ''
   },
-  { 
-    loc: 'Mumbai, Maharashtra', 
-    title: 'Weekend Escapes from Mumbai', 
-    img: journalMumbai 
-  },
-  { 
-    loc: 'Varanasi, UP', 
-    title: 'AI-Curated Spiritual Trails in Varanasi', 
-    img: journalVaranasi 
-  },
-  { 
-    loc: 'Meghalaya', 
-    title: 'Chasing Waterfalls in Meghalaya', 
-    img: journalMeghalaya 
+  {
+    id: 'luxury',
+    title: 'Luxury Retreats',
+    subtitle: 'Palaces, wellness resorts, curated stays',
+    img: 'https://images.unsplash.com/photo-1582610116397-edb318620f90?q=80&w=600&auto=format&fit=crop',
+    gridClass: ''
   }
 ];
 
-function ExploreJourneys() {
+function TravelInspiration() {
   const navigate = useNavigate();
   return (
-    <section style={{ paddingBlock: '100px', borderTop: '1px solid var(--line)', background: 'var(--card)' }} className={styles.sectionContainer}>
-      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 48 }}>
-        <motion.div initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}>
-          <div className={styles.mono} style={{ marginBottom: 16 }}>{'{ 04 · journal }'}</div>
-          <h2 style={{ fontSize: 48, lineHeight: 1.05, letterSpacing: '-0.03em', fontWeight: 500, margin: 0, maxWidth: 640 }} className={styles.sectionHeadline}>
-            Stories from the <span style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', color: 'var(--a3)' }}>road</span>
+    <section style={{ paddingBlock: '120px', borderTop: '1px solid var(--line)', background: 'var(--page-bg)' }} className={styles.sectionContainer}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.6fr', gap: 64, alignItems: 'center' }} className={styles.responsiveGrid}>
+        
+        {/* Left Side Content */}
+        <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
+          <div className={styles.mono} style={{ marginBottom: 16, fontSize: 13, color: 'var(--ink-soft)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+            Explore with AltairGO
+          </div>
+          <h2 style={{ fontSize: 'clamp(40px, 4.5vw, 56px)', lineHeight: 1.1, letterSpacing: '-0.02em', fontWeight: 500, margin: '0 0 24px 0', color: 'var(--ink)' }}>
+            Travel India <br/><span style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', color: 'var(--a3)' }}>Your Way</span>
           </h2>
-        </motion.div>
-        <motion.button initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }} onClick={() => navigate('/blogs')} style={{ all: 'unset', cursor: 'pointer', fontSize: 13, color: 'var(--ink)', padding: '10px 18px', border: '1px solid var(--line)', borderRadius: 999, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-          All posts <I.arrow />
-        </motion.button>
-      </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }} className={`${styles.responsiveGrid} ${styles.responsiveGrid3}`}>
-        {JOURNEYS.map((j, i) =>
-          <motion.article key={i}
-            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.1 }} transition={{ duration: 0.5, delay: i * 0.1, ease: "easeOut" }}
-            whileHover={{ y: -4, boxShadow: 'var(--shadow-md)' }}
+          <p style={{ fontSize: 17, lineHeight: 1.6, color: 'var(--ink-soft)', margin: '0 0 40px 0', maxWidth: 460 }}>
+            From Himalayan adventures and spiritual trails to luxury escapes and coastal getaways, AltairGO helps you discover journeys tailored to your vibe, budget, season, and travel style.
+          </p>
+          <motion.button 
+            whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} 
+            onClick={() => navigate('/discover')} 
             style={{ 
-              cursor: 'pointer', 
-              background: 'var(--card)', 
-              borderRadius: 'var(--radius-xl)', 
-              overflow: 'hidden', 
-              border: '1px solid var(--line)',
-              boxShadow: 'var(--shadow-sm)',
-              display: 'flex',
-              flexDirection: 'column',
-              transition: 'transform 0.2s ease, box-shadow 0.2s ease'
-            }}>
-            <div style={{ height: 220, position: 'relative', overflow: 'hidden' }}>
-              <motion.img 
-                src={j.img} 
-                alt={j.title} 
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
-              />
-            </div>
-            <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-              <div style={{ fontSize: 12, color: 'var(--ink-soft)', marginBottom: 8 }}>{j.loc}</div>
-              <h3 style={{ fontSize: 18, fontWeight: 500, lineHeight: 1.3, letterSpacing: '-0.01em', margin: 0, color: 'var(--ink)' }}>{j.title}</h3>
-              <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'flex-end', paddingTop: 20 }}>
-                <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--page-bg)', display: 'grid', placeItems: 'center', color: 'var(--ink)', border: '1px solid var(--line)', transition: 'background 0.2s ease' }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--a1)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--page-bg)'; }}>
-                  <I.arrow />
+              all: 'unset', cursor: 'pointer', padding: '16px 28px', background: 'var(--card)', color: 'var(--ink)', 
+              borderRadius: 999, fontSize: 15, fontWeight: 500, display: 'inline-flex', alignItems: 'center', gap: 10, 
+              border: '1px solid var(--ink)', boxShadow: 'var(--shadow-sm)', transition: 'background 0.2s, color 0.2s'
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--ink)'; e.currentTarget.style.color = 'var(--page-bg)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--card)'; e.currentTarget.style.color = 'var(--ink)'; }}
+          >
+            Explore All Journeys <I.arrow style={{ width: 14, height: 14 }} />
+          </motion.button>
+        </motion.div>
+
+        {/* Right Side Card Grid */}
+        <motion.div 
+          initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          className={styles.inspirationGrid}
+        >
+          {INSPIRATION_CARDS.map((card) => {
+            return (
+              <motion.article 
+                key={card.id}
+                whileHover={{ y: -6, boxShadow: 'var(--shadow-lg)' }}
+                transition={{ duration: 0.3 }}
+                className={card.gridClass}
+                style={{ 
+                  position: 'relative',
+                  borderRadius: 'var(--radius-2xl)',
+                  overflow: 'hidden',
+                  cursor: 'pointer',
+                  border: '1px solid var(--line)',
+                  boxShadow: 'var(--shadow-md)',
+                  background: 'var(--card)'
+                }}
+              >
+                <motion.img 
+                  src={card.img} 
+                  alt={card.title} 
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.5, ease: 'easeOut' }}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+                <div style={{ 
+                  position: 'absolute', inset: 0, 
+                  background: 'linear-gradient(to top, rgba(20,28,45,0.85) 0%, rgba(20,28,45,0) 60%)',
+                  display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '24px'
+                }}>
+                  <h3 style={{ color: '#fff', fontSize: 22, fontWeight: 500, letterSpacing: '-0.01em', margin: '0 0 6px 0', textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>
+                    {card.title}
+                  </h3>
+                  <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: 13.5, margin: 0, lineHeight: 1.4, fontWeight: 400 }}>
+                    {card.subtitle}
+                  </p>
                 </div>
-              </div>
-            </div>
-          </motion.article>
-        )}
+              </motion.article>
+            );
+          })}
+        </motion.div>
+
       </div>
-    </section>);
+    </section>
+  );
 }
 
 
@@ -1309,7 +1333,7 @@ export default function Home() {
       <FAQ />
       <Capabilities />
       <Packages />
-      <ExploreJourneys />
+      <TravelInspiration />
       <FinalCTA onPlan={handlePlan} />
     </div>
   );
