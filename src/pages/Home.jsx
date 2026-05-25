@@ -397,44 +397,6 @@ function Hero({ onPlan }) {
               </button>
             </motion.div>
 
-            {/* Right Block: Elegant Glassmorphic Floating Stats Card */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.6 }}
-              style={{
-                background: 'var(--glass-bg)',
-                backdropFilter: 'var(--glass-blur)',
-                webkitBackdropFilter: 'var(--glass-blur)',
-                border: '1px solid var(--glass-border)',
-                padding: '20px 28px',
-                borderRadius: '20px',
-                boxShadow: 'var(--shadow-lg)',
-                display: 'flex',
-                gap: '24px',
-                alignItems: 'center',
-                pointerEvents: 'auto',
-                maxWidth: '100%',
-                width: 'auto'
-              }}
-            >
-              {[
-                { val: '4.9 ★', label: 'Rating' },
-                { val: '28', label: 'States' },
-                { val: '100K+', label: 'Itineraries' }
-              ].map((stat, i) => (
-                <div key={i} style={{ display: 'flex', flexDirection: 'column' }}>
-                  <span style={{ 
-                    fontFamily: 'var(--font-display)', fontSize: '24px', fontWeight: 400, 
-                    color: '#ffffff', lineHeight: 1.1 
-                  }}>{stat.val}</span>
-                  <span style={{ 
-                    fontFamily: 'var(--mono)', fontSize: '9px', 
-                    color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', 
-                    letterSpacing: '0.05em', marginTop: '2px' 
-                  }}>{stat.label}</span>
-                </div>
-              ))}
-            </motion.div>
           </div>
         </div>
       </div>
@@ -636,15 +598,15 @@ function WhyAltairgo() {
              <motion.img 
               whileHover={{ scale: 1.02, y: -4 }}
               transition={{ duration: 0.4 }}
-              src={journalKerala} 
-              alt="Kerala Backwaters Houseboat" 
+              src="https://images.unsplash.com/photo-1593693397690-362cb9666c89?q=80&w=1000&auto=format&fit=crop" 
+              alt="Kerala Backwaters Serene View" 
               style={{ width: '100%', height: 280, objectFit: 'cover', borderRadius: 32, boxShadow: 'var(--shadow-lg)', border: '1px solid var(--line)' }}
              />
              <motion.img 
               whileHover={{ scale: 1.02, y: -4 }}
               transition={{ duration: 0.4 }}
-              src={philJaipur} 
-              alt="Jaipur Heritage Patrika Gate" 
+              src="https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?q=80&w=1000&auto=format&fit=crop" 
+              alt="Desert Dunes Sunset" 
               style={{ width: '100%', height: 280, objectFit: 'cover', borderRadius: 32, boxShadow: 'var(--shadow-lg)', border: '1px solid var(--line)' }}
              />
           </div>
@@ -654,8 +616,8 @@ function WhyAltairgo() {
              <motion.img 
               whileHover={{ scale: 1.02, y: -4 }}
               transition={{ duration: 0.4 }}
-              src={philHimalayas} 
-              alt="Towering Himalayan Mountain Valley" 
+              src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1000&auto=format&fit=crop" 
+              alt="Cinematic Himalayan Peaks" 
               style={{ width: '100%', height: 460, objectFit: 'cover', borderRadius: 32, boxShadow: 'var(--shadow-lg)', border: '1px solid var(--line)' }}
              />
           </div>
@@ -966,18 +928,18 @@ const TOURS = [
   { id: '04', title: 'Goa Beaches', img: destGoa },
   { id: '05', title: 'Ladakh', img: 'https://images.unsplash.com/photo-1581793745862-99fde7fa73d2?q=80&w=600&auto=format&fit=crop' },
   { id: '06', title: 'Taj Mahal, Agra', img: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?q=80&w=600&auto=format&fit=crop' },
-  { id: '07', title: 'Varanasi Ghats', img: journalVaranasi },
+  { id: '07', title: 'Varanasi Ghats', img: 'https://images.unsplash.com/photo-1561359313-0639aad49ca6?q=80&w=600&auto=format&fit=crop' },
   { id: '08', title: 'Andaman Islands', img: 'https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?q=80&w=600&auto=format&fit=crop' },
-  { id: '09', title: 'Hampi Ruins, Karnataka', img: 'https://images.unsplash.com/photo-1600100397990-24b35e396b68?q=80&w=600&auto=format&fit=crop' },
-  { id: '10', title: 'Munnar Tea Hills, Kerala', img: 'https://images.unsplash.com/photo-1597079910443-60c43fc4f929?q=80&w=600&auto=format&fit=crop' },
-  { id: '11', title: 'Udaipur Palace, Rajasthan', img: 'https://images.unsplash.com/photo-1602643163983-ed0babb37159?q=80&w=600&auto=format&fit=crop' },
-  { id: '12', title: 'Meghalaya Living Bridges', img: journalMeghalaya },
-  { id: '13', title: 'Rishikesh Yoga Valley', img: 'https://images.unsplash.com/photo-1605649487212-47bdab064df7?q=80&w=600&auto=format&fit=crop' },
-  { id: '14', title: 'Darjeeling Tea Estates', img: 'https://images.unsplash.com/photo-1616388417621-e0c1f604ec22?q=80&w=600&auto=format&fit=crop' },
-  { id: '15', title: 'Jaisalmer Desert, Rajasthan', img: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?q=80&w=600&auto=format&fit=crop' },
-  { id: '16', title: 'Shimla Ridge, Himachal', img: journalHimachal },
-  { id: '17', title: 'Ooty Lake Hills, Tamil Nadu', img: 'https://images.unsplash.com/photo-1614082242765-7c98cbc0d303?q=80&w=600&auto=format&fit=crop' },
-  { id: '18', title: 'Gokarna Cliffs, Karnataka', img: 'https://images.unsplash.com/photo-1604866380628-98e3b5e43bc3?q=80&w=600&auto=format&fit=crop' }
+  { id: '09', title: 'Hampi Ruins, Karnataka', img: 'https://images.unsplash.com/photo-1620766165457-a8025baa82e0?q=80&w=600&auto=format&fit=crop' },
+  { id: '10', title: 'Munnar Tea Hills, Kerala', img: 'https://images.unsplash.com/photo-1585501869805-4c0ee107fb7b?q=80&w=600&auto=format&fit=crop' },
+  { id: '11', title: 'Udaipur Palace, Rajasthan', img: 'https://images.unsplash.com/photo-1615836245337-f839d7912089?q=80&w=600&auto=format&fit=crop' },
+  { id: '12', title: 'Meghalaya Living Bridges', img: 'https://images.unsplash.com/photo-1628122394723-5e91bd550085?q=80&w=600&auto=format&fit=crop' },
+  { id: '13', title: 'Rishikesh Yoga Valley', img: 'https://images.unsplash.com/photo-1610410766986-74fccebf2284?q=80&w=600&auto=format&fit=crop' },
+  { id: '14', title: 'Darjeeling Tea Estates', img: 'https://images.unsplash.com/photo-1544634076-a90160ddf44f?q=80&w=600&auto=format&fit=crop' },
+  { id: '15', title: 'Jaisalmer Desert, Rajasthan', img: 'https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?q=80&w=600&auto=format&fit=crop' },
+  { id: '16', title: 'Shimla Ridge, Himachal', img: 'https://images.unsplash.com/photo-1548115184-bc6544d06a58?q=80&w=600&auto=format&fit=crop' },
+  { id: '17', title: 'Ooty Lake Hills, Tamil Nadu', img: 'https://images.unsplash.com/photo-1563242273-0f496338e3e7?q=80&w=600&auto=format&fit=crop' },
+  { id: '18', title: 'Gokarna Cliffs, Karnataka', img: 'https://images.unsplash.com/photo-1510006851064-e6056cd0e3a8?q=80&w=600&auto=format&fit=crop' }
 ];
 
 function TourSelection() {
