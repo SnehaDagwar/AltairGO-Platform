@@ -1,78 +1,233 @@
-/* --- Cinematic Footer Styling --- */
+/* --- Premium Combined CTA & Footer Styles --- */
 .footer {
-  background: var(--page-bg);
+  background: var(--color-bg);
   padding: 0 24px 24px;
-  font-family: var(--font-body), 'Geist', system-ui, sans-serif;
-  color: #dfdfde;
+  font-family: var(--font-family), system-ui, sans-serif;
+  color: var(--color-text);
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
-.container {
+/* --- 1. Cinematic CTA Banner Card --- */
+.ctaBanner {
   max-width: 1400px;
-  margin: 0 auto;
+  margin: 0 auto 60px;
   position: relative;
-  background: #0f191d; /* Deep teal/dark cinematic base */
-  padding: 100px 72px 50px;
   border-radius: 28px;
   overflow: hidden;
-  box-shadow: 0 12px 40px -10px rgba(0, 0, 0, 0.25);
+  padding: 100px 48px;
+  box-shadow: 0 20px 48px -8px rgba(28, 43, 72, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.ctaBgImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.ctaScrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(20, 28, 45, 0.55) 0%, rgba(20, 28, 45, 0.75) 100%);
+  z-index: 1;
+}
+
+.ctaContent {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 880px;
+  width: 100%;
+}
+
+.ctaHeading {
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(32px, 4.5vw, 54px);
+  font-weight: 500;
+  color: #ffffff;
+  line-height: 1.12;
+  margin: 0 0 16px;
+  letter-spacing: -0.02em;
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+.ctaSubtext {
+  font-size: clamp(14px, 1.8vw, 16px);
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 640px;
+  margin: 0 0 40px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* --- Search Engine styled Pill Bar --- */
+.searchPillBar {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 999px;
+  padding: 8px 8px 8px 24px;
+  box-shadow: 0 16px 40px -12px rgba(20, 28, 45, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  width: 100%;
+  max-width: 840px;
+  margin: 0 auto;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.searchPillBar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 24px 48px -10px rgba(20, 28, 45, 0.35);
+}
+
+.pillItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  text-align: left;
+  position: relative;
+  padding-right: 12px;
+}
+
+.pillItem:not(:last-of-type)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 15%;
+  bottom: 15%;
+  width: 1px;
+  background: rgba(20, 28, 45, 0.12);
+}
+
+.pillIconWrapper {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(28, 43, 72, 0.06);
+  color: var(--midnight);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.pillTextCol {
+  display: flex;
+  flex-direction: column;
+}
+
+.pillLabel {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #141413;
+  line-height: 1.2;
+}
+
+.pillDesc {
+  font-size: 10.5px;
+  color: #72716d;
+}
+
+.pillButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: var(--midnight);
+  color: #ffffff;
+  border: none;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  flex-shrink: 0;
+}
+
+.pillButton:hover {
+  background: #17a1cf;
+  transform: scale(1.02);
+}
+
+/* --- 2. Spaced Off-White Footer Section --- */
+.footerSection {
+  max-width: 1400px;
+  margin: 0 auto;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  padding: 72px 72px 32px;
+  border-radius: 28px;
+  box-shadow: var(--shadow-card);
+  transition: background 0.3s ease, border-color 0.3s ease;
 }
 
 .footerGrid {
   display: grid;
-  grid-template-columns: 2fr repeat(4, 1fr);
-  gap: 40px;
+  grid-template-columns: 2fr repeat(3, 1.2fr) 2.5fr;
+  gap: 48px;
   margin-bottom: 64px;
-  position: relative;
-  z-index: 2;
 }
 
 .brandCol {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
 }
 
 .brandLogo {
   display: flex;
   align-items: center;
-  gap: 10px;
   margin-bottom: 20px;
+  cursor: pointer;
 }
 
 .footerLogo {
-  height: 36px;
+  height: 28px;
   width: auto;
-  filter: brightness(0) invert(1);
 }
 
 .brandDesc {
   font-size: 13.5px;
   line-height: 1.65;
-  max-width: 280px;
+  color: var(--color-text-muted);
   margin: 0 0 24px;
-  color: rgba(255, 255, 255, 0.7);
+  max-width: 240px;
 }
 
-.contactInfo {
+.socialRow {
   display: flex;
-  flex-direction: column;
   gap: 10px;
-  font-family: var(--mono), 'JetBrains Mono', ui-monospace, monospace;
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.45);
 }
 
-.email {
-  color: rgba(255, 255, 255, 0.7);
+.socialIcon {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
   text-decoration: none;
-  transition: color 0.2s ease;
 }
 
-.email:hover {
-  color: var(--a2);
-}
-
-.locations {
-  color: rgba(255, 255, 255, 0.45);
+.socialIcon:hover {
+  border-color: var(--midnight);
+  color: var(--midnight);
+  background: rgba(28, 43, 72, 0.04);
+  transform: translateY(-2px);
 }
 
 .linksCol {
@@ -82,49 +237,142 @@
 
 .colTitle {
   font-size: 11px;
-  font-family: var(--mono), 'JetBrains Mono', ui-monospace, monospace;
+  font-family: var(--font-mono), monospace;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.4);
-  margin-bottom: 18px;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+  margin-bottom: 20px;
+  font-weight: 600;
 }
 
 .linksList {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .footerLink {
   font-size: 13.5px;
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--color-text-muted);
   text-decoration: none;
   cursor: pointer;
   width: fit-content;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s ease;
 }
 
 .footerLink:hover {
-  color: var(--a2);
-  transform: translateX(4px);
-  opacity: 1;
+  color: #17a1cf;
+  transform: translateX(3px);
 }
 
+/* --- Right Column: Newsletter area --- */
+.newsletterCol {
+  display: flex;
+  flex-direction: column;
+}
+
+.newsletterTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 12px;
+}
+
+.newsletterSubtext {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+  margin-bottom: 20px;
+}
+
+.newsletterForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.mailIcon {
+  position: absolute;
+  left: 14px;
+  color: var(--color-text-subtle);
+  pointer-events: none;
+}
+
+.newsletterInput {
+  width: 100%;
+  padding: 12px 14px 12px 38px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+  background: var(--color-bg);
+  color: var(--color-text);
+  transition: border-color 0.2s ease;
+}
+
+.newsletterInput:focus {
+  border-color: var(--midnight);
+}
+
+.newsletterButton {
+  padding: 12px 20px;
+  background: var(--midnight);
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.newsletterButton:hover {
+  background: #17a1cf;
+}
+
+.newsletterSuccess {
+  background: oklch(95% 0.02 145);
+  border: 1.5px solid oklch(80% 0.1 145);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.successHeading {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: oklch(40% 0.1 145);
+}
+
+.successDesc {
+  font-size: 12px;
+  color: oklch(50% 0.08 145);
+}
+
+/* --- Bottom Section --- */
 .bottomSection {
-  padding-top: 32px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 24px;
+  border-top: 1px solid var(--color-border);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 11.5px;
-  font-family: var(--mono), 'JetBrains Mono', ui-monospace, monospace;
-  color: rgba(255, 255, 255, 0.4);
-  position: relative;
-  z-index: 2;
+  font-size: 11px;
+  font-family: var(--font-mono), monospace;
+  color: var(--color-text-muted);
 }
 
 .copyright {
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--color-text-muted);
 }
 
 .vCredit {
@@ -133,14 +381,63 @@
 }
 
 .vCredit span {
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--color-text-muted);
 }
 
 /* --- Responsive Adjustments --- */
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
   .footerGrid {
-    grid-template-columns: 1.5fr 1fr 1fr;
-    gap: 40px;
+    grid-template-columns: 1.8fr repeat(3, 1.1fr) 2fr;
+    gap: 32px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .ctaBanner {
+    padding: 80px 32px;
+  }
+
+  .searchPillBar {
+    border-radius: 28px;
+    padding: 16px;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .pillItem {
+    width: 100%;
+    padding: 0 0 12px;
+    border-right: none;
+  }
+
+  .pillItem:not(:last-of-type)::after {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: auto;
+    height: 1px;
+    width: auto;
+    background: rgba(20, 28, 45, 0.08);
+  }
+
+  .pillButton {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .footerSection {
+    padding: 48px 48px 24px;
+  }
+
+  .footerGrid {
+    grid-template-columns: 1.5fr repeat(3, 1fr);
+    gap: 28px;
+  }
+
+  .newsletterCol {
+    grid-column: span 4;
+    max-width: 480px;
+    margin-top: 24px;
   }
 }
 
@@ -149,20 +446,29 @@
     padding: 0 16px 16px;
   }
 
-  .container {
-    padding: 80px 24px 40px;
+  .ctaBanner {
+    border-radius: 20px;
+    margin-bottom: 40px;
+    padding: 64px 20px;
+  }
+
+  .footerSection {
+    padding: 40px 24px 24px;
     border-radius: 20px;
   }
 
   .footerGrid {
     grid-template-columns: 1fr 1fr;
     gap: 32px;
-    margin-bottom: 40px;
   }
 
   .brandCol {
     grid-column: span 2;
-    margin-bottom: 12px;
+  }
+
+  .newsletterCol {
+    grid-column: span 2;
+    max-width: 100%;
   }
 
   .bottomSection {
@@ -184,6 +490,10 @@
   }
 
   .brandCol {
+    grid-column: span 1;
+  }
+
+  .newsletterCol {
     grid-column: span 1;
   }
 }
