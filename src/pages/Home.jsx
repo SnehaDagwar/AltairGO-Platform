@@ -12,7 +12,7 @@ import philHimalayas from '../assets/phil-himalayas.png';
 import destGoa from '../assets/dest-goa.png';
 import destKashmir from '../assets/dest-kashmir.png';
 import destKashmir2 from '../assets/dest-kashmir-2.png';
-const destRajasthan = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=800&auto=format&fit=crop';
+import destRajasthan from '../assets/dest-rajasthan.png';
 import destKerala from '../assets/dest-kerala.png';
 import destHimachal from '../assets/dest-himachal.png';
 import destMeghalaya from '../assets/dest-meghalaya.png';
@@ -636,14 +636,14 @@ function WhyAltairgo() {
              <motion.img 
               whileHover={{ scale: 1.02, y: -4 }}
               transition={{ duration: 0.4 }}
-              src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?q=80&w=600&auto=format&fit=crop" 
+              src={journalKerala} 
               alt="Kerala Backwaters Houseboat" 
               style={{ width: '100%', height: 280, objectFit: 'cover', borderRadius: 32, boxShadow: 'var(--shadow-lg)', border: '1px solid var(--line)' }}
              />
              <motion.img 
               whileHover={{ scale: 1.02, y: -4 }}
               transition={{ duration: 0.4 }}
-              src="https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=600&auto=format&fit=crop" 
+              src={philJaipur} 
               alt="Jaipur Heritage Patrika Gate" 
               style={{ width: '100%', height: 280, objectFit: 'cover', borderRadius: 32, boxShadow: 'var(--shadow-lg)', border: '1px solid var(--line)' }}
              />
@@ -654,7 +654,7 @@ function WhyAltairgo() {
              <motion.img 
               whileHover={{ scale: 1.02, y: -4 }}
               transition={{ duration: 0.4 }}
-              src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=600&auto=format&fit=crop" 
+              src={philHimalayas} 
               alt="Towering Himalayan Mountain Valley" 
               style={{ width: '100%', height: 460, objectFit: 'cover', borderRadius: 32, boxShadow: 'var(--shadow-lg)', border: '1px solid var(--line)' }}
              />
@@ -868,7 +868,7 @@ const INSPIRATION_CARDS = [
     id: 'luxury',
     title: 'Luxury Retreats',
     subtitle: 'Palaces, wellness resorts, curated stays',
-    img: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800&auto=format&fit=crop',
+    img: philGoa,
     gridClass: ''
   }
 ];
@@ -971,11 +971,11 @@ const TOURS = [
   { id: '09', title: 'Hampi Ruins, Karnataka', img: 'https://images.unsplash.com/photo-1600100397990-24b35e396b68?q=80&w=600&auto=format&fit=crop' },
   { id: '10', title: 'Munnar Tea Hills, Kerala', img: 'https://images.unsplash.com/photo-1597079910443-60c43fc4f929?q=80&w=600&auto=format&fit=crop' },
   { id: '11', title: 'Udaipur Palace, Rajasthan', img: 'https://images.unsplash.com/photo-1602643163983-ed0babb37159?q=80&w=600&auto=format&fit=crop' },
-  { id: '12', title: 'Meghalaya Living Bridges', img: 'https://images.unsplash.com/photo-1628134785735-d2427b035a79?q=80&w=600&auto=format&fit=crop' },
+  { id: '12', title: 'Meghalaya Living Bridges', img: journalMeghalaya },
   { id: '13', title: 'Rishikesh Yoga Valley', img: 'https://images.unsplash.com/photo-1605649487212-47bdab064df7?q=80&w=600&auto=format&fit=crop' },
   { id: '14', title: 'Darjeeling Tea Estates', img: 'https://images.unsplash.com/photo-1616388417621-e0c1f604ec22?q=80&w=600&auto=format&fit=crop' },
   { id: '15', title: 'Jaisalmer Desert, Rajasthan', img: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?q=80&w=600&auto=format&fit=crop' },
-  { id: '16', title: 'Shimla Ridge, Himachal', img: 'https://images.unsplash.com/photo-1597075687490-8f673c6c17f6?q=80&w=600&auto=format&fit=crop' },
+  { id: '16', title: 'Shimla Ridge, Himachal', img: journalHimachal },
   { id: '17', title: 'Ooty Lake Hills, Tamil Nadu', img: 'https://images.unsplash.com/photo-1614082242765-7c98cbc0d303?q=80&w=600&auto=format&fit=crop' },
   { id: '18', title: 'Gokarna Cliffs, Karnataka', img: 'https://images.unsplash.com/photo-1604866380628-98e3b5e43bc3?q=80&w=600&auto=format&fit=crop' }
 ];
