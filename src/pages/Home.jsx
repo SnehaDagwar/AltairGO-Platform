@@ -1075,134 +1075,7 @@ function TourSelection() {
 
 
 
-/* ---------- Packages ---------- */
-const PACKAGES = [
-  {
-    name: 'Wanderer',
-    price: 0,
-    period: 'forever',
-    tag: 'Free',
-    desc: 'Everything you need to plan your first trip — no credit card, no catch.',
-    feats: ['3 AI itineraries / month', 'Day-by-day planner', 'Budget estimator', 'PDF export'],
-    primary: false,
-    cta: 'Start free'
-  },
-  {
-    name: 'Explorer',
-    price: 499,
-    period: 'per month',
-    tag: 'Most loved',
-    desc: 'Unlimited trips, real-time bookings, and the full AltairGO intelligence stack.',
-    feats: ['Unlimited itineraries', 'One-tap bookings', 'Live weather rerouting', 'Smart budget tracking', 'Priority AI queue', 'Trip sharing'],
-    primary: true,
-    cta: 'Choose Explorer'
-  }
-];
 
-function Packages() {
-  const navigate = useNavigate();
-  return (
-    <motion.section
-      initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.1 }} transition={{ duration: 0.6, ease: 'easeOut' }}
-      style={{ paddingBlock: '110px', borderTop: '1px solid var(--line)', background: 'var(--page-bg)' }}
-      className={styles.sectionContainer}
-    >
-      <div style={{ textAlign: 'center', marginBottom: 64 }}>
-        <div className={styles.mono} style={{ marginBottom: 16 }}>{'{ 05 · pricing }'}</div>
-        <h2 className={styles.sectionHeadline} style={{ fontSize: 52, lineHeight: 1.05, letterSpacing: '-0.03em', fontWeight: 500, margin: 0, maxWidth: 640, marginInline: 'auto' }}>
-          Simple plans, <span style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', color: 'var(--a3)' }}>no surprises.</span>
-        </h2>
-      </div>
-
-      <div className={styles.pkgGrid} style={{ gridTemplateColumns: 'repeat(2, 1fr)', gap: 20, maxWidth: 820, marginInline: 'auto' }}>
-        {PACKAGES.map((pkg) => (
-          <motion.div
-            key={pkg.name}
-            whileHover={{ y: -4 }}
-            transition={{ duration: 0.22 }}
-            style={{
-              borderRadius: 20,
-              padding: '40px 36px',
-              background: pkg.primary ? 'var(--ink)' : 'var(--card)',
-              color: pkg.primary ? 'var(--card)' : 'var(--ink)',
-              border: pkg.primary ? 'none' : '1px solid var(--line-warm)',
-              position: 'relative',
-              overflow: 'hidden'
-            }}
-          >
-            {/* background glow for primary */}
-            {pkg.primary && (
-              <svg width="100%" height="100%" viewBox="0 0 400 300" preserveAspectRatio="none"
-                style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-                <defs>
-                  <radialGradient id="pkgg" cx="0.5" cy="1" r="0.8">
-                    <stop offset="0" stopColor="var(--a3)" stopOpacity="0.22" />
-                    <stop offset="1" stopColor="transparent" stopOpacity="0" />
-                  </radialGradient>
-                </defs>
-                <rect width="400" height="300" fill="url(#pkgg)" />
-              </svg>
-            )}
-
-            <div style={{ position: 'relative' }}>
-              {/* tag */}
-              <span style={{
-                display: 'inline-block', marginBottom: 24,
-                padding: '4px 10px', borderRadius: 999, fontSize: 11, fontWeight: 500,
-                background: pkg.primary ? 'var(--a3)' : 'var(--a1)',
-                color: pkg.primary ? 'var(--card)' : 'var(--a3)',
-                fontFamily: 'var(--mono)'
-              }}>{pkg.tag}</span>
-
-              <div style={{ marginBottom: 24 }}>
-                <div style={{ fontSize: 22, fontWeight: 500, letterSpacing: '-0.01em', marginBottom: 4 }}>{pkg.name}</div>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-                  <span style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 44, lineHeight: 1, letterSpacing: '-0.02em' }}>
-                    {pkg.price === 0 ? 'Free' : `₹${pkg.price}`}
-                  </span>
-                  {pkg.price > 0 && (
-                    <span style={{ fontSize: 13, opacity: 0.55 }}>/ {pkg.period}</span>
-                  )}
-                </div>
-              </div>
-
-              <p style={{ fontSize: 13.5, lineHeight: 1.6, opacity: 0.7, marginBottom: 28, margin: '0 0 28px' }}>{pkg.desc}</p>
-
-              <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 32px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {pkg.feats.map((f) => (
-                  <li key={f} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13.5 }}>
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                      <circle cx="7" cy="7" r="6.5" stroke={pkg.primary ? 'var(--a2)' : 'var(--a3)'} strokeOpacity="0.5" />
-                      <path d="M4 7l2 2 4-4" stroke={pkg.primary ? 'var(--a2)' : 'var(--a3)'} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                    <span style={{ opacity: 0.85 }}>{f}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <button
-                onClick={() => navigate('/planner')}
-                style={{
-                  all: 'unset', cursor: 'pointer', width: '100%', textAlign: 'center',
-                  padding: '13px 20px', borderRadius: 12, fontSize: 14, fontWeight: 500,
-                  background: pkg.primary ? 'var(--a2)' : 'var(--ink)',
-                  color: 'var(--card)',
-                  boxSizing: 'border-box',
-                  transition: 'opacity 0.18s'
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.85'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.opacity = '1'; }}
-              >
-                {pkg.cta}
-              </button>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-    </motion.section>
-  );
-}
 
 /* ---------- Newsletter / Waitlist CTA ---------- */
 function NewsletterCTA() {
@@ -1350,7 +1223,6 @@ export default function Home() {
       <WhyAltairgo />
       <TourSelection />
       <FAQ />
-      <Packages />
       <TravelInspiration />
       <NewsletterCTA />
     </div>
