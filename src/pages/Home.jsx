@@ -12,7 +12,7 @@ import philHimalayas from '../assets/phil-himalayas.png';
 import destGoa from '../assets/dest-goa.png';
 import destKashmir from '../assets/dest-kashmir.png';
 import destKashmir2 from '../assets/dest-kashmir-2.png';
-import destRajasthan from '../assets/dest-rajasthan.png';
+const destRajasthan = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=800&auto=format&fit=crop';
 import destKerala from '../assets/dest-kerala.png';
 import destHimachal from '../assets/dest-himachal.png';
 import destMeghalaya from '../assets/dest-meghalaya.png';
@@ -847,28 +847,28 @@ const INSPIRATION_CARDS = [
     id: 'adventure',
     title: 'Adventure Trails',
     subtitle: 'Himalayan hikes, Ladakh roads, Meghalaya escapes',
-    img: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=800&auto=format&fit=crop',
+    img: journalHimachal,
     gridClass: styles.inspirationCardVertical
   },
   {
     id: 'beach',
     title: 'Beach Escapes',
     subtitle: 'Goa, Andaman, Gokarna, Kerala coastlines',
-    img: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?q=80&w=1200&auto=format&fit=crop',
+    img: destGoa,
     gridClass: styles.inspirationCardHorizontal
   },
   {
     id: 'cultural',
     title: 'Cultural Journeys',
     subtitle: 'Jaipur, Varanasi, Hampi, spiritual circuits',
-    img: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=600&auto=format&fit=crop',
+    img: journalVaranasi,
     gridClass: ''
   },
   {
     id: 'luxury',
     title: 'Luxury Retreats',
     subtitle: 'Palaces, wellness resorts, curated stays',
-    img: 'https://images.unsplash.com/photo-1582610116397-edb318620f90?q=80&w=600&auto=format&fit=crop',
+    img: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800&auto=format&fit=crop',
     gridClass: ''
   }
 ];
