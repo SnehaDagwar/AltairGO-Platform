@@ -22,6 +22,7 @@ import destMunnar from '../assets/munnar-tea.jpg';
 import destHampi from '../assets/hampi-ruins.jpg';
 import destAndaman from '../assets/andaman-islands.jpg';
 import destLadakh from '../assets/ladakh.jpg';
+import destJaipurHawa from '../assets/jaipur-hawa.jpg';
 import journalJaipur from '../assets/journal_jaipur.png';
 import journalKerala from '../assets/journal_kerala.png';
 import journalHimachal from '../assets/journal_himachal.png';
@@ -33,7 +34,9 @@ import destGokarna from '../assets/gokarna-cliffs.jpg';
 import destOoty from '../assets/ooty-lake.jpg';
 import destJaisalmer from '../assets/jaisalmer-desert.jpg';
 import destDarjeeling from '../assets/darjeeling-tea.jpg';
+import destDarjeelingNew from '../assets/darjeeling-tea-pickers.jpg';
 import destRishikesh from '../assets/rishikesh-yoga.jpg';
+import destKashmirNew from '../assets/kashmir.jpg';
 
 /* ---------- Tweakable defaults ---------- */
 const TWEAK_DEFAULTS = {
@@ -933,8 +936,8 @@ function TravelInspiration() {
 
 /* ---------- Explore India / Indian Destinations Carousel ---------- */
 const TOURS = [
-  { id: '01', title: 'Kashmir', img: destKashmir },
-  { id: '02', title: 'Jaipur, Rajasthan', img: destRajasthan },
+  { id: '01', title: 'Kashmir', img: destKashmirNew },
+  { id: '02', title: 'Jaipur, Rajasthan', img: destJaipurHawa },
   { id: '03', title: 'Kerala Backwaters', img: destKerala },
   { id: '04', title: 'Goa Beaches', img: destGoa },
   { id: '05', title: 'Ladakh', img: destLadakh },
@@ -946,7 +949,7 @@ const TOURS = [
   { id: '11', title: 'Udaipur Palace, Rajasthan', img: destUdaipur },
   { id: '12', title: 'Meghalaya Living Bridges', img: destMeghalayaNew },
   { id: '13', title: 'Rishikesh Yoga Valley', img: destRishikesh },
-  { id: '14', title: 'Darjeeling Tea Estates', img: destDarjeeling },
+  { id: '14', title: 'Darjeeling Tea Estates', img: destDarjeelingNew },
   { id: '15', title: 'Jaisalmer Desert, Rajasthan', img: destJaisalmer },
   { id: '16', title: 'Shimla Ridge, Himachal', img: destHimachal },
   { id: '17', title: 'Ooty Lake Hills, Tamil Nadu', img: destOoty },
