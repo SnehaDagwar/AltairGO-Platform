@@ -21,6 +21,7 @@ import destUdaipur from '../assets/udaipur-palace.jpg';
 import destMunnar from '../assets/munnar-tea.jpg';
 import destHampi from '../assets/hampi-ruins.jpg';
 import destAndaman from '../assets/andaman-islands.jpg';
+import destLadakh from '../assets/ladakh.jpg';
 import journalJaipur from '../assets/journal_jaipur.png';
 import journalKerala from '../assets/journal_kerala.png';
 import journalHimachal from '../assets/journal_himachal.png';
@@ -936,7 +937,7 @@ const TOURS = [
   { id: '02', title: 'Jaipur, Rajasthan', img: destRajasthan },
   { id: '03', title: 'Kerala Backwaters', img: destKerala },
   { id: '04', title: 'Goa Beaches', img: destGoa },
-  { id: '05', title: 'Ladakh', img: philHimalayas },
+  { id: '05', title: 'Ladakh', img: destLadakh },
   { id: '06', title: 'Taj Mahal, Agra', img: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?q=80&w=1000&auto=format&fit=crop' },
   { id: '07', title: 'Varanasi Ghats', img: journalVaranasi },
   { id: '08', title: 'Andaman Islands', img: destAndaman },
