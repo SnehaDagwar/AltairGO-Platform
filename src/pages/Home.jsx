@@ -16,6 +16,11 @@ import destRajasthan from '../assets/dest-rajasthan.png';
 import destKerala from '../assets/dest-kerala.png';
 import destHimachal from '../assets/dest-himachal.png';
 import destMeghalaya from '../assets/dest-meghalaya.png';
+import destMeghalayaNew from '../assets/meghalaya-bridges.jpg';
+import destUdaipur from '../assets/udaipur-palace.jpg';
+import destMunnar from '../assets/munnar-tea.jpg';
+import destHampi from '../assets/hampi-ruins.jpg';
+import destAndaman from '../assets/andaman-islands.jpg';
 import journalJaipur from '../assets/journal_jaipur.png';
 import journalKerala from '../assets/journal_kerala.png';
 import journalHimachal from '../assets/journal_himachal.png';
@@ -23,6 +28,11 @@ import journalMumbai from '../assets/journal_mumbai.png';
 import journalVaranasi from '../assets/journal_varanasi.png';
 import journalMeghalaya from '../assets/journal_meghalaya.png';
 import footerBg from '../assets/footer-bg.png';
+import destGokarna from '../assets/gokarna-cliffs.jpg';
+import destOoty from '../assets/ooty-lake.jpg';
+import destJaisalmer from '../assets/jaisalmer-desert.jpg';
+import destDarjeeling from '../assets/darjeeling-tea.jpg';
+import destRishikesh from '../assets/rishikesh-yoga.jpg';
 
 /* ---------- Tweakable defaults ---------- */
 const TWEAK_DEFAULTS = {
@@ -927,20 +937,101 @@ const TOURS = [
   { id: '03', title: 'Kerala Backwaters', img: destKerala },
   { id: '04', title: 'Goa Beaches', img: destGoa },
   { id: '05', title: 'Ladakh', img: philHimalayas },
-  { id: '06', title: 'Taj Mahal, Agra', img: 'https://images.unsplash.com/photo-1548013146-72479768bada?q=80&w=600&auto=format&fit=crop' },
+  { id: '06', title: 'Taj Mahal, Agra', img: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?q=80&w=1000&auto=format&fit=crop' },
   { id: '07', title: 'Varanasi Ghats', img: journalVaranasi },
-  { id: '08', title: 'Andaman Islands', img: 'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?q=80&w=600&auto=format&fit=crop' },
-  { id: '09', title: 'Hampi Ruins, Karnataka', img: 'https://images.unsplash.com/photo-1600100397986-c4eb1a473c9f?q=80&w=600&auto=format&fit=crop' },
-  { id: '10', title: 'Munnar Tea Hills, Kerala', img: philKerala },
-  { id: '11', title: 'Udaipur Palace, Rajasthan', img: 'https://images.unsplash.com/photo-1597223557154-721c1cecc4b0?q=80&w=600&auto=format&fit=crop' },
-  { id: '12', title: 'Meghalaya Living Bridges', img: destMeghalaya },
-  { id: '13', title: 'Rishikesh Yoga Valley', img: 'https://images.unsplash.com/photo-1545203144-7d21c33ea9ae?q=80&w=600&auto=format&fit=crop' },
-  { id: '14', title: 'Darjeeling Tea Estates', img: 'https://images.unsplash.com/photo-1554124484-91689b9d3b5b?q=80&w=600&auto=format&fit=crop' },
-  { id: '15', title: 'Jaisalmer Desert, Rajasthan', img: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?q=80&w=600&auto=format&fit=crop' },
+  { id: '08', title: 'Andaman Islands', img: destAndaman },
+  { id: '09', title: 'Hampi Ruins, Karnataka', img: destHampi },
+  { id: '10', title: 'Munnar Tea Hills, Kerala', img: destMunnar },
+  { id: '11', title: 'Udaipur Palace, Rajasthan', img: destUdaipur },
+  { id: '12', title: 'Meghalaya Living Bridges', img: destMeghalayaNew },
+  { id: '13', title: 'Rishikesh Yoga Valley', img: destRishikesh },
+  { id: '14', title: 'Darjeeling Tea Estates', img: destDarjeeling },
+  { id: '15', title: 'Jaisalmer Desert, Rajasthan', img: destJaisalmer },
   { id: '16', title: 'Shimla Ridge, Himachal', img: destHimachal },
-  { id: '17', title: 'Ooty Lake Hills, Tamil Nadu', img: 'https://images.unsplash.com/photo-1563242273-0f496338e3e7?q=80&w=600&auto=format&fit=crop' },
-  { id: '18', title: 'Gokarna Cliffs, Karnataka', img: philGoa }
+  { id: '17', title: 'Ooty Lake Hills, Tamil Nadu', img: destOoty },
+  { id: '18', title: 'Gokarna Cliffs, Karnataka', img: destGokarna }
 ];
+
+const shimmerAfter = `
+  @keyframes shimmer { 100% { transform: translateX(100%); } }
+`;
+
+/* ---------- Graceful Image Loader with Fallback & Lazy Loading ---------- */
+function CarouselImage({ src, alt }) {
+  const [error, setError] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+
+  if (error || !src) {
+    return (
+      <div style={{ 
+        width: '100%', 
+        height: '100%', 
+        background: 'linear-gradient(135deg, var(--midnight) 0%, var(--page-bg) 100%)',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+        overflow: 'hidden',
+        border: '1px solid var(--line)'
+      }}>
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'radial-gradient(circle at 50% 50%, rgba(23, 161, 207, 0.15) 0%, transparent 80%)',
+          opacity: 0.8
+        }} />
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--cerulean)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7, marginBottom: 12 }}>
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+          <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+          <line x1="12" y1="22.08" x2="12" y2="12" />
+        </svg>
+        <span style={{ fontSize: 11, color: 'var(--ink-muted)', fontFamily: 'var(--mono)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+          AltairGO Journey
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ width: '100%', height: '100%', position: 'relative', background: 'var(--card-bg, #f0eee6)' }}>
+      <style>{shimmerAfter}</style>
+      {!loaded && (
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          background: '#f0eee6',
+          overflow: 'hidden'
+        }}>
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            transform: 'translateX(-100%)',
+            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)',
+            animation: 'shimmer 1.5s infinite',
+          }} />
+        </div>
+      )}
+      <img 
+        src={src} 
+        alt={alt} 
+        loading="lazy" 
+        onLoad={() => setLoaded(true)}
+        onError={() => setError(true)} 
+        style={{ 
+          width: '100%', 
+          height: '100%', 
+          objectFit: 'cover',
+          opacity: loaded ? 1 : 0,
+          transition: 'opacity 0.4s ease-in-out'
+        }} 
+      />
+    </div>
+  );
+}
 
 function TourSelection() {
   const [active, setActive] = useState(3);
@@ -987,7 +1078,7 @@ function TourSelection() {
                 border: '1px solid rgba(255,255,255,0.1)'
               }}
             >
-              <img src={tour.img} alt={tour.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <CarouselImage src={tour.img} alt={tour.title} />
               
               <div style={{ position: 'absolute', top: 0, left: 0, right: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 100%)', padding: '24px 16px 40px', textAlign: 'center' }}>
                 <h3 style={{ color: '#fff', margin: 0, fontSize: 18, fontWeight: 500, letterSpacing: '0.01em', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>{tour.title}</h3>
