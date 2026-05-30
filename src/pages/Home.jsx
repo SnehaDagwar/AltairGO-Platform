@@ -598,7 +598,7 @@ function WhyAltairgo() {
              <motion.img 
               whileHover={{ scale: 1.02, y: -4 }}
               transition={{ duration: 0.4 }}
-              src="https://images.unsplash.com/photo-1593693397690-362cb9666c89?q=80&w=1000&auto=format&fit=crop" 
+              src={journalKerala} 
               alt="Kerala Backwaters Serene View" 
               style={{ width: '100%', height: 280, objectFit: 'cover', borderRadius: 32, boxShadow: 'var(--shadow-lg)', border: '1px solid var(--line)' }}
              />
@@ -926,20 +926,20 @@ const TOURS = [
   { id: '02', title: 'Jaipur, Rajasthan', img: destRajasthan },
   { id: '03', title: 'Kerala Backwaters', img: destKerala },
   { id: '04', title: 'Goa Beaches', img: destGoa },
-  { id: '05', title: 'Ladakh', img: 'https://images.unsplash.com/photo-1581793745862-99fde7fa73d2?q=80&w=600&auto=format&fit=crop' },
-  { id: '06', title: 'Taj Mahal, Agra', img: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?q=80&w=600&auto=format&fit=crop' },
-  { id: '07', title: 'Varanasi Ghats', img: 'https://images.unsplash.com/photo-1561359313-0639aad49ca6?q=80&w=600&auto=format&fit=crop' },
-  { id: '08', title: 'Andaman Islands', img: 'https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?q=80&w=600&auto=format&fit=crop' },
-  { id: '09', title: 'Hampi Ruins, Karnataka', img: 'https://images.unsplash.com/photo-1620766165457-a8025baa82e0?q=80&w=600&auto=format&fit=crop' },
-  { id: '10', title: 'Munnar Tea Hills, Kerala', img: 'https://images.unsplash.com/photo-1585501869805-4c0ee107fb7b?q=80&w=600&auto=format&fit=crop' },
-  { id: '11', title: 'Udaipur Palace, Rajasthan', img: 'https://images.unsplash.com/photo-1615836245337-f839d7912089?q=80&w=600&auto=format&fit=crop' },
-  { id: '12', title: 'Meghalaya Living Bridges', img: 'https://images.unsplash.com/photo-1628122394723-5e91bd550085?q=80&w=600&auto=format&fit=crop' },
-  { id: '13', title: 'Rishikesh Yoga Valley', img: 'https://images.unsplash.com/photo-1610410766986-74fccebf2284?q=80&w=600&auto=format&fit=crop' },
-  { id: '14', title: 'Darjeeling Tea Estates', img: 'https://images.unsplash.com/photo-1544634076-a90160ddf44f?q=80&w=600&auto=format&fit=crop' },
-  { id: '15', title: 'Jaisalmer Desert, Rajasthan', img: 'https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?q=80&w=600&auto=format&fit=crop' },
-  { id: '16', title: 'Shimla Ridge, Himachal', img: 'https://images.unsplash.com/photo-1548115184-bc6544d06a58?q=80&w=600&auto=format&fit=crop' },
+  { id: '05', title: 'Ladakh', img: philHimalayas },
+  { id: '06', title: 'Taj Mahal, Agra', img: 'https://images.unsplash.com/photo-1548013146-72479768bada?q=80&w=600&auto=format&fit=crop' },
+  { id: '07', title: 'Varanasi Ghats', img: journalVaranasi },
+  { id: '08', title: 'Andaman Islands', img: 'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?q=80&w=600&auto=format&fit=crop' },
+  { id: '09', title: 'Hampi Ruins, Karnataka', img: 'https://images.unsplash.com/photo-1600100397986-c4eb1a473c9f?q=80&w=600&auto=format&fit=crop' },
+  { id: '10', title: 'Munnar Tea Hills, Kerala', img: philKerala },
+  { id: '11', title: 'Udaipur Palace, Rajasthan', img: 'https://images.unsplash.com/photo-1597223557154-721c1cecc4b0?q=80&w=600&auto=format&fit=crop' },
+  { id: '12', title: 'Meghalaya Living Bridges', img: destMeghalaya },
+  { id: '13', title: 'Rishikesh Yoga Valley', img: 'https://images.unsplash.com/photo-1545203144-7d21c33ea9ae?q=80&w=600&auto=format&fit=crop' },
+  { id: '14', title: 'Darjeeling Tea Estates', img: 'https://images.unsplash.com/photo-1554124484-91689b9d3b5b?q=80&w=600&auto=format&fit=crop' },
+  { id: '15', title: 'Jaisalmer Desert, Rajasthan', img: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?q=80&w=600&auto=format&fit=crop' },
+  { id: '16', title: 'Shimla Ridge, Himachal', img: destHimachal },
   { id: '17', title: 'Ooty Lake Hills, Tamil Nadu', img: 'https://images.unsplash.com/photo-1563242273-0f496338e3e7?q=80&w=600&auto=format&fit=crop' },
-  { id: '18', title: 'Gokarna Cliffs, Karnataka', img: 'https://images.unsplash.com/photo-1510006851064-e6056cd0e3a8?q=80&w=600&auto=format&fit=crop' }
+  { id: '18', title: 'Gokarna Cliffs, Karnataka', img: philGoa }
 ];
 
 function TourSelection() {
