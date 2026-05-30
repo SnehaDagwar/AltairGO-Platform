@@ -33,6 +33,7 @@ import footerBg from '../assets/footer-bg.png';
 import destGokarna from '../assets/gokarna-cliffs.jpg';
 import destOoty from '../assets/ooty-lake.jpg';
 import destJaisalmer from '../assets/jaisalmer-desert.jpg';
+import destJaisalmerNew from '../assets/jaisalmer-desert-camel.jpg';
 import destDarjeeling from '../assets/darjeeling-tea.jpg';
 import destDarjeelingNew from '../assets/darjeeling-tea-pickers.jpg';
 import destRishikesh from '../assets/rishikesh-yoga.jpg';
@@ -950,7 +951,7 @@ const TOURS = [
   { id: '12', title: 'Meghalaya Living Bridges', img: destMeghalayaNew },
   { id: '13', title: 'Rishikesh Yoga Valley', img: destRishikesh },
   { id: '14', title: 'Darjeeling Tea Estates', img: destDarjeelingNew },
-  { id: '15', title: 'Jaisalmer Desert, Rajasthan', img: destJaisalmer },
+  { id: '15', title: 'Jaisalmer Desert, Rajasthan', img: destJaisalmerNew },
   { id: '16', title: 'Shimla Ridge, Himachal', img: destHimachal },
   { id: '17', title: 'Ooty Lake Hills, Tamil Nadu', img: destOoty },
   { id: '18', title: 'Gokarna Cliffs, Karnataka', img: destGokarna }
