@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import styles from './Home.module.css';
 import logoUrl from '../assets/logo.png';
-import heroBg from '../assets/hero-palace-sunrise.jpg';
+import heroBg from '../assets/hero-page-image.png';
 import philJaipur from '../assets/phil-jaipur.png';
 import philKerala from '../assets/phil-kerala.png';
 import philGoa from '../assets/phil-goa.png';
@@ -183,7 +183,7 @@ function ItineraryCard({ variant, onCycle }) {
           )}
         </div>
 
-        <Button variant="teal" style={{ marginTop: '16px' }} onClick={onCycle}>
+        <Button variant="primary" style={{ marginTop: '16px' }} onClick={onCycle}>
           <I.spark /> Refine Itinerary
         </Button>
       </div>
@@ -285,7 +285,7 @@ function Hero({ onPlan }) {
             </div>
             
             <Button 
-              variant="gradient" 
+              variant="primary" 
               onClick={onPlan}
             >
               Booking Now <I.arrow />

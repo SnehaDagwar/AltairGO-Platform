@@ -27,12 +27,6 @@ export default function Button({
     variantClass = 'btn-glass';
   } else if (variant === 'ghost') {
     variantClass = 'btn-glass';
-  } else if (variant === 'teal') {
-    variantClass = 'btn-teal';
-  } else if (variant === 'gradient') {
-    variantClass = 'btn-gradient';
-  } else if (variant === 'lavender') {
-    variantClass = 'btn-lavender';
   } else if (variant === 'danger') {
     variantClass = 'btn-danger';
   }
