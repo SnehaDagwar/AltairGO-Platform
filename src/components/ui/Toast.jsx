@@ -3,10 +3,10 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
 
 const borderColors = {
-  success: 'var(--color-primary)',
-  error:   'var(--color-error)',
-  warning: 'var(--color-warning)',
-  info:    'var(--color-info)',
+  success: 'oklch(40% 0.1 150)',
+  error:   'var(--color-peach)',
+  warning: 'var(--color-cream)',
+  info:    'var(--color-ice)',
 };
 
 const ToastContext = createContext(null);
@@ -69,10 +69,13 @@ function ToastContainer({ toasts, onDismiss }) {
             exit={{ opacity: 0, x: 80, scale: 0.95 }}
             transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }} /* transition-fade ease */
             style={{
-              background: 'var(--color-bg-soft)', /* Surface bg-soft (#F6F1E6) */
-              borderLeft: `4px solid ${borderColors[t.variant] || 'var(--color-primary)'}`,
-              boxShadow: 'var(--shadow-lg)', /* shadow-lg for floating overlays */
-              borderRadius: 'var(--radius-xl)', /* Radius: 16px radius-xl */
+              background: 'var(--glass-bg)',
+              backdropFilter: 'var(--glass-blur)',
+              WebkitBackdropFilter: 'var(--glass-blur)',
+              border: '1px solid var(--glass-border)',
+              borderLeft: `4px solid ${borderColors[t.variant] || 'var(--color-black)'}`,
+              boxShadow: 'var(--shadow-lg)',
+              borderRadius: 'var(--radius-md)',
               padding: '16px 20px',
               maxWidth: '360px',
               display: 'flex',
@@ -84,8 +87,8 @@ function ToastContainer({ toasts, onDismiss }) {
           >
             <span style={{ 
               flex: 1, 
-              fontSize: '14px', /* StyreneB 14px */
-              color: 'var(--color-text-primary)', 
+              fontSize: '1rem',
+              color: 'var(--fg)', 
               fontFamily: 'var(--font-body)',
               fontWeight: '400',
               lineHeight: 1.5 
@@ -99,7 +102,7 @@ function ToastContainer({ toasts, onDismiss }) {
                 background: 'none',
                 border: 'none',
                 cursor: 'pointer',
-                color: 'var(--color-text-secondary)',
+                color: 'var(--muted)',
                 padding: '4px',
                 borderRadius: 'var(--radius-sm)',
                 display: 'flex',
@@ -107,20 +110,20 @@ function ToastContainer({ toasts, onDismiss }) {
                 justifyContent: 'center',
                 flexShrink: 0,
                 outline: 'none',
-                transition: 'color var(--duration-fast) var(--ease-standard), background var(--duration-fast) var(--ease-standard)'
+                transition: 'color var(--t-hover), background var(--t-hover)'
               }}
               onFocus={(e) => {
-                e.target.style.outline = '2px solid var(--color-primary)';
+                e.target.style.outline = '2px solid var(--color-black)';
               }}
               onBlur={(e) => {
                 e.target.style.outline = 'none';
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.color = 'var(--color-text-primary)';
-                e.currentTarget.style.background = 'var(--color-bg-surface)';
+                e.currentTarget.style.color = 'var(--fg)';
+                e.currentTarget.style.background = 'var(--surface)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.color = 'var(--color-text-secondary)';
+                e.currentTarget.style.color = 'var(--muted)';
                 e.currentTarget.style.background = 'none';
               }}
             >

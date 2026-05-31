@@ -27,17 +27,17 @@ const BlogDetails = () => {
   if (!blog || fetchError) {
     return (
       <div style={{ padding: '10rem 2rem', textAlign: 'center' }}>
-        <h2 style={{ marginBottom: '1rem', color: 'var(--primary)' }}>
+        <h2 style={{ marginBottom: '1rem', color: 'var(--color-teal)' }}>
           {fetchError ? 'Could not load blog post' : 'Blog post not found'}
         </h2>
         <Link
           to="/blogs"
           style={{
             display: 'inline-block',
-            background: 'var(--accent)',
+            background: 'var(--color-sand)',
             color: '#fff',
             padding: '0.75rem 2rem',
-            borderRadius: 'var(--radius-full)',
+            borderRadius: 'var(--radius-pill)',
             textDecoration: 'none',
             fontWeight: 600,
           }}

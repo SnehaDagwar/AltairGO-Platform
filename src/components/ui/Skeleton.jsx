@@ -24,7 +24,7 @@ export default function Skeleton({
     width,
     height: finalHeight,
     borderRadius,
-    background: 'var(--color-bg-surface)', /* bg-surface: #D6C4AB */
+    background: 'var(--surface)', 
     position: 'relative',
     overflow: 'hidden',
     boxSizing: 'border-box',

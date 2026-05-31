@@ -202,7 +202,7 @@ const TripPlannerPage = () => {
   ];
 
   return (
-    <div style={{ paddingTop: '72px', minHeight: '100vh', background: 'var(--color-bg-main)', boxSizing: 'border-box' }}>
+    <div style={{ paddingTop: '72px', minHeight: '100vh', background: 'var(--bg)', boxSizing: 'border-box' }}>
       <div style={{ maxWidth: '800px', margin: '0 auto', padding: '48px 24px', boxSizing: 'border-box' }}>
 
         {/* Progress Steps */}
@@ -215,18 +215,18 @@ const TripPlannerPage = () => {
               >
                 <div style={{
                   width: '36px', height: '36px', borderRadius: 'var(--radius-pill)',
-                  background: step >= s.num ? 'var(--color-primary)' : 'var(--color-bg-surface)',
-                  color: 'var(--color-text-primary)', /* Locked active stepper contrast is dark #2E2E2E */
+                  background: step >= s.num ? 'var(--color-teal)' : 'var(--surface)',
+                  color: 'var(--fg)', /* Locked active stepper contrast is dark #2E2E2E */
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontWeight: 500, fontSize: '14px', transition: 'all var(--duration-normal) var(--ease-standard)',
                   fontFamily: 'var(--font-body)',
                 }}>
                   {step > s.num ? <Check size={16} strokeWidth={2.5} /> : s.num}
                 </div>
-                <span style={{ fontSize: '12px', fontWeight: 500, fontFamily: 'var(--font-body)', color: step >= s.num ? 'var(--color-text-primary)' : 'var(--color-text-secondary)', whiteSpace: 'nowrap' }}>{s.label}</span>
+                <span style={{ fontSize: '12px', fontWeight: 500, fontFamily: 'var(--font-body)', color: step >= s.num ? 'var(--fg)' : 'var(--muted)', whiteSpace: 'nowrap' }}>{s.label}</span>
               </div>
               {i < STEPS.length - 1 && (
-                <div style={{ flex: 1, height: '2px', background: step > s.num ? 'var(--color-primary)' : 'var(--color-border-strong)', margin: '0 8px', marginBottom: '22px', transition: 'background var(--duration-normal)' }} />
+                <div style={{ flex: 1, height: '2px', background: step > s.num ? 'var(--color-teal)' : 'var(--border)', margin: '0 8px', marginBottom: '22px', transition: 'background var(--duration-normal)' }} />
               )}
             </React.Fragment>
           ))}
@@ -238,11 +238,11 @@ const TripPlannerPage = () => {
           {/* STEP 1: Where */}
           {step === 1 && (
             <div>
-              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '32px', fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: '8px', lineHeight: 1.2 }}>Where do you want to go?</h2>
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: '16px', color: 'var(--color-text-secondary)', marginBottom: '32px' }}>Type a destination or let AI suggest the perfect place for you</p>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '32px', fontWeight: 600, color: 'var(--fg)', marginBottom: '8px', lineHeight: 1.2 }}>Where do you want to go?</h2>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '16px', color: 'var(--muted)', marginBottom: '32px' }}>Type a destination or let AI suggest the perfect place for you</p>
 
               <div style={{ position: 'relative', marginBottom: '16px', width: '100%' }}>
-                <Search size={18} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-secondary)', pointerEvents: 'none', zIndex: 10 }} />
+                <Search size={18} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--muted)', pointerEvents: 'none', zIndex: 10 }} />
                 <input
                   type="text"
                   placeholder="Search — Goa, Manali, Rajasthan..."
@@ -258,8 +258,8 @@ const TripPlannerPage = () => {
                     fontFamily: 'var(--font-body)', 
                     fontSize: '16px', 
                     fontWeight: '400',
-                    background: 'var(--color-bg-surface)',
-                    color: 'var(--color-text-primary)',
+                    background: 'var(--surface)',
+                    color: 'var(--fg)',
                     outline: 'none',
                     boxSizing: 'border-box'
                   }}
@@ -269,23 +269,23 @@ const TripPlannerPage = () => {
               </div>
 
               {searchResults.length > 0 && (
-                <div style={{ border: '1px solid var(--color-border-subtle)', borderRadius: 'var(--radius-sm)', overflow: 'hidden', marginBottom: '24px', background: 'var(--color-bg-soft)' }}>
+                <div style={{ border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', overflow: 'hidden', marginBottom: '24px', background: 'var(--glass-bg)' }}>
                   {searchResults.map(dest => (
                     <div
                       key={dest.id}
                       onClick={() => addDest(dest)}
-                      style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', cursor: 'pointer', borderBottom: '1px solid var(--color-border-subtle)', transition: 'background var(--duration-fast)' }}
-                      onMouseEnter={(e) => e.currentTarget.style.background = 'var(--color-bg-surface)'}
+                      style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', cursor: 'pointer', borderBottom: '1px solid var(--border)', transition: 'background var(--duration-fast)' }}
+                      onMouseEnter={(e) => e.currentTarget.style.background = 'var(--surface)'}
                       onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                     >
-                      <div style={{ width: '32px', height: '32px', borderRadius: 'var(--radius-sm)', background: 'var(--color-bg-surface)', display: 'flex', alignItems: 'center', justifycontent: 'center', flexShrink: 0 }}>
-                        <MapPin size={16} color="var(--color-text-secondary)" style={{ margin: 'auto' }} />
+                      <div style={{ width: '32px', height: '32px', borderRadius: 'var(--radius-sm)', background: 'var(--surface)', display: 'flex', alignItems: 'center', justifycontent: 'center', flexShrink: 0 }}>
+                        <MapPin size={16} color="var(--muted)" style={{ margin: 'auto' }} />
                       </div>
                       <div style={{ fontFamily: 'var(--font-body)' }}>
-                        <div style={{ fontWeight: 500, color: 'var(--color-text-primary)', fontSize: '15px' }}>{dest.name}</div>
-                        <div style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>{dest.state_name || dest.country_name || ''}</div>
+                        <div style={{ fontWeight: 500, color: 'var(--fg)', fontSize: '15px' }}>{dest.name}</div>
+                        <div style={{ fontSize: '12px', color: 'var(--muted)' }}>{dest.state_name || dest.country_name || ''}</div>
                       </div>
-                      <Plus size={16} style={{ marginLeft: 'auto', color: 'var(--color-text-secondary)' }} />
+                      <Plus size={16} style={{ marginLeft: 'auto', color: 'var(--muted)' }} />
                     </div>
                   ))}
                 </div>
@@ -296,19 +296,19 @@ const TripPlannerPage = () => {
                 size="sm"
                 loading={recommendLoading}
                 onClick={handleRecommend}
-                style={{ marginBottom: '24px', border: '1px solid var(--color-border-strong)', background: 'var(--color-bg-surface)' }}
+                style={{ marginBottom: '24px', border: '1px solid var(--border)', background: 'var(--surface)' }}
               >
                 <Sparkles size={16} /> {recommendLoading ? 'Loading Suggestions...' : 'Recommend me destinations!'}
               </Button>
 
               {selectedDests.length > 0 && (
                 <div style={{ marginBottom: '16px' }}>
-                  <div style={{ fontWeight: 500, color: 'var(--color-text-primary)', marginBottom: '8px', fontSize: '14px', fontFamily: 'var(--font-body)' }}>Selected destinations:</div>
+                  <div style={{ fontWeight: 500, color: 'var(--fg)', marginBottom: '8px', fontSize: '14px', fontFamily: 'var(--font-body)' }}>Selected destinations:</div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                     {selectedDests.map(d => (
-                      <div key={d.id || d.name} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--color-primary)', color: 'var(--color-text-primary)', padding: '6px 14px', borderRadius: 'var(--radius-pill)', fontSize: '14px', fontWeight: 500, fontFamily: 'var(--font-body)' }}>
+                      <div key={d.id || d.name} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--color-teal)', color: 'var(--fg)', padding: '6px 14px', borderRadius: 'var(--radius-pill)', fontSize: '14px', fontWeight: 500, fontFamily: 'var(--font-body)' }}>
                         <MapPin size={12} /> {d.name}
-                        <button onClick={() => removeDest(d.id || d.name)} style={{ background: 'none', border: 'none', color: 'var(--color-text-primary)', cursor: 'pointer', display: 'flex', padding: 0 }}>
+                        <button onClick={() => removeDest(d.id || d.name)} style={{ background: 'none', border: 'none', color: 'var(--fg)', cursor: 'pointer', display: 'flex', padding: 0 }}>
                           <X size={14} />
                         </button>
                       </div>
@@ -322,11 +322,11 @@ const TripPlannerPage = () => {
           {/* STEP 2: When */}
           {step === 2 && (
             <div>
-              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '32px', fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: '8px', lineHeight: 1.2 }}>When are you going?</h2>
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: '16px', color: 'var(--color-text-secondary)', marginBottom: '32px' }}>Pick your travel dates and how long you'll be away</p>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '32px', fontWeight: 600, color: 'var(--fg)', marginBottom: '8px', lineHeight: 1.2 }}>When are you going?</h2>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '16px', color: 'var(--muted)', marginBottom: '32px' }}>Pick your travel dates and how long you'll be away</p>
 
               <div style={{ marginBottom: '24px' }}>
-                <label style={{ display: 'block', fontWeight: 500, color: 'var(--color-text-primary)', marginBottom: '8px', fontSize: '14px', fontFamily: 'var(--font-body)' }}>Start Date (optional)</label>
+                <label style={{ display: 'block', fontWeight: 500, color: 'var(--fg)', marginBottom: '8px', fontSize: '14px', fontFamily: 'var(--font-body)' }}>Start Date (optional)</label>
                 <input
                   type="date"
                   value={startDate}
@@ -341,8 +341,8 @@ const TripPlannerPage = () => {
                     fontFamily: 'var(--font-body)', 
                     fontSize: '16px', 
                     fontWeight: '400',
-                    background: 'var(--color-bg-surface)',
-                    color: 'var(--color-text-primary)',
+                    background: 'var(--surface)',
+                    color: 'var(--fg)',
                     outline: 'none',
                     boxSizing: 'border-box'
                   }}
@@ -350,8 +350,8 @@ const TripPlannerPage = () => {
               </div>
 
               <div style={{ marginBottom: '32px' }}>
-                <label style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 500, color: 'var(--color-text-primary)', marginBottom: '16px', fontSize: '14px', fontFamily: 'var(--font-body)' }}>
-                  Duration <span style={{ color: 'var(--color-active)', fontSize: '18px', fontWeight: 600 }}>{duration} days</span>
+                <label style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 500, color: 'var(--fg)', marginBottom: '16px', fontSize: '14px', fontFamily: 'var(--font-body)' }}>
+                  Duration <span style={{ color: 'var(--color-teal)', fontSize: '18px', fontWeight: 600 }}>{duration} days</span>
                 </label>
                 <input
                   type="range"
@@ -359,9 +359,9 @@ const TripPlannerPage = () => {
                   max={21}
                   value={duration}
                   onChange={(e) => setDuration(Number(e.target.value))}
-                  style={{ width: '100%', accentColor: 'var(--color-primary)' }}
+                  style={{ width: '100%', accentColor: 'var(--color-teal)' }}
                 />
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'var(--color-text-secondary)', marginTop: '8px', fontFamily: 'var(--font-body)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'var(--muted)', marginTop: '8px', fontFamily: 'var(--font-body)' }}>
                   <span>1 day</span><span>21 days</span>
                 </div>
               </div>
@@ -375,8 +375,8 @@ const TripPlannerPage = () => {
                       padding: '12px', 
                       border: 'none', 
                       borderRadius: 'var(--radius-lg)', 
-                      background: duration === d ? 'var(--color-primary)' : 'var(--color-bg-surface)', 
-                      color: 'var(--color-text-primary)', 
+                      background: duration === d ? 'var(--color-teal)' : 'var(--surface)', 
+                      color: 'var(--fg)', 
                       fontFamily: 'var(--font-body)', 
                       fontWeight: 500, 
                       cursor: 'pointer', 
@@ -394,21 +394,21 @@ const TripPlannerPage = () => {
           {/* STEP 3: Budget */}
           {step === 3 && (
             <div>
-              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '32px', fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: '8px', lineHeight: 1.2 }}>Budget & Style</h2>
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: '16px', color: 'var(--color-text-secondary)', marginBottom: '32px' }}>Set your total budget and travel style preferences</p>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '32px', fontWeight: 600, color: 'var(--fg)', marginBottom: '8px', lineHeight: 1.2 }}>Budget & Style</h2>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '16px', color: 'var(--muted)', marginBottom: '32px' }}>Set your total budget and travel style preferences</p>
 
               <div style={{ marginBottom: '32px' }}>
-                <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 500, color: 'var(--color-text-primary)', marginBottom: '12px', fontSize: '14px', fontFamily: 'var(--font-body)' }}>
+                <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 500, color: 'var(--fg)', marginBottom: '12px', fontSize: '14px', fontFamily: 'var(--font-body)' }}>
                   <span>Total Budget</span>
-                  <span style={{ fontSize: '18px', fontWeight: 600, color: 'var(--color-text-primary)' }}>
+                  <span style={{ fontSize: '18px', fontWeight: 600, color: 'var(--fg)' }}>
                     ₹{Number(budget).toLocaleString('en-IN')}
-                    <span style={{ fontSize: '12px', marginLeft: '8px', color: 'var(--color-text-primary)', background: 'var(--color-primary)', padding: '2px 8px', borderRadius: 'var(--radius-pill)', fontWeight: 500 }}>
+                    <span style={{ fontSize: '12px', marginLeft: '8px', color: 'var(--fg)', background: 'var(--color-teal)', padding: '2px 8px', borderRadius: 'var(--radius-pill)', fontWeight: 500 }}>
                       {getBudgetLabel(budget, duration, travelers)}
                     </span>
                   </span>
                 </label>
                 <div style={{ position: 'relative', marginBottom: '12px' }}>
-                  <span style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', fontWeight: 600, color: 'var(--color-text-secondary)' }}>₹</span>
+                  <span style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', fontWeight: 600, color: 'var(--muted)' }}>₹</span>
                   <input
                     type="number"
                     value={budget}
@@ -423,8 +423,8 @@ const TripPlannerPage = () => {
                       fontFamily: 'var(--font-body)', 
                       fontSize: '16px', 
                       outline: 'none',
-                      background: 'var(--color-bg-surface)',
-                      color: 'var(--color-text-primary)',
+                      background: 'var(--surface)',
+                      color: 'var(--fg)',
                       boxSizing: 'border-box'
                     }}
                   />
@@ -436,22 +436,22 @@ const TripPlannerPage = () => {
                   step={1000}
                   value={budget}
                   onChange={(e) => setBudget(Number(e.target.value))}
-                  style={{ width: '100%', accentColor: 'var(--color-primary)' }}
+                  style={{ width: '100%', accentColor: 'var(--color-teal)' }}
                 />
 
                 {/* Live budget hint */}
                 {budgetHint && (
                   <div style={{
                     marginTop: '16px', padding: '16px 20px', borderRadius: 'var(--radius-sm)',
-                    background: 'var(--color-bg-surface)',
-                    border: '1px solid var(--color-border-subtle)',
+                    background: 'var(--surface)',
+                    border: '1px solid var(--border)',
                     display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px',
                   }}>
                     <div style={{ fontFamily: 'var(--font-body)' }}>
-                      <span style={{ fontWeight: 600, fontSize: '18px', color: 'var(--color-text-primary)' }}>
+                      <span style={{ fontWeight: 600, fontSize: '18px', color: 'var(--fg)' }}>
                         ₹{budgetHint.daily.toLocaleString('en-IN')}
                       </span>
-                      <span style={{ color: 'var(--color-text-secondary)', fontSize: '14px' }}> per person, per day</span>
+                      <span style={{ color: 'var(--muted)', fontSize: '14px' }}> per person, per day</span>
                     </div>
                     <Badge variant="accent" size="sm">
                       {budgetHint.tierLabel} Travel
@@ -461,7 +461,7 @@ const TripPlannerPage = () => {
               </div>
 
               <div style={{ marginBottom: '32px' }}>
-                <label style={{ display: 'block', fontWeight: 500, color: 'var(--color-text-primary)', marginBottom: '12px', fontSize: '14px', fontFamily: 'var(--font-body)' }}>Trip Style (select all that apply)</label>
+                <label style={{ display: 'block', fontWeight: 500, color: 'var(--fg)', marginBottom: '12px', fontSize: '14px', fontFamily: 'var(--font-body)' }}>Trip Style (select all that apply)</label>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                   {STYLES.map(s => (
                     <button
@@ -471,8 +471,8 @@ const TripPlannerPage = () => {
                         padding: '8px 16px', 
                         border: 'none', 
                         borderRadius: 'var(--radius-pill)', 
-                        background: selectedStyles.includes(s) ? 'var(--color-primary)' : 'var(--color-bg-surface)', 
-                        color: 'var(--color-text-primary)', 
+                        background: selectedStyles.includes(s) ? 'var(--color-teal)' : 'var(--surface)', 
+                        color: 'var(--fg)', 
                         fontFamily: 'var(--font-body)', 
                         fontWeight: 500, 
                         cursor: 'pointer', 
@@ -488,16 +488,16 @@ const TripPlannerPage = () => {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontWeight: 500, color: 'var(--color-text-primary)', marginBottom: '12px', fontSize: '14px', fontFamily: 'var(--font-body)' }}>Number of Travelers</label>
+                <label style={{ display: 'block', fontWeight: 500, color: 'var(--fg)', marginBottom: '12px', fontSize: '14px', fontFamily: 'var(--font-body)' }}>Number of Travelers</label>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                  <button onClick={() => setTravelers(t => Math.max(1, t - 1))} style={{ width: '40px', height: '40px', borderRadius: 'var(--radius-pill)', border: '1px solid var(--color-border-strong)', background: 'var(--color-bg-surface)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-text-primary)' }}>
+                  <button onClick={() => setTravelers(t => Math.max(1, t - 1))} style={{ width: '40px', height: '40px', borderRadius: 'var(--radius-pill)', border: '1px solid var(--border)', background: 'var(--surface)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--fg)' }}>
                     <Minus size={16} />
                   </button>
-                  <span style={{ fontSize: '20px', fontWeight: 600, color: 'var(--color-text-primary)', minWidth: '40px', textAlign: 'center', fontFamily: 'var(--font-body)' }}>{travelers}</span>
-                  <button onClick={() => setTravelers(t => Math.min(20, t + 1))} style={{ width: '40px', height: '40px', borderRadius: 'var(--radius-pill)', border: '1px solid var(--color-border-strong)', background: 'var(--color-bg-surface)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-text-primary)' }}>
+                  <span style={{ fontSize: '20px', fontWeight: 600, color: 'var(--fg)', minWidth: '40px', textAlign: 'center', fontFamily: 'var(--font-body)' }}>{travelers}</span>
+                  <button onClick={() => setTravelers(t => Math.min(20, t + 1))} style={{ width: '40px', height: '40px', borderRadius: 'var(--radius-pill)', border: '1px solid var(--border)', background: 'var(--surface)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--fg)' }}>
                     <Plus size={16} />
                   </button>
-                  <span style={{ color: 'var(--color-text-secondary)', fontSize: '14px', fontFamily: 'var(--font-body)' }}>
+                  <span style={{ color: 'var(--muted)', fontSize: '14px', fontFamily: 'var(--font-body)' }}>
                     {travelers === 1 ? 'person' : 'people'}
                   </span>
                 </div>
@@ -508,12 +508,12 @@ const TripPlannerPage = () => {
           {/* STEP 4: About You */}
           {step === 4 && (
             <div>
-              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '32px', fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: '8px', lineHeight: 1.2 }}>Who's going?</h2>
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: '16px', color: 'var(--color-text-secondary)', marginBottom: '32px' }}>Just the essentials — we'll handle the rest</p>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '32px', fontWeight: 600, color: 'var(--fg)', marginBottom: '8px', lineHeight: 1.2 }}>Who's going?</h2>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '16px', color: 'var(--muted)', marginBottom: '32px' }}>Just the essentials — we'll handle the rest</p>
 
               {/* Traveler type */}
               <div style={{ marginBottom: '24px' }}>
-                <label style={{ display: 'block', fontWeight: 500, color: 'var(--color-text-primary)', marginBottom: '12px', fontSize: '14px', fontFamily: 'var(--font-body)' }}>I'm traveling as...</label>
+                <label style={{ display: 'block', fontWeight: 500, color: 'var(--fg)', marginBottom: '12px', fontSize: '14px', fontFamily: 'var(--font-body)' }}>I'm traveling as...</label>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
                   {TRAVELER_TYPES.map(t => (
                     <button
@@ -527,8 +527,8 @@ const TripPlannerPage = () => {
                         padding: '12px 20px', 
                         border: 'none',
                         borderRadius: 'var(--radius-xl)', 
-                        background: travelerType === t.value ? 'var(--color-primary)' : 'var(--color-bg-surface)', 
-                        color: 'var(--color-text-primary)', 
+                        background: travelerType === t.value ? 'var(--color-teal)' : 'var(--surface)', 
+                        color: 'var(--fg)', 
                         fontFamily: 'var(--font-body)', 
                         cursor: 'pointer', 
                         transition: 'all var(--duration-fast)', 
@@ -544,32 +544,32 @@ const TripPlannerPage = () => {
 
               {/* Children/senior counts — only show if relevant */}
               {travelerType === 'family' && (
-                <div style={{ marginBottom: '24px', padding: '16px', background: 'var(--color-bg-surface)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border-subtle)' }}>
-                  <label style={{ display: 'block', fontWeight: 500, color: 'var(--color-text-primary)', marginBottom: '12px', fontSize: '14px', fontFamily: 'var(--font-body)' }}>How many children?</label>
+                <div style={{ marginBottom: '24px', padding: '16px', background: 'var(--surface)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)' }}>
+                  <label style={{ display: 'block', fontWeight: 500, color: 'var(--fg)', marginBottom: '12px', fontSize: '14px', fontFamily: 'var(--font-body)' }}>How many children?</label>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                    <button onClick={() => setChildrenCount(c => Math.max(0, c - 1))} style={{ width: '36px', height: '36px', borderRadius: 'var(--radius-pill)', border: '1px solid var(--color-border-strong)', background: 'var(--color-bg-soft)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifycontent: 'center', color: 'var(--color-text-primary)' }}><Minus size={14} style={{ margin: 'auto' }} /></button>
-                    <span style={{ fontSize: '18px', fontWeight: 600, minWidth: '30px', textAlign: 'center', fontFamily: 'var(--font-body)', color: 'var(--color-text-primary)' }}>{childrenCount}</span>
-                    <button onClick={() => setChildrenCount(c => c + 1)} style={{ width: '36px', height: '36px', borderRadius: 'var(--radius-pill)', border: '1px solid var(--color-border-strong)', background: 'var(--color-bg-soft)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifycontent: 'center', color: 'var(--color-text-primary)' }}><Plus size={14} style={{ margin: 'auto' }} /></button>
-                    <span style={{ fontSize: '13px', color: 'var(--color-text-secondary)', fontFamily: 'var(--font-body)' }}>We'll pick family-friendly spots</span>
+                    <button onClick={() => setChildrenCount(c => Math.max(0, c - 1))} style={{ width: '36px', height: '36px', borderRadius: 'var(--radius-pill)', border: '1px solid var(--border)', background: 'var(--glass-bg)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifycontent: 'center', color: 'var(--fg)' }}><Minus size={14} style={{ margin: 'auto' }} /></button>
+                    <span style={{ fontSize: '18px', fontWeight: 600, minWidth: '30px', textAlign: 'center', fontFamily: 'var(--font-body)', color: 'var(--fg)' }}>{childrenCount}</span>
+                    <button onClick={() => setChildrenCount(c => c + 1)} style={{ width: '36px', height: '36px', borderRadius: 'var(--radius-pill)', border: '1px solid var(--border)', background: 'var(--glass-bg)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifycontent: 'center', color: 'var(--fg)' }}><Plus size={14} style={{ margin: 'auto' }} /></button>
+                    <span style={{ fontSize: '13px', color: 'var(--muted)', fontFamily: 'var(--font-body)' }}>We'll pick family-friendly spots</span>
                   </div>
                 </div>
               )}
 
               {travelerType === 'senior' && (
-                <div style={{ marginBottom: '24px', padding: '16px', background: 'var(--color-bg-surface)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border-subtle)' }}>
-                  <label style={{ display: 'block', fontWeight: 500, color: 'var(--color-text-primary)', marginBottom: '12px', fontSize: '14px', fontFamily: 'var(--font-body)' }}>How many seniors?</label>
+                <div style={{ marginBottom: '24px', padding: '16px', background: 'var(--surface)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)' }}>
+                  <label style={{ display: 'block', fontWeight: 500, color: 'var(--fg)', marginBottom: '12px', fontSize: '14px', fontFamily: 'var(--font-body)' }}>How many seniors?</label>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                    <button onClick={() => setSeniorCount(s => Math.max(0, s - 1))} style={{ width: '36px', height: '36px', borderRadius: 'var(--radius-pill)', border: '1px solid var(--color-border-strong)', background: 'var(--color-bg-soft)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifycontent: 'center', color: 'var(--color-text-primary)' }}><Minus size={14} style={{ margin: 'auto' }} /></button>
-                    <span style={{ fontSize: '18px', fontWeight: 600, minWidth: '30px', textAlign: 'center', fontFamily: 'var(--font-body)', color: 'var(--color-text-primary)' }}>{seniorCount}</span>
-                    <button onClick={() => setSeniorCount(s => s + 1)} style={{ width: '36px', height: '36px', borderRadius: 'var(--radius-pill)', border: '1px solid var(--color-border-strong)', background: 'var(--color-bg-soft)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifycontent: 'center', color: 'var(--color-text-primary)' }}><Plus size={14} style={{ margin: 'auto' }} /></button>
-                    <span style={{ fontSize: '13px', color: 'var(--color-text-secondary)', fontFamily: 'var(--font-body)' }}>Gentle pacing, accessible venues</span>
+                    <button onClick={() => setSeniorCount(s => Math.max(0, s - 1))} style={{ width: '36px', height: '36px', borderRadius: 'var(--radius-pill)', border: '1px solid var(--border)', background: 'var(--glass-bg)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifycontent: 'center', color: 'var(--fg)' }}><Minus size={14} style={{ margin: 'auto' }} /></button>
+                    <span style={{ fontSize: '18px', fontWeight: 600, minWidth: '30px', textAlign: 'center', fontFamily: 'var(--font-body)', color: 'var(--fg)' }}>{seniorCount}</span>
+                    <button onClick={() => setSeniorCount(s => s + 1)} style={{ width: '36px', height: '36px', borderRadius: 'var(--radius-pill)', border: '1px solid var(--border)', background: 'var(--glass-bg)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifycontent: 'center', color: 'var(--fg)' }}><Plus size={14} style={{ margin: 'auto' }} /></button>
+                    <span style={{ fontSize: '13px', color: 'var(--muted)', fontFamily: 'var(--font-body)' }}>Gentle pacing, accessible venues</span>
                   </div>
                 </div>
               )}
 
               {/* Interests */}
               <div style={{ marginBottom: '24px' }}>
-                <label style={{ display: 'block', fontWeight: 500, color: 'var(--color-text-primary)', marginBottom: '12px', fontSize: '14px', fontFamily: 'var(--font-body)' }}>What excites you most? <span style={{ color: 'var(--color-text-secondary)', fontWeight: 400 }}>(optional)</span></label>
+                <label style={{ display: 'block', fontWeight: 500, color: 'var(--fg)', marginBottom: '12px', fontSize: '14px', fontFamily: 'var(--font-body)' }}>What excites you most? <span style={{ color: 'var(--muted)', fontWeight: 400 }}>(optional)</span></label>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                   {INTERESTS.map(i => (
                     <button
@@ -580,8 +580,8 @@ const TripPlannerPage = () => {
                         padding: '8px 16px',
                         border: 'none',
                         borderRadius: 'var(--radius-pill)',
-                        background: selectedInterests.includes(i.value) ? 'var(--color-primary)' : 'var(--color-bg-surface)',
-                        color: 'var(--color-text-primary)',
+                        background: selectedInterests.includes(i.value) ? 'var(--color-teal)' : 'var(--surface)',
+                        color: 'var(--fg)',
                         fontFamily: 'var(--font-body)', fontWeight: 500, cursor: 'pointer', fontSize: '14px',
                         transition: 'all var(--duration-fast)',
                       }}
@@ -597,20 +597,20 @@ const TripPlannerPage = () => {
                 <button
                   type="button"
                   onClick={() => setShowAdvanced(v => !v)}
-                  style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'none', border: 'none', color: 'var(--color-text-secondary)', cursor: 'pointer', fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: '14px', padding: '0', marginBottom: showAdvanced ? '16px' : '0' }}
+                  style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'none', border: 'none', color: 'var(--muted)', cursor: 'pointer', fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: '14px', padding: '0', marginBottom: showAdvanced ? '16px' : '0' }}
                 >
                   <ChevronRight size={16} style={{ transform: showAdvanced ? 'rotate(90deg)' : 'none', transition: 'transform var(--duration-fast)' }} />
                   Advanced options (dietary, fitness, accessibility, special occasion)
                 </button>
 
                 {showAdvanced && (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', padding: '20px', background: 'var(--color-bg-surface)', borderRadius: 'var(--radius-xl)', border: '1px solid var(--color-border-subtle)', boxSizing: 'border-box' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', padding: '20px', background: 'var(--surface)', borderRadius: 'var(--radius-xl)', border: '1px solid var(--border)', boxSizing: 'border-box' }}>
                     {/* Dietary */}
                     <div>
-                      <label style={{ display: 'block', fontWeight: 500, color: 'var(--color-text-primary)', marginBottom: '8px', fontSize: '13px', fontFamily: 'var(--font-body)' }}>Dietary preference</label>
+                      <label style={{ display: 'block', fontWeight: 500, color: 'var(--fg)', marginBottom: '8px', fontSize: '13px', fontFamily: 'var(--font-body)' }}>Dietary preference</label>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                         {DIETARY.map(d => (
-                          <button key={d} onClick={() => setDietary(d)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-pill)', background: dietary === d ? 'var(--color-primary)' : 'var(--color-bg-soft)', color: 'var(--color-text-primary)', fontFamily: 'var(--font-body)', fontWeight: 500, cursor: 'pointer', textTransform: 'capitalize', fontSize: '13px' }}>
+                          <button key={d} onClick={() => setDietary(d)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-pill)', background: dietary === d ? 'var(--color-teal)' : 'var(--glass-bg)', color: 'var(--fg)', fontFamily: 'var(--font-body)', fontWeight: 500, cursor: 'pointer', textTransform: 'capitalize', fontSize: '13px' }}>
                             {d === 'none' ? 'No restriction' : d}
                           </button>
                         ))}
@@ -619,10 +619,10 @@ const TripPlannerPage = () => {
 
                     {/* Fitness */}
                     <div>
-                      <label style={{ display: 'block', fontWeight: 500, color: 'var(--color-text-primary)', marginBottom: '8px', fontSize: '13px', fontFamily: 'var(--font-body)' }}>Activity intensity</label>
+                      <label style={{ display: 'block', fontWeight: 500, color: 'var(--fg)', marginBottom: '8px', fontSize: '13px', fontFamily: 'var(--font-body)' }}>Activity intensity</label>
                       <div style={{ display: 'flex', gap: '10px' }}>
                         {[{ v: 'low', l: 'Easy going' }, { v: 'moderate', l: 'Moderate' }, { v: 'high', l: 'Very active' }].map(f => (
-                          <button key={f.v} onClick={() => setFitnessLevel(f.v)} style={{ flex: 1, padding: '10px', border: 'none', borderRadius: 'var(--radius-lg)', background: fitnessLevel === f.v ? 'var(--color-primary)' : 'var(--color-bg-soft)', color: 'var(--color-text-primary)', fontFamily: 'var(--font-body)', fontWeight: 500, cursor: 'pointer', fontSize: '13px' }}>
+                          <button key={f.v} onClick={() => setFitnessLevel(f.v)} style={{ flex: 1, padding: '10px', border: 'none', borderRadius: 'var(--radius-lg)', background: fitnessLevel === f.v ? 'var(--color-teal)' : 'var(--glass-bg)', color: 'var(--fg)', fontFamily: 'var(--font-body)', fontWeight: 500, cursor: 'pointer', fontSize: '13px' }}>
                             {f.l}
                           </button>
                         ))}
@@ -632,13 +632,13 @@ const TripPlannerPage = () => {
                     {/* Accessibility */}
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <div style={{ fontFamily: 'var(--font-body)' }}>
-                        <div style={{ fontWeight: 500, color: 'var(--color-text-primary)', fontSize: '13px' }}>Wheelchair / mobility access needed</div>
-                        <div style={{ fontSize: '12px', color: 'var(--color-text-secondary)', marginTop: '2px' }}>We'll filter out venues with poor accessibility</div>
+                        <div style={{ fontWeight: 500, color: 'var(--fg)', fontSize: '13px' }}>Wheelchair / mobility access needed</div>
+                        <div style={{ fontSize: '12px', color: 'var(--muted)', marginTop: '2px' }}>We'll filter out venues with poor accessibility</div>
                       </div>
                       <button
                         type="button"
                         onClick={() => setAccessibility(v => !v)}
-                        style={{ width: '48px', height: '26px', borderRadius: 'var(--radius-pill)', border: 'none', cursor: 'pointer', background: accessibility ? 'var(--color-primary)' : 'var(--color-bg-soft)', position: 'relative', transition: 'background var(--duration-fast)', flexShrink: 0 }}
+                        style={{ width: '48px', height: '26px', borderRadius: 'var(--radius-pill)', border: 'none', cursor: 'pointer', background: accessibility ? 'var(--color-teal)' : 'var(--glass-bg)', position: 'relative', transition: 'background var(--duration-fast)', flexShrink: 0 }}
                       >
                         <span style={{ position: 'absolute', top: '4px', left: accessibility ? '26px' : '4px', width: '18px', height: '18px', borderRadius: 'var(--radius-pill)', background: 'white', transition: 'left var(--duration-fast)' }} />
                       </button>
@@ -646,7 +646,7 @@ const TripPlannerPage = () => {
 
                     {/* Special occasion */}
                     <div>
-                      <label style={{ display: 'block', fontWeight: 500, color: 'var(--color-text-primary)', marginBottom: '8px', fontSize: '13px', fontFamily: 'var(--font-body)' }}>Special occasion? <span style={{ color: 'var(--color-text-secondary)', fontWeight: 400 }}>(optional)</span></label>
+                      <label style={{ display: 'block', fontWeight: 500, color: 'var(--fg)', marginBottom: '8px', fontSize: '13px', fontFamily: 'var(--font-body)' }}>Special occasion? <span style={{ color: 'var(--muted)', fontWeight: 400 }}>(optional)</span></label>
                       <input
                         type="text"
                         placeholder="e.g. honeymoon, birthday, anniversary..."
@@ -661,8 +661,8 @@ const TripPlannerPage = () => {
                           fontFamily: 'var(--font-body)', 
                           fontSize: '14px', 
                           outline: 'none', 
-                          background: 'var(--color-bg-soft)',
-                          color: 'var(--color-text-primary)',
+                          background: 'var(--glass-bg)',
+                          color: 'var(--fg)',
                           boxSizing: 'border-box'
                         }}
                       />
@@ -676,10 +676,10 @@ const TripPlannerPage = () => {
           {/* STEP 5: Review */}
           {step === 5 && (
             <div>
-              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '32px', fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: '8px', lineHeight: 1.2 }}>Review & Generate</h2>
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: '16px', color: 'var(--color-text-secondary)', marginBottom: '32px' }}>Confirm your trip details before generating</p>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '32px', fontWeight: 600, color: 'var(--fg)', marginBottom: '8px', lineHeight: 1.2 }}>Review & Generate</h2>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '16px', color: 'var(--muted)', marginBottom: '32px' }}>Confirm your trip details before generating</p>
 
-              <div style={{ background: 'var(--color-bg-surface)', borderRadius: 'var(--radius-xl)', padding: '24px', marginBottom: '32px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ background: 'var(--surface)', borderRadius: 'var(--radius-xl)', padding: '24px', marginBottom: '32px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 {[
                   { icon: <MapPin size={18} />, label: 'Destinations', value: selectedDests.map(d => d.name).join(', ') || 'None selected' },
                   { icon: <Calendar size={18} />, label: 'Duration', value: `${duration} days${startDate ? ` from ${new Date(startDate).toLocaleDateString('en-IN')}` : ''}` },
@@ -690,10 +690,10 @@ const TripPlannerPage = () => {
                   { icon: <Sparkles size={18} />, label: 'Dietary', value: dietary === 'none' ? 'No restrictions' : dietary },
                 ].map((item, i) => (
                   <div key={i} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-                    <div style={{ color: 'var(--color-text-secondary)', marginTop: '2px', flexShrink: 0 }}>{item.icon}</div>
+                    <div style={{ color: 'var(--muted)', marginTop: '2px', flexShrink: 0 }}>{item.icon}</div>
                     <div style={{ fontFamily: 'var(--font-body)' }}>
-                      <div style={{ fontSize: '12px', color: 'var(--color-text-secondary)', fontWeight: 500, marginBottom: '2px' }}>{item.label}</div>
-                      <div style={{ fontWeight: 600, color: 'var(--color-text-primary)', fontSize: '15px' }}>{item.value}</div>
+                      <div style={{ fontSize: '12px', color: 'var(--muted)', fontWeight: 500, marginBottom: '2px' }}>{item.label}</div>
+                      <div style={{ fontWeight: 600, color: 'var(--fg)', fontSize: '15px' }}>{item.value}</div>
                     </div>
                   </div>
                 ))}
@@ -712,13 +712,13 @@ const TripPlannerPage = () => {
               </Button>
 
               {selectedDests.length === 0 && (
-                <p style={{ color: 'var(--color-error)', textAlign: 'center', marginTop: '12px', fontSize: '14px', fontFamily: 'var(--font-body)' }}>Please go back and select at least one destination</p>
+                <p style={{ color: 'var(--color-peach)', textAlign: 'center', marginTop: '12px', fontSize: '14px', fontFamily: 'var(--font-body)' }}>Please go back and select at least one destination</p>
               )}
             </div>
           )}
 
           {/* Navigation controls */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '40px', paddingTop: '32px', borderTop: '1px solid var(--color-border-subtle)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '40px', paddingTop: '32px', borderTop: '1px solid var(--border)' }}>
             <Button
               variant="secondary"
               size="md"

@@ -59,13 +59,13 @@ export default function Modal({
           style={{
             position: 'fixed',
             inset: 0,
-            background: 'rgba(46, 46, 46, 0.4)', /* Backdrop: rgba(46,46,46,0.4) */
-            backdropFilter: 'blur(4px)', /* blur 4px */
-            WebkitBackdropFilter: 'blur(4px)',
+            background: 'oklch(0% 0 0 / 40%)', /* Dark overlay */
+            backdropFilter: 'var(--glass-blur)',
+            WebkitBackdropFilter: 'var(--glass-blur)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            zIndex: 400, /* z-overlay: 400 */
+            zIndex: 400,
             padding: '16px',
           }}
         >
@@ -80,16 +80,19 @@ export default function Modal({
             transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }} /* transition-slow (350ms) */
             onClick={(e) => e.stopPropagation()}
             style={{
-              background: 'var(--color-bg-soft)', /* Surface: bg.soft (#F6F1E6) */
-              borderRadius: 'var(--radius-xl)', /* Radius: radius-xl (16px) */
-              boxShadow: 'var(--shadow-lg)', /* Shadow: shadow-lg */
-              padding: '32px', /* Padding: 32px */
+              background: 'var(--glass-bg)',
+              backdropFilter: 'var(--glass-blur)',
+              WebkitBackdropFilter: 'var(--glass-blur)',
+              border: '1px solid var(--glass-border)',
+              borderRadius: 'var(--radius-lg)',
+              boxShadow: 'var(--shadow-lg)',
+              padding: '32px',
               width: '100%',
               maxWidth: sizeMap[size] || sizeMap.md,
-              maxHeight: 'min(720px, 90vh)', /* max min(720px, 90vh) */
+              maxHeight: 'min(720px, 90vh)',
               overflowY: 'auto',
               position: 'relative',
-              zIndex: 500, /* z-modal: 500 */
+              zIndex: 500,
             }}
           >
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '24px' }}>
@@ -97,11 +100,13 @@ export default function Modal({
                 <h2 
                   id="modal-title" 
                   style={{ 
-                    fontFamily: 'var(--font-heading)', 
-                    fontSize: '24px', /* Copernicus 24px */
-                    fontWeight: '500', /* H3/H4 modal weight: 500 */
-                    color: 'var(--color-text-primary)', 
-                    margin: 0 
+                    fontFamily: 'var(--font-display)', 
+                    fontSize: '2rem',
+                    fontWeight: '400',
+                    color: 'var(--fg)', 
+                    margin: 0,
+                    lineHeight: '1.1',
+                    letterSpacing: '-0.01em'
                   }}
                 >
                   {title}
@@ -115,30 +120,30 @@ export default function Modal({
                   background: 'none',
                   border: 'none',
                   cursor: 'pointer',
-                  color: 'var(--color-text-secondary)',
-                  width: '44px', /* 44px min hit target */
+                  color: 'var(--muted)',
+                  width: '44px',
                   height: '44px',
                   borderRadius: 'var(--radius-sm)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   marginLeft: 'auto',
-                  transition: 'color var(--duration-fast) var(--ease-standard), background var(--duration-fast) var(--ease-standard)',
+                  transition: 'color var(--t-hover), background var(--t-hover)',
                   outline: 'none',
                 }}
                 onFocus={(e) => {
-                  e.target.style.outline = '2px solid var(--color-primary)';
+                  e.target.style.outline = '2px solid var(--color-black)';
                   e.target.style.outlineOffset = '2px';
                 }}
                 onBlur={(e) => {
                   e.target.style.outline = 'none';
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.color = 'var(--color-text-primary)';
-                  e.currentTarget.style.background = 'var(--color-bg-surface)';
+                  e.currentTarget.style.color = 'var(--fg)';
+                  e.currentTarget.style.background = 'var(--surface)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.color = 'var(--color-text-secondary)';
+                  e.currentTarget.style.color = 'var(--muted)';
                   e.currentTarget.style.background = 'none';
                 }}
               >
@@ -146,7 +151,7 @@ export default function Modal({
               </button>
             </div>
 
-            <div style={{ color: 'var(--color-text-primary)', fontFamily: 'var(--font-body)', fontSize: '16px', lineHeight: 1.6 }}>
+            <div style={{ color: 'var(--fg)', fontFamily: 'var(--font-body)', fontSize: '1rem', lineHeight: 1.6 }}>
               {children}
             </div>
 
@@ -154,7 +159,7 @@ export default function Modal({
               <div style={{ 
                 marginTop: '32px', 
                 paddingTop: '24px', 
-                borderTop: '1px solid var(--color-border-subtle)',
+                borderTop: '1px solid var(--border)',
                 display: 'flex',
                 justifyContent: 'flex-end',
                 gap: '12px'

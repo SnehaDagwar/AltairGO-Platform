@@ -1,37 +1,34 @@
-/* AltairGo Combined CTA & Footer — Style
- * Source: AltairGo_Design_System_FINAL.md (v3.1)
- * Last synced: 2026-05-31
- */
+/* AltairGo Combined CTA & Footer — Style v5.0 */
 
 .footer {
-  background: var(--color-bg-main);
-  padding: 0 var(--space-12) var(--space-12);
+  background: var(--bg);
+  padding: 0 48px 48px;
   font-family: var(--font-body), system-ui, sans-serif;
-  color: var(--color-text-primary);
+  color: var(--fg);
   box-sizing: border-box;
 }
 
 @media (max-width: 1024px) {
   .footer {
-    padding: 0 var(--space-6) var(--space-6);
+    padding: 0 24px 24px;
   }
 }
 
 @media (max-width: 768px) {
   .footer {
-    padding: 0 var(--space-4) var(--space-4);
+    padding: 0 16px 16px;
   }
 }
 
 /* --- 1. Cinematic CTA Banner Card --- */
 .ctaBanner {
-  max-width: var(--container-max);
-  margin: 0 auto var(--space-16);
+  max-width: 1400px;
+  margin: 0 auto 64px;
   position: relative;
-  border-radius: var(--radius-xl); /* cards/hero use radius-xl (16px) */
+  border-radius: var(--radius-lg);
   overflow: hidden;
   padding: 80px 48px;
-  box-shadow: var(--shadow-lg); /* relative-luminance shadow */
+  box-shadow: var(--shadow-lg);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -51,7 +48,7 @@
 .ctaScrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(46, 46, 46, 0.45) 0%, rgba(46, 46, 46, 0.65) 100%);
+  background: linear-gradient(180deg, rgba(18, 18, 18, 0.45) 0%, rgba(18, 18, 18, 0.65) 100%);
   z-index: 1;
 }
 
@@ -66,39 +63,39 @@
 }
 
 .ctaHeading {
-  font-family: var(--font-heading);
+  font-family: var(--font-display);
   font-size: clamp(32px, 4vw, 44px);
-  font-weight: 600; /* locked display/H1/H2 weight */
+  font-weight: 400;
   color: #ffffff;
   line-height: 1.2;
   margin: 0 0 16px;
   letter-spacing: -0.01em;
-  text-shadow: 0 4px 16px rgba(46, 46, 46, 0.45);
+  text-shadow: 0 4px 16px rgba(18, 18, 18, 0.45);
 }
 
 .ctaSubtext {
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.9);
   max-width: 540px;
   margin: 0 0 32px;
-  text-shadow: 0 2px 10px rgba(46, 46, 46, 0.4);
+  text-shadow: 0 2px 10px rgba(18, 18, 18, 0.4);
 }
 
 /* --- Search Engine styled Pill Bar --- */
 .searchPillBar {
   display: flex;
   align-items: center;
-  background: var(--color-bg-soft);
-  border-radius: var(--radius-pill); /* tags/pills use radius-pill */
+  background: var(--surface);
+  border-radius: var(--radius-pill);
   padding: 8px 8px 8px 24px;
   box-shadow: var(--shadow-md);
-  border: 1px solid var(--color-border-subtle);
+  border: 1px solid var(--border);
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
-  transition: transform var(--duration-normal) var(--ease-standard), box-shadow var(--duration-normal) var(--ease-standard);
+  transition: transform var(--t-hover), box-shadow var(--t-hover);
   box-sizing: border-box;
 }
 
@@ -125,15 +122,15 @@
   top: 20%;
   bottom: 20%;
   width: 1px;
-  background: var(--color-border-strong);
+  background: var(--border);
 }
 
 .pillIconWrapper {
   width: 32px;
   height: 32px;
   border-radius: var(--radius-pill);
-  background: var(--color-bg-surface);
-  color: var(--color-text-primary);
+  background: var(--glass-bg);
+  color: var(--fg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -146,25 +143,25 @@
 }
 
 .pillLabel {
-  font-size: 13px;
+  font-size: 0.875rem;
   font-weight: 500;
-  color: var(--color-text-primary);
+  color: var(--fg);
   line-height: 1.2;
 }
 
 .pillDesc {
-  font-size: 11px;
-  color: var(--color-text-secondary);
+  font-size: 0.75rem;
+  color: var(--muted);
 }
 
 /* --- 2. Spacious Sand-Colored Footer Section --- */
 .footerSection {
-  max-width: var(--container-max);
+  max-width: 1400px;
   margin: 0 auto;
-  background: var(--color-bg-surface); /* background is bg-surface (#D6C4AB) */
-  padding: 48px 48px 32px; /* padding 48px 0 desktop - adjusted slightly for inner cards */
-  border-radius: var(--radius-xl);
-  border: 1px solid var(--color-border-subtle);
+  background: var(--surface);
+  padding: 48px 48px 32px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
   box-sizing: border-box;
 }
 
@@ -195,9 +192,9 @@
 
 .brandDesc {
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: 1.5;
-  color: var(--color-text-secondary);
+  color: var(--muted);
   margin: 0 0 20px;
   max-width: 240px;
 }
@@ -211,20 +208,20 @@
   width: 36px;
   height: 36px;
   border-radius: var(--radius-pill);
-  border: 1px solid var(--color-border-strong);
-  color: var(--color-text-secondary);
+  border: 1px solid var(--border);
+  color: var(--muted);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all var(--duration-fast) var(--ease-standard);
+  transition: all var(--t-hover);
   text-decoration: none;
   box-sizing: border-box;
 }
 
 .socialIcon:hover {
-  border-color: var(--color-text-primary);
-  color: var(--color-text-primary);
-  background: var(--color-bg-soft);
+  border-color: var(--fg);
+  color: var(--fg);
+  background: var(--surface);
   transform: translateY(-2px);
 }
 
@@ -234,13 +231,13 @@
 }
 
 .colTitle {
-  font-size: 12px;
+  font-size: 0.75rem;
   font-family: var(--font-body);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--color-text-secondary);
+  color: var(--muted);
   margin-bottom: 20px;
-  font-weight: 500; /* Overline weight locked to 500 */
+  font-weight: 500;
 }
 
 .linksList {
@@ -250,17 +247,17 @@
 }
 
 .footerLink {
-  font-size: 14px; /* StyreneB 14px */
+  font-size: 0.875rem;
   font-family: var(--font-body);
-  color: var(--color-text-secondary);
+  color: var(--muted);
   text-decoration: none;
   cursor: pointer;
   width: fit-content;
-  transition: color var(--duration-fast) var(--ease-standard);
+  transition: color var(--t-hover);
 }
 
 .footerLink:hover {
-  color: var(--color-text-primary); /* dense links clutter, hover just changes color, no underline */
+  color: var(--fg);
 }
 
 /* --- Right Column: Newsletter area --- */
@@ -270,16 +267,16 @@
 }
 
 .newsletterTitle {
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 500;
-  color: var(--color-text-primary);
+  color: var(--fg);
   margin-bottom: 12px;
 }
 
 .newsletterSubtext {
-  font-size: 13px;
+  font-size: 0.875rem;
   line-height: 1.5;
-  color: var(--color-text-secondary);
+  color: var(--muted);
   margin-bottom: 16px;
 }
 
@@ -298,31 +295,31 @@
 .mailIcon {
   position: absolute;
   left: 14px;
-  color: var(--color-text-secondary);
+  color: var(--muted);
   pointer-events: none;
 }
 
 .newsletterInput {
   width: 100%;
   padding: 12px 14px 12px 38px;
-  border: 1.5px solid var(--color-border-strong);
-  border-radius: var(--radius-sm); /* Inputs use radius-sm (8px) */
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   font-family: inherit;
-  font-size: 14px;
+  font-size: 0.875rem;
   outline: none;
-  background: var(--color-bg-soft);
-  color: var(--color-text-primary);
-  transition: border-color var(--duration-fast) var(--ease-standard);
+  background: var(--glass-bg);
+  color: var(--fg);
+  transition: border-color var(--t-hover);
   box-sizing: border-box;
 }
 
 .newsletterInput:focus {
-  border-color: var(--color-border-focus);
+  border-color: var(--color-teal);
 }
 
 .newsletterSuccess {
-  background: var(--color-success-surface);
-  border: 1.5px solid var(--color-success);
+  background: var(--surface);
+  border: 1px solid oklch(40% 0.1 150);
   border-radius: var(--radius-sm);
   padding: 16px;
   display: flex;
@@ -332,31 +329,31 @@
 }
 
 .successHeading {
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 500;
-  color: var(--color-text-primary);
+  color: var(--fg);
 }
 
 .successDesc {
-  font-size: 12px;
-  color: var(--color-text-secondary);
+  font-size: 0.75rem;
+  color: var(--muted);
 }
 
 /* --- Bottom Section --- */
 .bottomSection {
   padding-top: 24px;
-  border-top: 1px solid var(--color-border-subtle);
+  border-top: 1px solid var(--border);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 14px; /* StyreneB 14px caption copy */
+  font-size: 0.875rem;
   font-family: var(--font-body);
-  color: var(--color-text-secondary);
+  color: var(--muted);
   box-sizing: border-box;
 }
 
 .copyright {
-  color: var(--color-text-secondary);
+  color: var(--muted);
 }
 
 .vCredit {
@@ -365,18 +362,18 @@
 }
 
 .vCredit span {
-  color: var(--color-text-secondary);
+  color: var(--muted);
 }
 
 /* --- Responsive Adjustments --- */
 @media (max-width: 1024px) {
   .ctaBanner {
     padding: 64px 32px;
-    margin-bottom: var(--space-8);
+    margin-bottom: 32px;
   }
 
   .searchPillBar {
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius-lg);
     padding: 16px;
     flex-direction: column;
     gap: 16px;
@@ -395,11 +392,11 @@
     top: auto;
     height: 1px;
     width: auto;
-    background: var(--color-border-subtle);
+    background: var(--border);
   }
 
   .footerSection {
-    padding: 32px 32px 24px; /* padding 32px mobile */
+    padding: 32px 32px 24px;
   }
 
   .footerGrid {

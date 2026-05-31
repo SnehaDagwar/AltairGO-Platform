@@ -1,30 +1,31 @@
-/* AltairGo Navigation — Style
- * Source: AltairGo_Design_System_FINAL.md (v3.1)
- * Last synced: 2026-05-31
- */
+/* AltairGo Navigation — Style v5.0 */
 
 .navbarWrapper {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 200; /* z-sticky: 200 */
+  z-index: 200;
   height: 72px;
-  background: var(--color-bg-main); /* bg.main (#E9DFC6) */
-  transition: box-shadow var(--duration-fast) var(--ease-standard);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-bottom: 1px solid transparent;
+  transition: box-shadow var(--t-hover), border-color var(--t-hover);
   display: flex;
   align-items: center;
   box-sizing: border-box;
 }
 
 .scrolled {
-  box-shadow: var(--shadow-xs); /* sticky-header shadow on scroll */
+  box-shadow: var(--shadow-sm);
+  border-bottom: 1px solid var(--glass-border);
 }
 
 .navContainer {
-  max-width: var(--container-max);
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 0 var(--space-12);
+  padding: 0 48px;
   width: 100%;
   display: flex;
   align-items: center;
@@ -35,29 +36,28 @@
 .logoArea {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: 8px;
 }
 
 .desktopLinks {
   display: flex;
   align-items: center;
-  gap: var(--space-6); /* Spacing 24px between links */
+  gap: 24px;
 }
 
 .navLink {
   text-decoration: none;
   font-family: var(--font-body);
-  font-size: 16px; /* StyreneB 16px */
-  font-weight: 500; /* locked nav link weight: 500 */
-  color: var(--color-text-primary); /* Charcoal */
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--fg);
   position: relative;
   padding: 6px 0;
   box-sizing: border-box;
   outline: none;
-  transition: color var(--duration-fast) var(--ease-standard);
+  transition: color var(--t-hover);
 }
 
-/* Hover state: 1px underline in Hover Green (#8FA876), offset 6px */
 .navLink::after {
   content: '';
   position: absolute;
@@ -65,17 +65,16 @@
   right: 0;
   bottom: -6px;
   height: 1px;
-  background: var(--color-hover);
+  background: var(--color-sky);
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform var(--duration-fast) var(--ease-standard);
+  transition: transform var(--t-hover);
 }
 
 .navLink:hover::after {
   transform: scaleX(1);
 }
 
-/* Active state: 2px underline in Active Green (#7A9463), offset 6px */
 .activeNavLink::after {
   content: '';
   position: absolute;
@@ -83,12 +82,12 @@
   right: 0;
   bottom: -6px;
   height: 2px;
-  background: var(--color-active);
+  background: var(--color-teal);
   transform: scaleX(1) !important;
 }
 
 .navLink:focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--color-teal);
   outline-offset: 4px;
   border-radius: 4px;
 }
@@ -96,51 +95,62 @@
 .ctaGroup {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
+  gap: 16px;
+}
+
+.signInDesktop {
+  display: flex;
 }
 
 .hamburger {
   display: none !important;
   all: unset;
   cursor: pointer;
-  width: 44px; /* 44px min hit target */
+  width: 44px;
   height: 44px;
   border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background var(--duration-fast) var(--ease-standard);
+  transition: background var(--t-hover);
 }
 
 .hamburger:hover {
-  background: var(--color-bg-surface);
+  background: var(--surface);
 }
 
 .hamburger:focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--color-teal);
 }
 
-/* Mobile responsive navigation styles */
 @media (max-width: 1024px) {
   .navbarWrapper {
-    height: 64px; /* Tablet height 64px */
+    height: 64px;
   }
   
   .navContainer {
-    padding: 0 var(--space-6);
+    padding: 0 24px;
   }
 }
 
 @media (max-width: 768px) {
   .navbarWrapper {
-    height: 56px; /* Mobile height 56px */
+    height: 56px;
   }
 
   .navContainer {
-    padding: 0 var(--space-4);
+    padding: 0 16px;
   }
 
   .desktopLinks {
+    display: none !important;
+  }
+  
+  .signInDesktop {
+    display: none !important;
+  }
+
+  .planDesktop {
     display: none !important;
   }
 
@@ -149,16 +159,17 @@
   }
 }
 
-/* Mobile dropdown panel */
 .mobileMenu {
   position: fixed;
-  top: 56px;
+  top: 64px;
   left: 16px;
   right: 16px;
   z-index: 100;
-  border-radius: var(--radius-xl); /* Modals/drawers on mobile use radius-xl */
-  background: var(--color-bg-soft); /* bg.soft (#F6F1E6) */
-  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
   padding: 24px;
   display: flex;
   flex-direction: column;
@@ -170,22 +181,22 @@
 .menuLink {
   text-decoration: none;
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 500;
-  color: var(--color-text-primary);
+  color: var(--fg);
   padding: 12px 16px;
   border-radius: var(--radius-sm);
   display: block;
-  transition: background var(--duration-fast) var(--ease-standard);
+  transition: background var(--t-hover);
   box-sizing: border-box;
 }
 
 .menuLink:hover {
-  background: var(--color-bg-surface);
+  background: var(--surface);
 }
 
 .activeMenuLink {
-  background: var(--color-bg-surface);
-  color: var(--color-active);
+  background: var(--surface);
+  color: var(--color-teal);
   font-weight: 600;
 }

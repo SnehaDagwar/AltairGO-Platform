@@ -37,13 +37,13 @@ const UserIcon = () => (
 
 const HamburgerIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-    <path d="M4 6h16M4 12h16M4 18h16" stroke="var(--color-text-primary)" strokeWidth="2" strokeLinecap="round" />
+    <path d="M4 6h16M4 12h16M4 18h16" stroke="var(--fg)" strokeWidth="2" strokeLinecap="round" />
   </svg>
 );
 
 const CloseIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-    <path d="M6 6l12 12M18 6L6 18" stroke="var(--color-text-primary)" strokeWidth="2" strokeLinecap="round" />
+    <path d="M6 6l12 12M18 6L6 18" stroke="var(--fg)" strokeWidth="2" strokeLinecap="round" />
   </svg>
 );
 
@@ -102,12 +102,12 @@ const Navbar = () => {
                 <Link to="/trips" className={styles.navLink} style={{ fontSize: '14px', fontWeight: 500 }}>
                   My Trips
                 </Link>
-                <Button variant="secondary" size="sm" onClick={handleLogout}>
+                <Button variant="glass" size="sm" onClick={handleLogout}>
                   Sign Out
                 </Button>
               </div>
             ) : (
-              <Button variant="secondary" size="sm" onClick={() => navigate('/login')}>
+              <Button variant="glass" size="sm" onClick={() => navigate('/login')}>
                 <UserIcon /> Sign In
               </Button>
             )}

@@ -100,21 +100,21 @@ function ItineraryCard({ variant, onCycle }) {
       {/* Left side: itinerary */}
       <div className={styles.cardLeft}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-          <div style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: 500, color: 'var(--color-text-primary)', lineHeight: 1.2 }}>
-            {data.dest.split(',')[0]} <span style={{ fontStyle: 'italic', color: 'var(--color-active)' }}>itinerary</span>
+          <div style={{ fontFamily: 'var(--font-display)', fontSize: '24px', fontWeight: 500, color: 'var(--fg)', lineHeight: 1.2 }}>
+            {data.dest.split(',')[0]} <span style={{ fontStyle: 'italic', color: 'var(--color-teal)' }}>itinerary</span>
           </div>
           <Button variant="secondary" size="sm" onClick={onCycle} style={{ height: '28px', padding: '0 8px', fontSize: '12px' }}>
             {variant + 1}/3 →
           </Button>
         </div>
         
-        <div style={{ fontFamily: 'var(--font-body)', fontSize: '14px', lineHeight: 1.6, color: 'var(--color-text-secondary)', marginBottom: '16px' }}>
+        <div style={{ fontFamily: 'var(--font-body)', fontSize: '14px', lineHeight: 1.6, color: 'var(--muted)', marginBottom: '16px' }}>
           {data.blurb}
         </div>
 
         <div style={{ display: 'flex', gap: '16px' }}>
           {data.meta.map((m, i) =>
-            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: 'var(--color-text-secondary)', fontFamily: 'var(--font-body)' }}>
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: 'var(--muted)', fontFamily: 'var(--font-body)' }}>
               {m.i === 'plane' && <I.plane />}
               {m.i === 'bed' && <I.bed />}
               {m.i === 'clock' && <I.clock />}
@@ -125,40 +125,40 @@ function ItineraryCard({ variant, onCycle }) {
       </div>
 
       {/* Right side: map + details */}
-      <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', background: 'var(--color-bg-soft)' }}>
-        <div style={{ position: 'relative', background: 'var(--color-bg-surface)', borderRadius: 'var(--radius-xl)', height: '150px', border: '1px solid var(--color-border-subtle)', overflow: 'hidden', marginBottom: '16px' }}>
+      <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', background: 'var(--glass-bg)' }}>
+        <div style={{ position: 'relative', background: 'var(--surface)', borderRadius: 'var(--radius-xl)', height: '150px', border: '1px solid var(--border)', overflow: 'hidden', marginBottom: '16px' }}>
           {/* stylized map */}
           <svg viewBox="0 0 240 150" width="100%" height="100%">
             <defs>
               <pattern id="dots" width="8" height="8" patternUnits="userSpaceOnUse">
-                <circle cx="1" cy="1" r="0.7" fill="var(--color-text-primary)" opacity="0.15" />
+                <circle cx="1" cy="1" r="0.7" fill="var(--fg)" opacity="0.15" />
               </pattern>
             </defs>
             <rect width="240" height="150" fill="url(#dots)" />
-            <path d="M0,100 Q40,80 80,95 T160,80 T240,90" stroke="var(--color-active)" strokeWidth="1.2" fill="none" opacity="0.5" strokeDasharray="2 3" />
-            <path d="M20,60 Q70,50 120,70 T220,50" stroke="var(--color-primary)" strokeWidth="1" fill="none" opacity="0.5" />
+            <path d="M0,100 Q40,80 80,95 T160,80 T240,90" stroke="var(--color-teal)" strokeWidth="1.2" fill="none" opacity="0.5" strokeDasharray="2 3" />
+            <path d="M20,60 Q70,50 120,70 T220,50" stroke="var(--color-teal)" strokeWidth="1" fill="none" opacity="0.5" />
             <path d={
               variant === 0 ? "M60,100 C80,70 100,60 130,55 C160,50 180,70 195,85" :
                 variant === 1 ? "M50,80 C80,60 120,65 150,70 C180,75 200,60 200,50" :
                   "M40,110 C60,90 90,70 120,60 C150,50 180,40 210,35 C195,60 180,80 160,100"
-            } stroke="var(--color-active)" strokeWidth="1.8" fill="none" strokeLinecap="round" />
+            } stroke="var(--color-teal)" strokeWidth="1.8" fill="none" strokeLinecap="round" />
             {data.days.slice(0, 5).map((_, i) => {
               const pts = variant === 0 ? [[60, 100], [95, 75], [130, 55], [165, 60], [195, 85]] :
                 variant === 1 ? [[50, 80], [90, 67], [130, 70], [170, 65], [200, 50]] :
                   [[40, 110], [85, 80], [130, 58], [180, 42], [210, 35]];
               const [x, y] = pts[i] || [0, 0];
               return <g key={i}>
-                <circle cx={x} cy={y} r="4" fill="#fff" stroke="var(--color-active)" strokeWidth="1.5" />
-                <text x={x} y={y + 1.5} fontSize="5" fontFamily="var(--mono)" textAnchor="middle" fill="var(--color-active)" fontWeight="600">{i + 1}</text>
+                <circle cx={x} cy={y} r="4" fill="#fff" stroke="var(--color-teal)" strokeWidth="1.5" />
+                <text x={x} y={y + 1.5} fontSize="5" fontFamily="var(--mono)" textAnchor="middle" fill="var(--color-teal)" fontWeight="600">{i + 1}</text>
               </g>;
             })}
           </svg>
-          <div style={{ position: 'absolute', top: 10, left: 10, fontSize: '11px', fontFamily: 'var(--font-body)', color: 'var(--color-text-primary)', background: 'rgba(246, 241, 230, 0.85)', padding: '4px 8px', borderRadius: 'var(--radius-sm)' }}>
+          <div style={{ position: 'absolute', top: 10, left: 10, fontSize: '11px', fontFamily: 'var(--font-body)', color: 'var(--fg)', background: 'rgba(246, 241, 230, 0.85)', padding: '4px 8px', borderRadius: 'var(--radius-sm)' }}>
             <I.pin style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: '4px' }} /> {data.dest}
           </div>
         </div>
 
-        <div style={{ fontSize: '12px', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '12px', fontWeight: 500, fontFamily: 'var(--font-body)' }}>
+        <div style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '12px', fontWeight: 500, fontFamily: 'var(--font-body)' }}>
           AI suggestions
         </div>
         
@@ -168,17 +168,17 @@ function ItineraryCard({ variant, onCycle }) {
             { i: 'star', t: 'Patrika Gate photo stop', s: '+ 1h · Thu am' },
             { i: 'spark', t: 'Block-printing workshop', s: '+ ₹1,200 · optional' }
           ].map((s, i) =>
-            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '8px 12px', border: '1px solid var(--color-border-subtle)', borderRadius: 'var(--radius-sm)', fontSize: '14px', background: 'rgba(255, 255, 255, 0.4)' }}>
-              <div style={{ width: '24px', height: '24px', borderRadius: 'var(--radius-pill)', background: 'var(--color-bg-surface)', display: 'grid', placeItems: 'center', color: 'var(--color-active)' }}>
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '8px 12px', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', fontSize: '14px', background: 'rgba(255, 255, 255, 0.4)' }}>
+              <div style={{ width: '24px', height: '24px', borderRadius: 'var(--radius-pill)', background: 'var(--surface)', display: 'grid', placeItems: 'center', color: 'var(--color-teal)' }}>
                 {s.i === 'fork' && <I.fork />}
                 {s.i === 'star' && <I.star />}
                 {s.i === 'spark' && <I.spark />}
               </div>
               <div style={{ flex: 1, fontFamily: 'var(--font-body)' }}>
-                <div style={{ color: 'var(--color-text-primary)', fontSize: '13px', fontWeight: 500 }}>{s.t}</div>
-                <div style={{ fontSize: '11px', color: 'var(--color-text-secondary)', fontFamily: 'var(--mono)' }}>{s.s}</div>
+                <div style={{ color: 'var(--fg)', fontSize: '13px', fontWeight: 500 }}>{s.t}</div>
+                <div style={{ fontSize: '11px', color: 'var(--muted)', fontFamily: 'var(--mono)' }}>{s.s}</div>
               </div>
-              <I.plus style={{ color: 'var(--color-text-secondary)' }} />
+              <I.plus style={{ color: 'var(--muted)' }} />
             </div>
           )}
         </div>
@@ -194,7 +194,7 @@ function ItineraryCard({ variant, onCycle }) {
 /* ---------- Hero (v3.1 Cinematic) ---------- */
 function Hero({ onPlan }) {
   return (
-    <div style={{ position: 'relative', height: '100vh', display: 'flex', flexDirection: 'column', boxSizing: 'border-box', background: 'var(--color-bg-soft)', width: '100%', overflow: 'hidden' }}>
+    <div style={{ position: 'relative', height: '100vh', display: 'flex', flexDirection: 'column', boxSizing: 'border-box', background: 'var(--glass-bg)', width: '100%', overflow: 'hidden' }}>
       {/* Background Image & Scrim Overlay */}
       <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
         <img 
@@ -205,29 +205,14 @@ function Hero({ onPlan }) {
         {/* Layer 1: Gentle top scrim for nav readability, deeper bottom scrim for text contrast */}
         <div style={{ 
           position: 'absolute', inset: 0, 
-          background: 'linear-gradient(to bottom, rgba(46,46,46,0.65) 0%, rgba(46,46,46,0.15) 30%, rgba(46,46,46,0.0) 60%, rgba(46,46,46,0.65) 100%)'
+          background: 'linear-gradient(to bottom, rgba(18,18,18,0.65) 0%, rgba(18,18,18,0.15) 30%, rgba(18,18,18,0.0) 60%, rgba(18,18,18,0.65) 100%)'
         }} />
-        {/* Layer 2: Soft warm-to-cool atmospheric tint matching image palette */}
-        <div style={{ 
-          position: 'absolute', inset: 0, 
-          background: 'linear-gradient(160deg, rgba(231,162,123,0.15) 0%, rgba(163,177,138,0.08) 50%, rgba(46,46,46,0.2) 100%)'
-        }} />
-
-        {/* Floating Organic Vector Waves in Corners for Premium Depth */}
-        <svg style={{ position: 'absolute', right: '-40px', bottom: '12%', height: '70%', width: '35%', zIndex: 1, pointerEvents: 'none', transform: 'scaleX(-1)' }} viewBox="0 0 100 200">
-          <path d="M0,200 C35,170 55,110 35,0" fill="none" stroke="rgba(255, 255, 255, 0.22)" strokeWidth="0.8" strokeLinecap="round" />
-          <path d="M12,200 C48,170 68,110 48,0" fill="none" stroke="rgba(255, 255, 255, 0.1)" strokeWidth="0.6" strokeLinecap="round" />
-        </svg>
-
-        <svg style={{ position: 'absolute', left: '-40px', top: '10%', height: '60%', width: '30%', zIndex: 1, pointerEvents: 'none' }} viewBox="0 0 100 200">
-          <path d="M0,200 C30,160 50,100 30,0" fill="none" stroke="rgba(255, 255, 255, 0.12)" strokeWidth="0.8" strokeLinecap="round" />
-        </svg>
       </div>
 
       {/* Smooth Organic Section Edge Transition at bottom */}
       <div style={{ position: 'absolute', bottom: -1, left: 0, right: 0, height: 48, zIndex: 3, pointerEvents: 'none' }}>
         <svg viewBox="0 0 1440 48" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
-          <path d="M0,48 L1440,48 L1440,24 C1080,-8 360,-8 0,24 Z" fill="var(--color-bg-main)" />
+          <path d="M0,48 L1440,48 L1440,24 C1080,-8 360,-8 0,24 Z" fill="var(--bg)" />
         </svg>
       </div>
 
@@ -240,9 +225,9 @@ function Hero({ onPlan }) {
             initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
             style={{ 
-              fontFamily: 'var(--font-heading)', fontSize: 'clamp(56px, 12vw, 154px)', lineHeight: 0.82, 
-              letterSpacing: '0.08em', fontWeight: 500, margin: 0, color: '#ffffff',
-              textTransform: 'uppercase', textShadow: '0 4px 24px rgba(46,46,46,0.55), 0 12px 60px rgba(46,46,46,0.3)'
+              fontFamily: 'var(--font-display)', fontSize: 'clamp(56px, 12vw, 154px)', lineHeight: 0.82, 
+              letterSpacing: '0.08em', fontWeight: 500, margin: 0, color: 'var(--color-cream)',
+              textTransform: 'uppercase', textShadow: '0 4px 24px rgba(18,18,18,0.55), 0 12px 60px rgba(18,18,18,0.3)'
             }}
           >
             ALTAIRGO
@@ -253,10 +238,10 @@ function Hero({ onPlan }) {
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
             style={{ marginTop: 24, display: 'flex', flexDirection: 'column', alignItems: 'center' }}
           >
-            <h2 style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(11px, 1.8vw, 13px)', fontWeight: 500, color: 'rgba(246, 241, 230, 0.95)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 16, textShadow: '0 2px 12px rgba(46,46,46,0.5)' }}>
+            <h2 style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(11px, 1.8vw, 13px)', fontWeight: 500, color: 'var(--color-cream)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 16, textShadow: '0 2px 12px rgba(18,18,18,0.5)' }}>
               India’s AI-First Travel Intelligence Platform
             </h2>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: '16px', fontWeight: 400, lineHeight: 1.65, color: 'rgba(255,255,255,0.92)', maxWidth: 540, margin: '0 auto', textShadow: '0 2px 16px rgba(46,46,46,0.7)' }}>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: '16px', fontWeight: 400, lineHeight: 1.65, color: 'var(--color-cream)', maxWidth: 540, margin: '0 auto', textShadow: '0 2px 16px rgba(18,18,18,0.7)' }}>
               Bespoke journeys mapped to the rhythm of India. Spontaneous road trips, slow boutique havelis, and deep heritage itineraries structured seamlessly by real-time travel intelligence.
             </p>
           </motion.div>
@@ -281,19 +266,19 @@ function Hero({ onPlan }) {
           >
             <div style={{ position: 'relative', marginBottom: 20 }}>
               <h3 style={{ 
-                fontFamily: 'var(--font-heading)', fontSize: 'clamp(36px, 5vw, 52px)', 
-                fontWeight: 500, color: '#ffffff', margin: 0, lineHeight: 0.85, 
-                letterSpacing: '-0.02em', textShadow: '0 4px 16px rgba(46,46,46,0.3)' 
+                fontFamily: 'var(--font-display)', fontSize: 'clamp(36px, 5vw, 52px)', 
+                fontWeight: 500, color: 'var(--color-cream)', margin: 0, lineHeight: 0.85, 
+                letterSpacing: '-0.02em', textShadow: '0 4px 16px rgba(18,18,18,0.3)' 
               }}>
                 Traveling
               </h3>
               <span style={{ 
-                fontFamily: 'var(--font-heading)', display: 'block', fontWeight: 400, 
+                fontFamily: 'var(--font-display)', display: 'block', fontWeight: 400, 
                 fontStyle: 'italic',
-                color: 'var(--color-accent)', 
+                color: 'var(--color-sand)', 
                 fontSize: 'clamp(34px, 4.5vw, 48px)', 
                 margin: '-4px 0 0 8px', textTransform: 'none', 
-                textShadow: '0 4px 16px rgba(46,46,46,0.2)' 
+                textShadow: '0 4px 16px rgba(18,18,18,0.2)' 
               }}>
                 Beyond
               </span>
@@ -431,10 +416,10 @@ function WhyAltairgo() {
         
         {/* Left Side: Content & Feature Cards */}
         <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
-          <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(36px, 4vw, 48px)', lineHeight: 1.15, letterSpacing: '-0.02em', fontWeight: 600, margin: '0 0 24px 0', color: 'var(--color-text-primary)' }}>
+          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(36px, 4vw, 48px)', lineHeight: 1.15, letterSpacing: '-0.02em', fontWeight: 600, margin: '0 0 24px 0', color: 'var(--fg)' }}>
             Unlock Smarter Indian Journeys
           </h2>
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: 16, lineHeight: 1.65, color: 'var(--color-text-secondary)', margin: '0 0 48px 0', maxWidth: 480 }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: 16, lineHeight: 1.65, color: 'var(--fg)', opacity: 0.85, margin: '0 0 48px 0', maxWidth: 480 }}>
             Altairgo helps you explore India smarter — from scenic road trips and train journeys to hidden escapes and cultural adventures. Personalized AI-powered itineraries designed for the way India actually travels.
           </p>
 
@@ -447,17 +432,17 @@ function WhyAltairgo() {
                 style={{ padding: '32px 24px', textAlign: 'left', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center' }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, borderRadius: 'var(--radius-pill)', background: 'var(--color-bg-surface)', color: 'var(--color-active)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, borderRadius: 'var(--radius-pill)', background: 'var(--surface)', color: 'var(--color-teal)' }}>
                     <card.icon />
                   </div>
-                  <div style={{ fontSize: 'clamp(22px, 2.8vw, 30px)', fontFamily: 'var(--font-heading)', fontWeight: 600, color: 'var(--color-active)', letterSpacing: '-0.02em', margin: 0, lineHeight: 1 }}>
+                  <div style={{ fontSize: 'clamp(22px, 2.8vw, 30px)', fontFamily: 'var(--font-display)', fontWeight: 600, color: 'var(--color-teal)', letterSpacing: '-0.02em', margin: 0, lineHeight: 1 }}>
                     <AnimatedCounter value={card.value} />
                   </div>
                 </div>
-                <div style={{ fontSize: 15, fontWeight: 500, color: 'var(--color-text-primary)', marginBottom: 6, lineHeight: 1.3, fontFamily: 'var(--font-body)' }}>
+                <div style={{ fontSize: 15, fontWeight: 500, color: 'var(--fg)', marginBottom: 6, lineHeight: 1.3, fontFamily: 'var(--font-body)' }}>
                   {card.title}
                 </div>
-                <div style={{ fontSize: 13, color: 'var(--color-text-secondary)', fontWeight: 400, lineHeight: 1.4, fontFamily: 'var(--font-body)' }}>
+                <div style={{ fontSize: 13, color: 'var(--muted)', fontWeight: 400, lineHeight: 1.4, fontFamily: 'var(--font-body)' }}>
                   {card.desc}
                 </div>
               </Card>
@@ -472,8 +457,8 @@ function WhyAltairgo() {
         >
           {/* Subtle decorative dashed data path overlay */}
           <svg style={{ position: 'absolute', top: '-10%', left: '-20%', width: '140%', height: '120%', pointerEvents: 'none', zIndex: 0 }} viewBox="0 0 500 500">
-            <path d="M 0 100 Q 200 -50 400 150 T 500 450" fill="none" stroke="var(--color-border-strong)" strokeWidth="1.5" strokeDasharray="6 8" strokeLinecap="round" style={{ opacity: 0.3 }} />
-            <path d="M 100 450 Q 300 550 450 300 T 500 100" fill="none" stroke="var(--color-border-strong)" strokeWidth="1.5" strokeDasharray="6 8" strokeLinecap="round" style={{ opacity: 0.3 }} />
+            <path d="M 0 100 Q 200 -50 400 150 T 500 450" fill="none" stroke="var(--border)" strokeWidth="1.5" strokeDasharray="6 8" strokeLinecap="round" style={{ opacity: 0.3 }} />
+            <path d="M 100 450 Q 300 550 450 300 T 500 100" fill="none" stroke="var(--border)" strokeWidth="1.5" strokeDasharray="6 8" strokeLinecap="round" style={{ opacity: 0.3 }} />
           </svg>
 
           {/* Left Column (Two Stacked Images) */}
@@ -483,14 +468,14 @@ function WhyAltairgo() {
               transition={{ duration: 0.4 }}
               src={journalKerala} 
               alt="Kerala Backwaters Serene View" 
-              style={{ width: '100%', height: 280, objectFit: 'cover', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border-subtle)' }}
+              style={{ width: '100%', height: 280, objectFit: 'cover', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--border)' }}
              />
              <motion.img 
               whileHover={{ scale: 1.02, y: -4 }}
               transition={{ duration: 0.4 }}
               src="https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?q=80&w=1000&auto=format&fit=crop" 
               alt="Desert Dunes Sunset" 
-              style={{ width: '100%', height: 280, objectFit: 'cover', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border-subtle)' }}
+              style={{ width: '100%', height: 280, objectFit: 'cover', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--border)' }}
              />
           </div>
 
@@ -501,7 +486,7 @@ function WhyAltairgo() {
               transition={{ duration: 0.4 }}
               src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1000&auto=format&fit=crop" 
               alt="Cinematic Himalayan Peaks" 
-              style={{ width: '100%', height: 460, objectFit: 'cover', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border-subtle)' }}
+              style={{ width: '100%', height: 460, objectFit: 'cover', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--border)' }}
              />
           </div>
         </motion.div>
@@ -554,7 +539,7 @@ function FAQ() {
         {/* Right Side: Accordion */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div style={{ marginBottom: 32 }}>
-            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '40px', lineHeight: 1.1, letterSpacing: '-0.02em', fontWeight: 600, color: 'var(--color-text-primary)' }}>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '40px', lineHeight: 1.1, letterSpacing: '-0.02em', fontWeight: 600, color: 'var(--fg)' }}>
               Still Have Questions? We've Got Answers.
             </h2>
           </div>
@@ -570,8 +555,8 @@ function FAQ() {
                   initial={false}
                   animate={{ 
                     borderRadius: isActive ? 16 : 9999,
-                    backgroundColor: isActive ? 'transparent' : 'var(--color-bg-soft)',
-                    color: 'var(--color-text-primary)'
+                    backgroundColor: isActive ? 'transparent' : 'var(--glass-bg)',
+                    color: 'var(--fg)'
                   }}
                   transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
                   style={{
@@ -579,7 +564,7 @@ function FAQ() {
                     overflow: 'hidden',
                     cursor: 'pointer',
                     boxShadow: 'var(--shadow-sm)',
-                    border: '1px solid var(--color-border-subtle)',
+                    border: '1px solid var(--border)',
                     padding: isActive ? '32px 32px 40px' : '16px 20px 16px 32px',
                     display: 'flex',
                     flexDirection: 'column',
@@ -602,7 +587,7 @@ function FAQ() {
 
                   {/* Header Row */}
                   <div style={{ position: 'relative', zIndex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 20 }}>
-                    <h3 style={{ fontFamily: 'var(--font-body)', fontSize: '16px', fontWeight: 500, margin: 0, display: 'flex', gap: 12, alignItems: 'center', color: isActive ? '#fff' : 'var(--color-text-primary)' }}>
+                    <h3 style={{ fontFamily: 'var(--font-body)', fontSize: '16px', fontWeight: 500, margin: 0, display: 'flex', gap: 12, alignItems: 'center', color: isActive ? '#fff' : 'var(--fg)' }}>
                       <span style={{ opacity: isActive ? 0.9 : 0.5, fontWeight: 600 }}>0{i + 1}.</span> 
                       {faq.q}
                     </h3>
@@ -611,8 +596,8 @@ function FAQ() {
                       layout
                       animate={{ 
                         rotate: isActive ? 180 : 0,
-                        backgroundColor: isActive ? 'var(--color-bg-soft)' : 'var(--color-text-primary)',
-                        color: isActive ? 'var(--color-text-primary)' : 'var(--color-bg-soft)'
+                        backgroundColor: isActive ? 'var(--glass-bg)' : 'var(--fg)',
+                        color: isActive ? 'var(--fg)' : 'var(--glass-bg)'
                       }}
                       style={{
                         width: 44, height: 44, borderRadius: 'var(--radius-pill)', flexShrink: 0,
@@ -687,13 +672,13 @@ function TravelInspiration() {
         
         {/* Left Side Content */}
         <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
-          <div className={styles.mono} style={{ marginBottom: 16, fontSize: 13, color: 'var(--color-text-secondary)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+          <div className={styles.mono} style={{ marginBottom: 16, fontSize: 13, color: 'var(--muted)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
             Explore with AltairGO
           </div>
-          <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(40px, 4.5vw, 56px)', lineHeight: 1.1, letterSpacing: '-0.02em', fontWeight: 600, margin: '0 0 24px 0', color: 'var(--color-text-primary)' }}>
-            Travel India <br/><span style={{ fontStyle: 'italic', color: 'var(--color-active)' }}>Your Way</span>
+          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(40px, 4.5vw, 56px)', lineHeight: 1.1, letterSpacing: '-0.02em', fontWeight: 600, margin: '0 0 24px 0', color: 'var(--fg)' }}>
+            Travel India <br/><span style={{ fontStyle: 'italic', color: 'var(--color-teal)' }}>Your Way</span>
           </h2>
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: 16, lineHeight: 1.6, color: 'var(--color-text-secondary)', margin: '0 0 40px 0', maxWidth: 460 }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: 16, lineHeight: 1.6, color: 'var(--muted)', margin: '0 0 40px 0', maxWidth: 460 }}>
             From Himalayan adventures and spiritual trails to luxury escapes and coastal getaways, AltairGO helps you discover journeys tailored to your vibe, budget, season, and travel style.
           </p>
           <Button variant="secondary" onClick={() => navigate('/discover')}>
@@ -718,9 +703,9 @@ function TravelInspiration() {
                   borderRadius: 'var(--radius-xl)',
                   overflow: 'hidden',
                   cursor: 'pointer',
-                  border: '1px solid var(--color-border-subtle)',
+                  border: '1px solid var(--border)',
                   boxShadow: 'var(--shadow-sm)',
-                  background: 'var(--color-bg-soft)'
+                  background: 'var(--glass-bg)'
                 }}
               >
                 <motion.img 
@@ -735,7 +720,7 @@ function TravelInspiration() {
                   background: 'linear-gradient(to top, rgba(46,46,46,0.8) 0%, rgba(46,46,46,0) 60%)',
                   display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '24px'
                 }}>
-                  <h3 style={{ color: '#fff', fontSize: 22, fontWeight: 500, letterSpacing: '-0.01em', margin: '0 0 6px 0', textShadow: '0 2px 8px rgba(46,46,46,0.3)', fontFamily: 'var(--font-heading)' }}>
+                  <h3 style={{ color: '#fff', fontSize: 22, fontWeight: 500, letterSpacing: '-0.01em', margin: '0 0 6px 0', textShadow: '0 2px 8px rgba(46,46,46,0.3)', fontFamily: 'var(--font-display)' }}>
                     {card.title}
                   </h3>
                   <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: 13.5, margin: 0, lineHeight: 1.4, fontWeight: 400, fontFamily: 'var(--font-body)' }}>
@@ -784,21 +769,21 @@ function CarouselImage({ src, alt }) {
       <div style={{ 
         width: '100%', 
         height: '100%', 
-        background: 'var(--color-bg-surface)',
+        background: 'var(--surface)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
         position: 'relative',
         overflow: 'hidden',
-        border: '1px solid var(--color-border-subtle)'
+        border: '1px solid var(--border)'
       }}>
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-secondary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7, marginBottom: 12 }}>
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7, marginBottom: 12 }}>
           <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
           <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
           <line x1="12" y1="22.08" x2="12" y2="12" />
         </svg>
-        <span style={{ fontSize: 11, color: 'var(--color-text-secondary)', fontFamily: 'var(--mono)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+        <span style={{ fontSize: 11, color: 'var(--muted)', fontFamily: 'var(--mono)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
           AltairGO Journey
         </span>
       </div>
@@ -806,12 +791,12 @@ function CarouselImage({ src, alt }) {
   }
 
   return (
-    <div style={{ width: '100%', height: '100%', position: 'relative', background: 'var(--color-bg-surface)' }}>
+    <div style={{ width: '100%', height: '100%', position: 'relative', background: 'var(--surface)' }}>
       {!loaded && (
         <div style={{
           position: 'absolute',
           inset: 0,
-          background: 'var(--color-bg-surface)',
+          background: 'var(--surface)',
           overflow: 'hidden'
         }}>
           <span style={{
@@ -853,8 +838,8 @@ function TourSelection() {
         viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
         style={{ textAlign: 'center', marginBottom: 60 }}
       >
-        <h2 className={styles.sectionHeadline} style={{ fontSize: 44, lineHeight: 1.05, letterSpacing: '-0.02em', fontWeight: 600, margin: '0 auto', maxWidth: 760, color: 'var(--color-text-primary)', fontFamily: 'var(--font-heading)' }}>
-          Explore our <span style={{ fontStyle: 'italic', color: 'var(--color-active)' }}>Indian</span> destinations
+        <h2 className={styles.sectionHeadline} style={{ fontSize: 44, lineHeight: 1.05, letterSpacing: '-0.02em', fontWeight: 600, margin: '0 auto', maxWidth: 760, color: 'var(--fg)', fontFamily: 'var(--font-display)' }}>
+          Explore our <span style={{ fontStyle: 'italic', color: 'var(--color-teal)' }}>Indian</span> destinations
         </h2>
       </motion.div>
 
@@ -882,7 +867,7 @@ function TourSelection() {
                 position: 'absolute', width: 320, height: 440, borderRadius: 'var(--radius-xl)', overflow: 'hidden',
                 cursor: isActive ? 'default' : 'pointer',
                 boxShadow: isActive ? 'var(--shadow-xl)' : 'var(--shadow-md)',
-                border: '1px solid var(--color-border-subtle)'
+                border: '1px solid var(--border)'
               }}
             >
               <CarouselImage src={tour.img} alt={tour.title} />
@@ -892,7 +877,7 @@ function TourSelection() {
               </div>
               
               <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', mixBlendMode: 'overlay' }}>
-                <span style={{ fontSize: 180, fontWeight: 300, color: 'transparent', WebkitTextStroke: '2px rgba(255,255,255,0.9)', fontFamily: 'var(--font-heading)' }}>
+                <span style={{ fontSize: 180, fontWeight: 300, color: 'transparent', WebkitTextStroke: '2px rgba(255,255,255,0.9)', fontFamily: 'var(--font-display)' }}>
                   {tour.id}
                 </span>
               </div>
@@ -906,11 +891,11 @@ function TourSelection() {
           onClick={handlePrev} disabled={active === 0}
           style={{ 
             all: 'unset', cursor: active === 0 ? 'not-allowed' : 'pointer', width: 56, height: 56, 
-            borderRadius: '50%', border: '1px solid var(--color-border-subtle)', display: 'grid', placeItems: 'center', 
-            color: 'var(--color-text-primary)', opacity: active === 0 ? 0.3 : 1, transition: 'all 0.2s ease', background: 'var(--color-bg-soft)', boxShadow: 'var(--shadow-sm)'
+            borderRadius: '50%', border: '1px solid var(--border)', display: 'grid', placeItems: 'center', 
+            color: 'var(--fg)', opacity: active === 0 ? 0.3 : 1, transition: 'all 0.2s ease', background: 'var(--glass-bg)', boxShadow: 'var(--shadow-sm)'
           }}
-          onMouseEnter={(e) => { if(active !== 0) e.currentTarget.style.background = 'var(--color-bg-surface)'; }}
-          onMouseLeave={(e) => { if(active !== 0) e.currentTarget.style.background = 'var(--color-bg-soft)'; }}
+          onMouseEnter={(e) => { if(active !== 0) e.currentTarget.style.background = 'var(--surface)'; }}
+          onMouseLeave={(e) => { if(active !== 0) e.currentTarget.style.background = 'var(--glass-bg)'; }}
         >
           <I.arrow style={{ transform: 'rotate(180deg)', width: 18, height: 18 }} />
         </button>
@@ -923,11 +908,11 @@ function TourSelection() {
           onClick={handleNext} disabled={active === TOURS.length - 1}
           style={{ 
             all: 'unset', cursor: active === TOURS.length - 1 ? 'not-allowed' : 'pointer', width: 56, height: 56, 
-            borderRadius: '50%', border: '1px solid var(--color-border-subtle)', display: 'grid', placeItems: 'center', 
-            color: 'var(--color-text-primary)', opacity: active === TOURS.length - 1 ? 0.3 : 1, transition: 'all 0.2s ease', background: 'var(--color-bg-soft)', boxShadow: 'var(--shadow-sm)'
+            borderRadius: '50%', border: '1px solid var(--border)', display: 'grid', placeItems: 'center', 
+            color: 'var(--fg)', opacity: active === TOURS.length - 1 ? 0.3 : 1, transition: 'all 0.2s ease', background: 'var(--glass-bg)', boxShadow: 'var(--shadow-sm)'
           }}
-          onMouseEnter={(e) => { if(active !== TOURS.length - 1) e.currentTarget.style.background = 'var(--color-bg-surface)'; }}
-          onMouseLeave={(e) => { if(active !== TOURS.length - 1) e.currentTarget.style.background = 'var(--color-bg-soft)'; }}
+          onMouseEnter={(e) => { if(active !== TOURS.length - 1) e.currentTarget.style.background = 'var(--surface)'; }}
+          onMouseLeave={(e) => { if(active !== TOURS.length - 1) e.currentTarget.style.background = 'var(--glass-bg)'; }}
         >
           <I.arrow style={{ width: 18, height: 18 }} />
         </button>

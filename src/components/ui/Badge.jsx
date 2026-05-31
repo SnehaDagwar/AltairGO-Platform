@@ -2,44 +2,44 @@ import React from 'react';
 
 const variantStyles = {
   default: { 
-    background: 'var(--color-bg-surface)', 
-    color: 'var(--color-text-primary)' 
+    background: 'var(--surface)', 
+    color: 'var(--fg)' 
   },
   primary: { 
-    background: 'var(--color-bg-soft)', 
-    color: 'var(--color-primary)' 
+    background: 'var(--color-teal)', 
+    color: '#FFF' 
   },
   success: { 
-    background: 'var(--color-success-surface)', 
-    color: 'var(--color-success)' 
+    background: 'oklch(95% 0.05 150)', 
+    color: 'oklch(40% 0.1 150)' 
   },
   info: { 
-    background: 'var(--color-info-surface)', 
-    color: 'var(--color-info)' 
+    background: 'var(--color-ice)', 
+    color: 'oklch(40% 0.1 240)' 
   },
   warning: { 
-    background: 'var(--color-warning-surface)', 
-    color: 'var(--color-warning)' 
+    background: 'var(--color-cream)', 
+    color: 'oklch(50% 0.1 60)' 
   },
   error: { 
-    background: 'var(--color-error-surface)', 
-    color: 'var(--color-error)' 
+    background: 'var(--color-peach)', 
+    color: 'oklch(45% 0.15 20)' 
   },
   accent: { 
-    background: 'var(--color-accent)', 
-    color: 'var(--color-text-primary)',
+    background: 'var(--color-lavender)', 
+    color: 'var(--color-black)',
     fontWeight: '500'
   },
   'ai-pick': { 
-    background: 'var(--color-accent)', 
-    color: 'var(--color-text-primary)',
+    background: 'var(--color-lavender)', 
+    color: 'var(--color-black)',
     fontWeight: '500'
   },
 };
 
 const sizeStyles = {
   sm: { fontSize: '12px', padding: '2px 8px' },
-  md: { fontSize: '14px', padding: '6px 14px' }, /* Pill padding matches default pill '6px 14px' */
+  md: { fontSize: '14px', padding: '6px 14px' },
 };
 
 export default function Badge({
@@ -54,13 +54,13 @@ export default function Badge({
 
   return (
     <span
-      className={`altair-badge altair-badge--${variant}${className ? ` ${className}` : ''}`}
+      className={`badge badge--${variant} ${className}`}
       style={{
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 'var(--radius-pill)', /* pill shape is exactly 9999px */
-        fontWeight: activeStyle.fontWeight || '400', /* Default pill/badge weight is 400, except active chips and AI pick */
+        borderRadius: 'var(--radius-pill)',
+        fontWeight: activeStyle.fontWeight || '400',
         fontFamily: 'var(--font-body)',
         lineHeight: 1,
         whiteSpace: 'nowrap',

@@ -27,7 +27,7 @@ export default function EmptyState({
       {...rest}
     >
       {IconComponent && (
-        <div style={{ color: 'var(--color-text-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ color: 'var(--muted)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           {/* Render the icon component directly or pass a custom node */}
           {React.isValidElement(IconComponent) ? (
             IconComponent
@@ -39,11 +39,11 @@ export default function EmptyState({
       
       {title && (
         <h3 style={{ 
-          fontFamily: 'var(--font-heading)', 
-          fontSize: '24px', /* Copernicus 24px */
-          fontWeight: '500', /* H3 weight: 500 */
-          color: 'var(--color-text-primary)', 
-          marginTop: '16px', /* margin-top: 16px */
+          fontFamily: 'var(--font-display)', 
+          fontSize: '2rem',
+          fontWeight: '400',
+          color: 'var(--fg)', 
+          marginTop: '16px',
           marginBottom: 0,
           lineHeight: 1.3
         }}>
@@ -54,10 +54,10 @@ export default function EmptyState({
       {description && (
         <p style={{ 
           fontFamily: 'var(--font-body)',
-          fontSize: '16px', /* StyreneB 16px */
-          fontWeight: '400', /* Body weight: 400 */
-          color: 'var(--color-text-secondary)', 
-          marginTop: '8px', /* margin-top: 8px */
+          fontSize: '1rem',
+          fontWeight: '400',
+          color: 'var(--muted)', 
+          marginTop: '8px',
           marginBottom: 0,
           lineHeight: 1.6,
           maxWidth: '360px',

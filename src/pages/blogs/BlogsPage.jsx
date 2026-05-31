@@ -56,11 +56,11 @@ const BlogsPage = () => {
               </div>
             </article>
           )) : fetchError ? (
-            <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '4rem', color: 'var(--text-muted)' }}>
+            <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '4rem', color: 'var(--muted)' }}>
               Could not load blog posts. Please try again later.
             </div>
           ) : (
-            <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '4rem', color: 'var(--text-muted)' }}>
+            <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '4rem', color: 'var(--muted)' }}>
               No blog posts found.
             </div>
           )}

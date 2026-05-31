@@ -18,7 +18,7 @@ export default function ProgressBar({
     >
       {showLabel && (
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <span style={{ fontSize: '14px', color: 'var(--color-text-primary)', fontWeight: '500', fontFamily: 'var(--font-body)' }}>
+          <span style={{ fontSize: '14px', color: 'var(--fg)', fontWeight: '500', fontFamily: 'var(--font-body)' }}>
             {indeterminate ? 'Loading...' : `${clamped}%`}
           </span>
         </div>
@@ -30,9 +30,9 @@ export default function ProgressBar({
         aria-valuemax={indeterminate ? undefined : 100}
         style={{
           width: '100%',
-          height: '8px', /* Height exactly 8px */
-          background: 'var(--color-bg-surface)', /* Track bg is bg-surface (#D6C4AB) */
-          borderRadius: 'var(--radius-pill)', /* Track is pill shape */
+          height: '8px', 
+          background: 'var(--surface)',
+          borderRadius: 'var(--radius-pill)', 
           overflow: 'hidden',
           position: 'relative',
         }}
@@ -41,7 +41,7 @@ export default function ProgressBar({
           style={{
             height: '100%',
             borderRadius: 'var(--radius-pill)',
-            background: 'var(--color-primary)', /* Fill is primary (#A3B18A) */
+            background: 'var(--color-teal)',
             
             // Determinate properties
             ...(!indeterminate ? {
