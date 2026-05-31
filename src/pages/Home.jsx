@@ -126,7 +126,7 @@ function ItineraryCard({ variant, onCycle }) {
 
       {/* Right side: map + details */}
       <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', background: 'var(--glass-bg)' }}>
-        <div style={{ position: 'relative', background: 'var(--surface)', borderRadius: 'var(--radius-xl)', height: '150px', border: '1px solid var(--border)', overflow: 'hidden', marginBottom: '16px' }}>
+        <div style={{ position: 'relative', background: 'var(--surface)', borderRadius: 'var(--radius-lg)', height: '150px', border: '1px solid var(--border)', overflow: 'hidden', marginBottom: '16px' }}>
           {/* stylized map */}
           <svg viewBox="0 0 240 150" width="100%" height="100%">
             <defs>
@@ -468,14 +468,14 @@ function WhyAltairgo() {
               transition={{ duration: 0.4 }}
               src={journalKerala} 
               alt="Kerala Backwaters Serene View" 
-              style={{ width: '100%', height: 280, objectFit: 'cover', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--border)' }}
+              style={{ width: '100%', height: 280, objectFit: 'cover', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--border)' }}
              />
              <motion.img 
               whileHover={{ scale: 1.02, y: -4 }}
               transition={{ duration: 0.4 }}
               src="https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?q=80&w=1000&auto=format&fit=crop" 
               alt="Desert Dunes Sunset" 
-              style={{ width: '100%', height: 280, objectFit: 'cover', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--border)' }}
+              style={{ width: '100%', height: 280, objectFit: 'cover', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--border)' }}
              />
           </div>
 
@@ -486,7 +486,7 @@ function WhyAltairgo() {
               transition={{ duration: 0.4 }}
               src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1000&auto=format&fit=crop" 
               alt="Cinematic Himalayan Peaks" 
-              style={{ width: '100%', height: 460, objectFit: 'cover', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--border)' }}
+              style={{ width: '100%', height: 460, objectFit: 'cover', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--border)' }}
              />
           </div>
         </motion.div>
@@ -517,17 +517,17 @@ function FAQ() {
           <motion.img 
             src={destKashmir} 
             animate={{ y: [0, -10, 0] }} transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-            style={{ position: 'absolute', top: '0%', left: '0%', width: '50%', height: '50%', objectFit: 'cover', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-lg)', zIndex: 1 }} 
+            style={{ position: 'absolute', top: '0%', left: '0%', width: '50%', height: '50%', objectFit: 'cover', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-lg)', zIndex: 1 }} 
           />
           <motion.img 
             src={destRajasthan} 
             animate={{ y: [0, 10, 0] }} transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
-            style={{ position: 'absolute', top: '28%', left: '36%', width: '54.5%', height: '43.7%', objectFit: 'cover', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-lg)', zIndex: 2 }} 
+            style={{ position: 'absolute', top: '28%', left: '36%', width: '54.5%', height: '43.7%', objectFit: 'cover', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-lg)', zIndex: 2 }} 
           />
           <motion.img 
             src={destKerala} 
             animate={{ y: [0, -8, 0] }} transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-            style={{ position: 'absolute', top: '53%', left: '4.5%', width: '45.4%', height: '40.6%', objectFit: 'cover', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-lg)', zIndex: 3 }} 
+            style={{ position: 'absolute', top: '53%', left: '4.5%', width: '45.4%', height: '40.6%', objectFit: 'cover', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-lg)', zIndex: 3 }} 
           />
           <motion.img 
             src={destGoa} 
@@ -700,7 +700,7 @@ function TravelInspiration() {
                 className={card.gridClass}
                 style={{ 
                   position: 'relative',
-                  borderRadius: 'var(--radius-xl)',
+                  borderRadius: 'var(--radius-lg)',
                   overflow: 'hidden',
                   cursor: 'pointer',
                   border: '1px solid var(--border)',
@@ -864,7 +864,7 @@ function TourSelection() {
               transition={{ type: 'spring', stiffness: 260, damping: 25 }}
               onClick={() => setActive(i)}
               style={{
-                position: 'absolute', width: 320, height: 440, borderRadius: 'var(--radius-xl)', overflow: 'hidden',
+                position: 'absolute', width: 320, height: 440, borderRadius: 'var(--radius-lg)', overflow: 'hidden',
                 cursor: isActive ? 'default' : 'pointer',
                 boxShadow: isActive ? 'var(--shadow-xl)' : 'var(--shadow-md)',
                 border: '1px solid var(--border)'

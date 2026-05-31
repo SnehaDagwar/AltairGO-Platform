@@ -526,7 +526,7 @@ const TripPlannerPage = () => {
                         gap: '6px', 
                         padding: '12px 20px', 
                         border: 'none',
-                        borderRadius: 'var(--radius-xl)', 
+                        borderRadius: 'var(--radius-lg)', 
                         background: travelerType === t.value ? 'var(--color-teal)' : 'var(--surface)', 
                         color: 'var(--fg)', 
                         fontFamily: 'var(--font-body)', 
@@ -604,7 +604,7 @@ const TripPlannerPage = () => {
                 </button>
 
                 {showAdvanced && (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', padding: '20px', background: 'var(--surface)', borderRadius: 'var(--radius-xl)', border: '1px solid var(--border)', boxSizing: 'border-box' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', padding: '20px', background: 'var(--surface)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)', boxSizing: 'border-box' }}>
                     {/* Dietary */}
                     <div>
                       <label style={{ display: 'block', fontWeight: 500, color: 'var(--fg)', marginBottom: '8px', fontSize: '13px', fontFamily: 'var(--font-body)' }}>Dietary preference</label>
@@ -679,7 +679,7 @@ const TripPlannerPage = () => {
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '32px', fontWeight: 600, color: 'var(--fg)', marginBottom: '8px', lineHeight: 1.2 }}>Review & Generate</h2>
               <p style={{ fontFamily: 'var(--font-body)', fontSize: '16px', color: 'var(--muted)', marginBottom: '32px' }}>Confirm your trip details before generating</p>
 
-              <div style={{ background: 'var(--surface)', borderRadius: 'var(--radius-xl)', padding: '24px', marginBottom: '32px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ background: 'var(--surface)', borderRadius: 'var(--radius-lg)', padding: '24px', marginBottom: '32px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 {[
                   { icon: <MapPin size={18} />, label: 'Destinations', value: selectedDests.map(d => d.name).join(', ') || 'None selected' },
                   { icon: <Calendar size={18} />, label: 'Duration', value: `${duration} days${startDate ? ` from ${new Date(startDate).toLocaleDateString('en-IN')}` : ''}` },
