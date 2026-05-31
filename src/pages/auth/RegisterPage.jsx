@@ -146,7 +146,7 @@ const RegisterPage = () => {
                 />
                 {password && (
                   <div className={styles.strengthBar}>
-                    <div className={styles.strengthFill} style={{ width: strength.pct, background: strength.color }} />
+                    <div className={styles.strengthFill} style={{ transform: `scaleX(${parseFloat(strength.pct) / 100})`, transformOrigin: 'left', background: strength.color }} />
                   </div>
                 )}
               </div>

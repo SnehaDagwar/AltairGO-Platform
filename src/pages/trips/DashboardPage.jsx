@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { MapPin, Clock, DollarSign, Star, Share2, Plus, Sparkles, ArrowRight } from 'lucide-react';
 import { getUserTrips, shareTrip } from '../../services/api.js';
-import { DashboardSkeleton } from '../../components/Skeleton/Skeleton.jsx';
+import { DashboardSkeleton } from '../../components/skeletons/Skeleton.jsx';
 import toast from 'react-hot-toast';
 
 const TripCard = ({ trip, onShare }) => {

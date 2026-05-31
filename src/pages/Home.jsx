@@ -30,9 +30,9 @@ import destJaisalmerNew from '../assets/jaisalmer-desert-camel.jpg';
 import destDarjeelingNew from '../assets/darjeeling-tea-pickers.jpg';
 import destRishikesh from '../assets/rishikesh-yoga.jpg';
 import destKashmirNew from '../assets/kashmir.jpg';
-import Button from '../components/ui/Button.jsx';
-import Card from '../components/ui/Card.jsx';
-import Badge from '../components/ui/Badge.jsx';
+import Button from '../components/common/Button.jsx';
+import Card from '../components/common/Card.jsx';
+import Badge from '../components/common/Badge.jsx';
 
 /* ---------- Minimal inline strokes Icons ---------- */
 const I = {
@@ -267,18 +267,17 @@ function Hero({ onPlan }) {
           >
             <div style={{ position: 'relative', marginBottom: 20 }}>
               <h3 style={{ 
-                fontFamily: 'var(--font-display)', fontSize: 'clamp(36px, 5vw, 52px)', 
-                fontWeight: 500, color: 'var(--color-cream)', margin: 0, lineHeight: 0.85, 
-                letterSpacing: '-0.02em', textShadow: '0 4px 16px rgba(18,18,18,0.3)' 
+                fontFamily: 'var(--font-accent)', fontSize: 'clamp(44px, 6vw, 64px)', 
+                fontWeight: 400, color: 'var(--color-teal)', margin: 0, lineHeight: 0.85, 
+                textShadow: '0 4px 16px rgba(18,18,18,0.3)' 
               }}>
                 Traveling
               </h3>
               <span style={{ 
-                fontFamily: 'var(--font-display)', display: 'block', fontWeight: 400, 
-                fontStyle: 'italic',
-                color: 'var(--color-sand)', 
-                fontSize: 'clamp(34px, 4.5vw, 48px)', 
-                margin: '-4px 0 0 8px', textTransform: 'none', 
+                fontFamily: 'var(--font-accent)', display: 'block', fontWeight: 400, 
+                color: 'var(--color-teal)', 
+                fontSize: 'clamp(40px, 5.5vw, 58px)', 
+                margin: '-4px 0 0 12px', textTransform: 'none', 
                 textShadow: '0 4px 16px rgba(18,18,18,0.2)' 
               }}>
                 Beyond
@@ -677,7 +676,7 @@ function TravelInspiration() {
             Explore with AltairGO
           </div>
           <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(40px, 4.5vw, 56px)', lineHeight: 1.1, letterSpacing: '-0.02em', fontWeight: 600, margin: '0 0 24px 0', color: 'var(--fg)' }}>
-            Travel India <br/><span style={{ fontStyle: 'italic', color: 'var(--color-teal)' }}>Your Way</span>
+            Travel India <br/><span style={{ fontFamily: 'var(--font-accent)', color: 'var(--color-teal)', fontWeight: 'normal', fontSize: '1.15em', textTransform: 'none' }}>Your Way</span>
           </h2>
           <p style={{ fontFamily: 'var(--font-body)', fontSize: 16, lineHeight: 1.6, color: 'var(--muted)', margin: '0 0 40px 0', maxWidth: 460 }}>
             From Himalayan adventures and spiritual trails to luxury escapes and coastal getaways, AltairGO helps you discover journeys tailored to your vibe, budget, season, and travel style.
@@ -840,7 +839,7 @@ function TourSelection() {
         style={{ textAlign: 'center', marginBottom: 60 }}
       >
         <h2 className={styles.sectionHeadline} style={{ fontSize: 44, lineHeight: 1.05, letterSpacing: '-0.02em', fontWeight: 600, margin: '0 auto', maxWidth: 760, color: 'var(--fg)', fontFamily: 'var(--font-display)' }}>
-          Explore our <span style={{ fontStyle: 'italic', color: 'var(--color-teal)' }}>Indian</span> destinations
+          Explore our <span style={{ fontFamily: 'var(--font-accent)', color: 'var(--color-teal)', fontWeight: 'normal', fontSize: '1.15em', textTransform: 'none' }}>Indian</span> destinations
         </h2>
       </motion.div>
 

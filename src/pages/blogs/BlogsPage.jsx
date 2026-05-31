@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import styles from '../../components/Blogs/Blogs.module.css';
+import styles from '../../components/blogs/Blogs.module.css';
 import { getBlogs } from '../../services/api';
-import { BlogCardSkeleton } from '../../components/Skeleton/Skeleton';
+import { BlogCardSkeleton } from '../../components/skeletons/Skeleton';
 
 const BlogsPage = () => {
   const navigate = useNavigate();

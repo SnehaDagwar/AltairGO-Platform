@@ -128,11 +128,11 @@
 /* Custom full-screen flex layout for Hero content, bypassing global responsiveGrid layout rules */
 .heroContentContainer {
   position: relative;
-  z-index: 2;
+  z-index: 4;
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 140px 48px 80px;
+  padding: 140px 48px 105px;
   display: flex !important;
   flex-direction: column;
   height: 100%;
@@ -143,13 +143,13 @@
 
 @media (max-width: 1024px) {
   .heroContentContainer {
-    padding: 100px 32px 60px !important;
+    padding: 100px 32px 85px !important;
   }
 }
 
 @media (max-width: 768px) {
   .heroContentContainer {
-    padding: 80px 24px 40px !important;
+    padding: 80px 24px 65px !important;
     gap: 48px;
   }
 }

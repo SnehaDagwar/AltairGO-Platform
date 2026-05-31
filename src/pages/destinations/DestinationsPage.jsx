@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Search, SearchX, Sparkles } from 'lucide-react';
 import styles from './DestinationsPage.module.css';
-import DestinationCard from '../../components/DestinationCard/DestinationCard.jsx';
+import DestinationCard from '../../components/destinations/DestinationCard/DestinationCard.jsx';
 import { getDestinations, recommend } from '../../services/api.js';
 import toast from 'react-hot-toast';
 

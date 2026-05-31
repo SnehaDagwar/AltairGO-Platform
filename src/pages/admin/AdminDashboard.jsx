@@ -637,7 +637,7 @@ const AdminDashboard = () => {
                           </>
                         )}
                         {previewBlog.excerpt && (
-                          <p style={{ fontSize: '1.1rem', color: '#5e5d59', borderLeft: '4px solid #5ac576', paddingLeft: '1.25rem', marginBottom: '1.5rem', lineHeight: 1.7 }}>{previewBlog.excerpt}</p>
+                          <p style={{ fontSize: '1.1rem', color: '#5e5d59', border: '1px solid rgba(90, 197, 118, 0.25)', background: 'rgba(90, 197, 118, 0.05)', borderRadius: 'var(--radius-md)', padding: '1rem 1.25rem', marginBottom: '1.5rem', lineHeight: 1.7 }}>{previewBlog.excerpt}</p>
                         )}
                         {previewBlog.content && (
                           <div

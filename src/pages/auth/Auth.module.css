@@ -381,7 +381,9 @@
 .strengthFill {
   height: 100%;
   border-radius: 4px;
-  transition: width 0.3s, background 0.3s;
+  width: 100%;
+  transform-origin: left;
+  transition: transform 0.3s, background 0.3s;
 }
 
 @media (min-width: 768px) {

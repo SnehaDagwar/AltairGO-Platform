@@ -21,7 +21,7 @@ export default function ReadinessTab({ readiness }) {
         </div>
         <div style={{ color: '#5e5d59', fontSize: '1.05rem', marginBottom: '1.5rem' }}>Trip Readiness</div>
         <div style={{ background: '#faf9f5', borderRadius: '999px', height: '8px', overflow: 'hidden' }}>
-          <div style={{ height: '100%', borderRadius: '999px', background: scoreColor, width: `${readiness.score}%`, transition: 'width 0.8s ease' }} />
+          <div style={{ height: '100%', borderRadius: '999px', background: scoreColor, width: '100%', transform: `scaleX(${readiness.score / 100})`, transformOrigin: 'left', transition: 'transform 0.8s ease' }} />
         </div>
       </div>
 
