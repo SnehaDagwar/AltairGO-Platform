@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 import styles from './Home.module.css';
 import logoUrl from '../assets/logo.png';
-import heroBg from '../assets/hero-bg.jpg';
+import heroBg from '../assets/hero-palace-sunrise.jpg';
 import philJaipur from '../assets/phil-jaipur.png';
 import philKerala from '../assets/phil-kerala.png';
 import philGoa from '../assets/phil-goa.png';
@@ -291,14 +291,20 @@ function Hero({ onPlan }) {
         {/* Background Image & Immersive Overlay */}
         <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
           <img 
-            src="https://images.unsplash.com/photo-1540541338287-41700207dee6?q=80&w=2000&auto=format&fit=crop" 
-            alt="Pristine Twilight Resort Pool" 
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+            src={heroBg} 
+            alt="Pristine Lakeside Palace Sunrise" 
+            style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }} 
           />
-          {/* Subtle top/bottom gradient overlays to maintain maximum readability */}
+          {/* Multi-layer overlay tuned for the soft pastel dawn image */}
+          {/* Layer 1: Gentle top veil so navbar/logo reads well */}
           <div style={{ 
             position: 'absolute', inset: 0, 
-            background: 'linear-gradient(to bottom, rgba(20,28,45,0.7) 0%, rgba(20,28,45,0.3) 50%, rgba(20,28,45,0.75) 100%)' 
+            background: 'linear-gradient(to bottom, rgba(12,20,38,0.55) 0%, rgba(12,20,38,0.1) 38%, rgba(12,20,38,0.0) 60%, rgba(12,20,38,0.6) 100%)'
+          }} />
+          {/* Layer 2: Soft warm-to-cool atmospheric tint matching image palette */}
+          <div style={{ 
+            position: 'absolute', inset: 0, 
+            background: 'linear-gradient(160deg, rgba(255,190,140,0.08) 0%, rgba(160,200,240,0.06) 50%, rgba(10,25,60,0.18) 100%)'
           }} />
         </div>
 
@@ -330,7 +336,7 @@ function Hero({ onPlan }) {
               style={{ 
                 fontFamily: 'var(--font-display)', fontSize: 'clamp(56px, 12vw, 154px)', lineHeight: 0.82, 
                 letterSpacing: '0.08em', fontWeight: 400, margin: 0, color: '#ffffff',
-                textTransform: 'uppercase', textShadow: '0 10px 40px rgba(20,28,45,0.45)'
+                textTransform: 'uppercase', textShadow: '0 4px 24px rgba(10,20,50,0.55), 0 12px 60px rgba(10,20,50,0.3)'
               }}
             >
               ALTAIRGO
@@ -341,10 +347,10 @@ function Hero({ onPlan }) {
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
               style={{ marginTop: 24, display: 'flex', flexDirection: 'column', alignItems: 'center' }}
             >
-              <h2 style={{ fontFamily: 'var(--mono)', fontSize: 'clamp(11px, 1.8vw, 13px)', fontWeight: 500, color: 'var(--cerulean)', letterSpacing: '0.28em', textTransform: 'uppercase', marginBottom: 16 }}>
+              <h2 style={{ fontFamily: 'var(--mono)', fontSize: 'clamp(11px, 1.8vw, 13px)', fontWeight: 500, color: 'rgba(200,230,255,0.92)', letterSpacing: '0.28em', textTransform: 'uppercase', marginBottom: 16, textShadow: '0 2px 12px rgba(10,20,50,0.5)' }}>
                 India’s AI-First Travel Intelligence Platform
               </h2>
-              <p style={{ fontSize: 16, lineHeight: 1.65, color: '#ffffff', maxWidth: 540, margin: 0, textShadow: '0 2px 12px rgba(0,0,0,0.6)' }}>
+              <p style={{ fontSize: 16, lineHeight: 1.65, color: 'rgba(255,255,255,0.92)', maxWidth: 540, margin: 0, textShadow: '0 2px 16px rgba(10,20,50,0.7)' }}>
                 Bespoke journeys mapped to the rhythm of India. Spontaneous road trips, slow boutique havelis, and deep heritage itineraries structured seamlessly by real-time travel intelligence.
               </p>
             </motion.div>
