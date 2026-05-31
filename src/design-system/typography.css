@@ -1,133 +1,159 @@
-/* ============================================================
-   AltairGO Typography System
-   All text scale utilities, built on token variables.
-   ============================================================ */
+/* AltairGo Intelligence — Typography Scale
+ * Source: AltairGo_Design_System_FINAL.md (v3.1)
+ * Last synced: 2026-05-31
+ * Owner: Design Systems
+ *
+ * Any deviation in code from this document is a bug, not a creative license.
+ */
 
 :root {
-  --font-body:            'Poppins', sans-serif;
-  --font-display:         'DM Serif Display', serif;
-  --font-accent:          'Satisfy', cursive;
+  /* Font families */
+  --font-heading: 'Copernicus', 'Tiempos Headline', serif;
+  --font-body: 'StyreneB', 'Inter', system-ui, sans-serif;
 
-  --font-family:          var(--font-body);
-  --font-family-mono:     'JetBrains Mono', ui-monospace, monospace;
-
-  --font-size-xs:   0.75rem;    /* 12px */
-  --font-size-sm:   0.875rem;   /* 14px */
-  --font-size-base: 1rem;       /* 16px */
-  --font-size-lg:   1.125rem;   /* 18px */
-  --font-size-xl:   1.25rem;    /* 20px */
-  --font-size-2xl:  1.5rem;     /* 24px */
-  --font-size-3xl:  1.875rem;   /* 30px */
-  --font-size-4xl:  2.25rem;    /* 36px */
-  --font-size-5xl:  3rem;       /* 48px */
-  --font-size-6xl:  3.75rem;    /* 60px */
-
-  --font-weight-light:     300;
-  --font-weight-normal:    400;
-  --font-weight-medium:    500;
-  --font-weight-semibold:  600;
-  --font-weight-bold:      700;
-  --font-weight-extrabold: 800;
-
-  --line-height-tight:   1.25;
-  --line-height-snug:    1.375;
-  --line-height-normal:  1.5;
-  --line-height-relaxed: 1.625;
-  --line-height-loose:   2;
+  /* Font-family aliases for legacy compatibility */
+  --font-display: var(--font-heading);
+  --font-main: var(--font-body);
 }
 
-/* ── Semantic text utilities ── */
+/* Base Headings & Display typography */
 
 .text-display {
-  font-family: var(--font-display);
-  font-size: clamp(var(--font-size-4xl), 6vw, var(--font-size-6xl));
-  font-weight: 400;
-  line-height: var(--line-height-tight);
-  letter-spacing: -0.02em;
+  font-family: var(--font-heading);
+  font-size: clamp(48px, 8vw, 64px);
+  font-weight: 600; /* Locked display weight */
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--color-text-primary);
 }
 
 .text-h1 {
-  font-family: var(--font-display);
-  font-size: clamp(var(--font-size-3xl), 4vw, var(--font-size-5xl));
-  font-weight: 400;
-  line-height: var(--line-height-tight);
-  letter-spacing: -0.01em;
+  font-family: var(--font-heading);
+  font-size: clamp(36px, 6vw, 48px);
+  font-weight: 600; /* Locked H1 weight */
+  line-height: 1.2;
+  letter-spacing: 0;
+  color: var(--color-text-primary);
 }
 
 .text-h2 {
-  font-family: var(--font-display);
-  font-size: clamp(var(--font-size-2xl), 3vw, var(--font-size-4xl));
-  font-weight: 400;
-  line-height: var(--line-height-snug);
-  letter-spacing: -0.01em;
-}
-
-.text-script {
-  font-family: var(--font-accent);
-  color: var(--color-accent, var(--cerulean));
-  font-size: 2rem;
-  line-height: var(--line-height-snug);
+  font-family: var(--font-heading);
+  font-size: 32px;
+  font-weight: 600; /* Locked H2 weight */
+  line-height: 1.2;
+  letter-spacing: 0;
+  color: var(--color-text-primary);
 }
 
 .text-h3 {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-snug);
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 500; /* Locked H3 weight */
+  line-height: 1.3;
+  letter-spacing: 0;
+  color: var(--color-text-primary);
 }
 
 .text-h4 {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-normal);
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 500; /* Locked H4 weight */
+  line-height: 1.35;
+  letter-spacing: 0;
+  color: var(--color-text-primary);
+}
+
+/* Body copies & labels */
+
+.text-body-large {
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 400; /* Locked Body L weight */
+  line-height: 1.6;
+  letter-spacing: 0;
+  color: var(--color-text-primary);
 }
 
 .text-body {
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-normal);
-  line-height: var(--line-height-relaxed);
-  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400; /* Locked Body weight */
+  line-height: 1.6;
+  letter-spacing: 0;
+  color: var(--color-text-primary);
 }
 
 .text-body-sm {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-normal);
-  line-height: var(--line-height-relaxed);
-  color: var(--color-text-muted);
-}
-
-.text-label {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: 0.02em;
-  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400; /* Locked Body Small weight */
+  line-height: 1.5;
+  letter-spacing: 0;
+  color: var(--color-text-secondary);
 }
 
 .text-caption {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-subtle);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 400; /* Locked Caption weight */
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  color: var(--color-text-secondary);
+}
+
+.text-ui-label {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400; /* Locked UI/Footer weight */
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: var(--color-text-primary);
+}
+
+.text-nav-link {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 500; /* Locked Nav Link weight */
+  line-height: 1.4;
+  letter-spacing: 0;
+  color: var(--color-text-primary);
+}
+
+.text-button-label {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 500; /* Locked Button weight */
+  line-height: 1;
+  letter-spacing: 0.01em;
 }
 
 .text-overline {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500; /* Locked Overline weight */
+  line-height: 1.4;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-text-muted);
+  color: var(--color-text-secondary);
 }
 
-/* ── Prose (long-form content) ── */
+/* Tabular Numbers */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
 
+/* Prose (long form) */
 .prose {
-  font-size: var(--font-size-base);
-  line-height: var(--line-height-loose);
-  color: var(--color-text);
-  max-width: 72ch;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  max-width: 75ch; /* ~75 characters ideal read measure */
 }
 
 .prose h1, .prose h2, .prose h3, .prose h4 {
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text);
+  font-family: var(--font-heading);
+  color: var(--color-text-primary);
   margin-top: var(--space-8);
   margin-bottom: var(--space-4);
 }
@@ -137,19 +163,19 @@
 }
 
 .prose a {
-  color: var(--color-primary);
+  color: var(--color-active);
   text-decoration: underline;
-  text-underline-offset: 2px;
+  text-underline-offset: 3px;
 }
 
 .prose a:hover {
-  color: var(--color-primary-dark);
+  color: var(--color-hover);
 }
 
 .prose code {
-  font-family: var(--font-family-mono);
-  font-size: var(--font-size-sm);
-  background: var(--color-bg-subtle);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 14px;
+  background: var(--color-bg-surface);
   padding: 0.125em 0.375em;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
 }

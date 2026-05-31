@@ -14,12 +14,12 @@ import {
   Linkedin, 
   Facebook 
 } from 'lucide-react';
+import Button from '../ui/Button.jsx';
 import styles from './Footer.module.css';
 import logo from '../../assets/logo.png';
 
 const Footer = () => {
   const location = useLocation();
-  const { id } = useParams();
   const navigate = useNavigate();
 
   // Waitlist form state
@@ -52,20 +52,20 @@ const Footer = () => {
     { label: 'Destinations', link: '/discover' },
     { label: 'AI Planner', link: '/planner' },
     { label: 'Travel Guides', link: '/blogs' },
-    { label: 'Experiences', link: '#tour-selection' }
+    { label: 'Experiences', link: '#' }
   ];
 
   const companyLinks = [
     { label: 'About', link: '/about' },
     { label: 'Contact', link: 'mailto:hello@altairgo.in' },
-    { label: 'FAQs', link: '#tour-selection' },
-    { label: 'Privacy Policy', link: '/privacy' }
+    { label: 'FAQs', link: '#' },
+    { label: 'Privacy Policy', link: '#' }
   ];
 
   const resourcesLinks = [
     { label: 'Blog', link: '/blogs' },
     { label: 'Support', link: 'mailto:hello@altairgo.in' },
-    { label: 'Terms & Conditions', link: '/terms' },
+    { label: 'Terms & Conditions', link: '#' },
     { label: 'Early Access', link: '/' }
   ];
 
@@ -77,7 +77,7 @@ const Footer = () => {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.1 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
+          transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }} /* transition-slow (350ms) */
           className={styles.ctaBanner}
         >
           {/* Parallax Background Visual */}
@@ -145,18 +145,19 @@ const Footer = () => {
               </div>
 
               {/* Pill CTA Button */}
-              <button 
+              <Button 
+                variant="primary"
+                size="sm"
                 onClick={() => navigate('/planner')} 
-                className={styles.pillButton}
               >
-                Start Planning <ArrowRight size={14} />
-              </button>
+                Plan Trip <ArrowRight size={14} />
+              </Button>
             </div>
           </div>
         </motion.div>
       )}
 
-      {/* 2. Bottom Spaced Off-White Footer Section */}
+      {/* 2. Bottom Spaced Sand Footer Section */}
       <div className={styles.footerSection}>
         <div className={styles.footerGrid}>
           {/* Left Column: Brand Section */}
@@ -253,9 +254,9 @@ const Footer = () => {
                     required
                   />
                 </div>
-                <button type="submit" className={styles.newsletterButton}>
+                <Button type="submit" variant="primary" style={{ width: '100%' }}>
                   Build My Trip
-                </button>
+                </Button>
               </form>
             )}
           </div>
@@ -264,9 +265,12 @@ const Footer = () => {
         {/* Bottom Credits Area */}
         <div className={styles.bottomSection}>
           <div className={styles.copyright}>© 2026 Altairgo. All Rights Reserved.</div>
+          <div style={{ textAlign: 'center', opacity: 0.8, fontSize: '13px' }}>
+            Warm. Calm. Editorial. Premium.
+          </div>
           <div className={styles.vCredit}>
             <span>Made in 🇮🇳 with चाय</span>
-            <span>v1.0 · 2026</span>
+            <span>v3.1 · 2026</span>
           </div>
         </div>
       </div>

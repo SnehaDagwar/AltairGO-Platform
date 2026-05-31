@@ -1,139 +1,106 @@
-/* ============================================================
-   AltairGO Design Tokens — Version 2.1
-   Single source of truth for all design decisions.
-   Refined with luxury Cerulean and deep Midnight Blue.
-   ============================================================ */
+/* AltairGo Intelligence — Design Tokens
+ * Source: AltairGo_Design_System_FINAL.md (v3.1)
+ * Last synced: 2026-05-31
+ * Owner: Design Systems
+ *
+ * Any deviation in code from this document is a bug, not a creative license.
+ */
 
 :root {
-  /* ── Base Colours (Altair GO Palette) ── */
-  --midnight:             #1C2B48;
-  --cerulean:             #8EB1D1;
-  --baby-blue:            #A7C7E7;
-  --platinum:             #E8ECEF;
-  --blue-grey:            #C4D8E5;
-  --white:                #F8FAFC;
+  /* Colors — Brand */
+  --color-primary: #A3B18A;
+  --color-accent: #E7A27B;
+  --color-hover: #8FA876;
+  --color-active: #7A9463;
 
-  /* ── OKLch Tokens ── */
-  --bg:                   oklch(98.5% 0.005 240);
-  --surface:              oklch(100% 0 0 / 80%);
-  --fg:                   oklch(25% 0.06 255);
-  --muted:                oklch(50% 0.04 250);
-  --border:               oklch(90% 0.02 245);
-  --accent:               oklch(73% 0.07 235);
-  --accent-soft:          oklch(80% 0.07 240);
+  /* Colors — Surfaces */
+  --color-bg-main: #E9DFC6;
+  --color-bg-soft: #F6F1E6;
+  --color-bg-surface: #D6C4AB;
 
-  /* ── Glassmorphism ── */
-  --glass-bg:             oklch(100% 0 0 / 55%);
-  --glass-border:         oklch(100% 0 0 / 20%);
-  --glass-blur:           blur(20px) saturate(180%);
+  /* Colors — Text */
+  --color-text-primary: #2E2E2E;
+  --color-text-secondary: #5A5A5A;
+  --color-text-inverse: #FFFFFF;
 
-  /* ── Semantic / Legacy color overrides (Backward Compatibility) ── */
-  --color-primary:        var(--midnight);
-  --color-primary-dark:   #121B2F;
-  --color-primary-light:  var(--cerulean);
-  --color-primary-subtle: var(--platinum);
+  /* Colors — Semantic */
+  --color-success: #A3B18A;
+  --color-success-surface: #F6F1E6;
+  --color-info: #7A9463;
+  --color-info-surface: #F6F1E6;
+  --color-warning: #C9883B;
+  --color-warning-surface: #F5EBD8;
+  --color-error: #C0574A;
+  --color-error-surface: #F5EBE8;
 
-  --color-accent:         var(--cerulean);
-  --color-accent-dark:    #6e93b5;
-  --color-accent-light:   var(--baby-blue);
-  --color-accent-subtle:  var(--blue-grey);
+  /* Colors — Borders */
+  --color-border-subtle: rgba(46, 46, 46, 0.08);
+  --color-border-strong: rgba(46, 46, 46, 0.18);
+  --color-border-focus: #A3B18A;
 
-  /* ── Backgrounds ── */
-  --color-bg:             var(--bg);
-  --color-bg-subtle:      var(--surface);
-  --color-bg-elevated:    var(--white);
-  --color-bg-hero:        var(--bg);
-  --color-bg-overlay:     oklch(25% 0.06 255 / 50%);
+  /* Spacing (4px base) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
 
-  /* ── Dark Theme Defaults (legacy names) ── */
-  --color-bg-dark:         #121B2F;
-  --color-bg-dark-surface: oklch(25% 0.05 255 / 70%);
-  --color-bg-dark-elevated:oklch(30% 0.05 255 / 75%);
+  /* Radius Scale */
+  --radius-sm: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-pill: 9999px;
 
-  /* ── Text ── */
-  --color-text:           var(--fg);
-  --color-text-muted:     var(--muted);
-  --color-text-subtle:    oklch(65% 0.03 245);
-  --color-text-inverted:  var(--white);
+  /* Shadows (with Charcoal backing) */
+  --shadow-xs: 0 1px 2px rgba(46, 46, 46, 0.06);
+  --shadow-sm: 0 2px 8px rgba(46, 46, 46, 0.08);
+  --shadow-md: 0 8px 24px rgba(46, 46, 46, 0.11);
+  --shadow-lg: 0 16px 40px rgba(46, 46, 46, 0.14);
+  --shadow-xl: 0 24px 64px rgba(46, 46, 46, 0.18);
 
-  /* ── Borders ── */
-  --color-border:         var(--border);
-  --color-border-subtle:  oklch(95% 0.01 245);
-  --color-border-strong:  oklch(85% 0.03 245);
+  /* Transitions & Easing */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-expo-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 200ms;
+  --duration-scale: 250ms;
+  --duration-fade: 250ms;
+  --duration-rise: 300ms;
+  --duration-slow: 350ms;
+  --duration-slide: 400ms;
 
-  /* ── Semantic ── */
-  --color-success:        #10B981;
-  --color-success-subtle: #ECFDF5;
-  --color-warning:        #F59E0B;
-  --color-warning-subtle: #FFFBEB;
-  --color-error:          #EF4444;
-  --color-error-subtle:   #FEF2F2;
-  --color-error-border:   #FECACA;
-  --color-info:           #3B82F6;
-  --color-info-subtle:    #EFF6FF;
+  /* Z-Index */
+  --z-base: 0;
+  --z-raised: 10;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-popover: 300;
+  --z-overlay: 400;
+  --z-modal: 500;
+  --z-toast: 600;
+  --z-tooltip: 700;
 
-  /* ── Spacing (4px base grid) ── */
-  --space-1:  0.25rem;   /* 4px  */
-  --space-2:  0.5rem;    /* 8px  */
-  --space-3:  0.75rem;   /* 12px */
-  --space-4:  1rem;      /* 16px */
-  --space-5:  1.25rem;   /* 20px */
-  --space-6:  1.5rem;    /* 24px */
-  --space-8:  2rem;      /* 32px */
-  --space-10: 2.5rem;    /* 40px */
-  --space-12: 3rem;      /* 48px */
-  --space-16: 4rem;      /* 64px */
-  --space-20: 5rem;      /* 80px */
-  --space-24: 6rem;      /* 96px */
-  --space-32: 8rem;      /* 128px */
+  /* Container & Layout constraints */
+  --container-max: 1280px;
 
-  /* ── Border Radius ── */
-  --radius-sm:   0.25rem;   /* 4px  */
-  --radius-md:   0.5rem;    /* 8px  */
-  --radius-lg:   0.75rem;   /* 12px */
-  --radius-xl:   1rem;      /* 16px */
-  --radius-2xl:  1.5rem;    /* 24px */
-  --radius-full: 9999px;
-
-  /* ── Shadows ── */
-  --shadow-sm:   0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md:   0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg:   0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-xl:   0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-  --shadow-card: 0 4px 16px rgb(0 0 0 / 0.06);
-  --shadow-primary: 0 8px 24px rgb(20 20 19 / 0.28);
-  --shadow-accent:  0 8px 24px rgb(90 197 118 / 0.25);
-
-  /* ── Transitions ── */
-  --transition-fast:   150ms ease;
-  --transition-normal: 250ms ease;
-  --transition-slow:   350ms ease;
-  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
-  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
-
-  /* ── Z-Index Scale ── */
-  --z-dropdown: 10;
-  --z-sticky:   20;
-  --z-navbar:   100;
-  --z-overlay:  200;
-  --z-modal:    1000;
-  --z-tooltip:  1100;
-
-  /* ── Layout ── */
-  --container-max: 1200px;
-  --navbar-height: 70px;
-  --navbar-offset: calc(var(--navbar-height) + 18px);
+  /* Backwards compatibility aliases mapped to new system tokens */
+  --bg: var(--color-bg-main);
+  --surface: var(--color-bg-soft);
+  --fg: var(--color-text-primary);
+  --muted: var(--color-text-secondary);
+  --border: var(--color-border-strong);
+  --accent: var(--color-accent);
+  --accent-soft: var(--color-hover);
 }
 
-[data-theme="dark"] {
-  --bg: oklch(18% 0.04 255);
-  --surface: oklch(25% 0.05 255 / 70%);
-  --fg: oklch(94% 0.01 245);
-  --muted: oklch(70% 0.03 245);
-  --border: oklch(35% 0.04 255);
-  --glass-bg: oklch(30% 0.05 255 / 45%);
-  --glass-border: oklch(100% 0 0 / 10%);
-  --shadow-sm: 0 1px 3px oklch(0% 0 0 / 0.2);
-  --shadow-md: 0 4px 12px oklch(0% 0 0 / 0.3);
-  --shadow-lg: 0 8px 24px oklch(0% 0 0 / 0.4);
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 100ms !important;
+  }
 }

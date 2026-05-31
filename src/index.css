@@ -1,35 +1,38 @@
-/* Fonts loaded via index.html */
+/* AltairGo Intelligence — Global Styles
+ * Source: AltairGo_Design_System_FINAL.md (v3.1)
+ * Last synced: 2026-05-31
+ * Owner: Design Systems
+ *
+ * Any deviation in code from this document is a bug, not a creative license.
+ */
+
 @import './design-system/index.css';
 
 :root {
-  /* ── Legacy aliases — kept for backward-compat with existing components ── */
-  /* Remove these as components are migrated to design-system tokens          */
-  --primary:        var(--color-primary);
-  --primary-light:  var(--color-primary-light);
+  /* Dynamic Design System 3.1 Mapping */
+  --page-bg: var(--color-bg-main);
+  --ink: var(--color-text-primary);
+  --ink-soft: var(--color-text-secondary);
+  --ink-muted: var(--color-text-secondary);
+  --line: var(--color-border-subtle);
+  --line-strong: var(--color-border-strong);
+  
+  --primary: var(--color-primary);
+  --accent: var(--color-accent);
+  --surface: var(--color-bg-soft);
+  --card: var(--color-bg-soft);
 
-  --accent:         var(--color-accent);
-  --accent-hover:   var(--color-accent-dark);
-  --accent-light:   var(--color-accent-subtle);
+  --font-main: var(--font-body);
+  --font-display: var(--font-heading);
 
-  --background:     var(--color-bg);
-  --surface:        var(--color-bg-subtle);
-  --surface-card:   var(--color-bg-elevated);
-
-  --text-main:      var(--color-text);
-  --text-inverse:   var(--color-text-inverted);
-  --text-muted:     var(--color-text-subtle);
-
-  --border:         var(--color-border);
-
-  --font-main:      var(--font-family);
-
-  /* Spacing aliases */
-  --spacing-xs:  var(--space-2);
-  --spacing-sm:  var(--space-4);
-  --spacing-md:  var(--space-6);
-  --spacing-lg:  var(--space-8);
-  --spacing-xl:  var(--space-16);
-  --spacing-2xl: var(--space-24);
+  /* Spacing Mapping */
+  --spacing-xs: var(--space-2);
+  --spacing-sm: var(--space-4);
+  --spacing-md: var(--space-6);
+  --spacing-lg: var(--space-8);
+  --spacing-xl: var(--space-12);
+  --spacing-2xl: var(--space-16);
+  --spacing-3xl: var(--space-24);
 }
 
 html, body {
@@ -40,6 +43,7 @@ html, body {
 html {
   font-size: 100%;
   scroll-behavior: smooth;
+  background-color: var(--color-bg-main);
 }
 
 * {
@@ -49,10 +53,10 @@ html {
 }
 
 body {
-  font-family: var(--font-family);
-  background-color: var(--color-bg);
-  color: var(--color-text);
-  line-height: var(--line-height-normal);
+  font-family: var(--font-body);
+  background-color: var(--color-bg-main);
+  color: var(--color-text-primary);
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -82,57 +86,93 @@ img {
   display: block;
 }
 
+/* Hard Container Cap at 1280px */
 .container {
-  max-width: 1200px;
+  max-width: var(--container-max);
   margin: 0 auto;
-  padding: 0 var(--spacing-sm);
+  padding: 0 var(--space-12); /* 48px padding-inline desktop */
 }
 
+@media (max-width: 1024px) {
+  .container {
+    padding: 0 var(--space-6); /* 24px padding-inline tablet */
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 var(--space-4); /* 16px padding-inline mobile */
+  }
+}
+
+/* Primary Button Global Overrides */
 .btnPrimary {
   background: var(--color-primary);
-  color: var(--color-text-inverted);
+  color: var(--color-text-primary) !important; /* Strictly charcoal, not white */
   padding: 0.75rem 1.5rem;
-  border-radius: var(--radius-full);
-  font-weight: var(--font-weight-medium);
-  transition: transform var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
-  font-size: var(--font-size-sm);
+  border-radius: var(--radius-lg); /* Buttons are exactly 12px radius-lg */
+  font-weight: 500;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  transition: all var(--duration-fast) var(--ease-standard);
 }
 
 .btnPrimary:hover {
-  background: var(--color-primary-dark);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-primary);
+  background: var(--color-hover);
+  box-shadow: var(--shadow-sm);
 }
 
-.btnAccent {
-  background: var(--color-accent);
-  color: var(--color-text-inverted);
+.btnPrimary:active {
+  background: var(--color-active);
+  box-shadow: var(--shadow-xs);
+}
+
+.btnPrimary:focus-visible {
+  outline: 2px solid var(--color-text-primary); /* Sage-on-Sage focus override */
+  outline-offset: 3px;
+}
+
+/* Secondary Button Global Overrides */
+.btnSecondary {
+  background: var(--color-bg-soft);
+  color: var(--color-text-primary);
   padding: 0.75rem 1.5rem;
-  border-radius: var(--radius-full);
-  font-weight: var(--font-weight-medium);
-  transition: transform var(--transition-fast), background var(--transition-fast);
+  border-radius: var(--radius-lg);
+  font-weight: 500;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--duration-fast) var(--ease-standard);
 }
 
-.btnAccent:hover {
-  background: var(--color-accent-dark);
-  transform: translateY(-1px);
+.btnSecondary:hover {
+  background: var(--color-bg-surface);
+  box-shadow: var(--shadow-md);
 }
 
-.btnOutline {
-  background: transparent;
-  border: 1px solid var(--color-text-inverted);
-  color: var(--color-text-inverted);
-  padding: 0.75rem 1.5rem;
-  border-radius: var(--radius-full);
-  font-weight: var(--font-weight-medium);
-  transition: background var(--transition-fast), color var(--transition-fast);
+.btnSecondary:active {
+  background: var(--color-bg-surface);
+  box-shadow: var(--shadow-xs);
 }
 
-.btnOutline:hover {
-  background: var(--color-text-inverted);
-  color: var(--color-text);
+.btnSecondary:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
 }
 
+/* Spin animation for loadings */
 .global-spinner-container {
   display: flex;
   justify-content: center;
@@ -142,39 +182,14 @@ img {
 }
 
 .global-spinner {
-  width: 50px;
-  height: 50px;
-  border: 4px solid var(--surface);
-  border-top-color: var(--primary);
+  width: 44px;
+  height: 44px;
+  border: 4px solid var(--color-bg-surface);
+  border-top-color: var(--color-primary);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
 
 @keyframes spin {
   to { transform: rotate(360deg); }
-}
-
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-  40% { transform: translateY(-10px); }
-  60% { transform: translateY(-5px); }
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
-}
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes shimmer {
-  100% { transform: translateX(100%); }
-}
-
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
 }

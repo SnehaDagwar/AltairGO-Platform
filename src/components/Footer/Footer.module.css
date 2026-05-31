@@ -1,25 +1,42 @@
-/* --- Premium Combined CTA & Footer Styles --- */
+/* AltairGo Combined CTA & Footer — Style
+ * Source: AltairGo_Design_System_FINAL.md (v3.1)
+ * Last synced: 2026-05-31
+ */
+
 .footer {
-  background: var(--color-bg);
-  padding: 0 24px 24px;
-  font-family: var(--font-family), system-ui, sans-serif;
-  color: var(--color-text);
-  transition: background 0.3s ease, color 0.3s ease;
+  background: var(--color-bg-main);
+  padding: 0 var(--space-12) var(--space-12);
+  font-family: var(--font-body), system-ui, sans-serif;
+  color: var(--color-text-primary);
+  box-sizing: border-box;
+}
+
+@media (max-width: 1024px) {
+  .footer {
+    padding: 0 var(--space-6) var(--space-6);
+  }
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding: 0 var(--space-4) var(--space-4);
+  }
 }
 
 /* --- 1. Cinematic CTA Banner Card --- */
 .ctaBanner {
-  max-width: 1400px;
-  margin: 0 auto 60px;
+  max-width: var(--container-max);
+  margin: 0 auto var(--space-16);
   position: relative;
-  border-radius: 28px;
+  border-radius: var(--radius-xl); /* cards/hero use radius-xl (16px) */
   overflow: hidden;
-  padding: 100px 48px;
-  box-shadow: 0 20px 48px -8px rgba(28, 43, 72, 0.25);
+  padding: 80px 48px;
+  box-shadow: var(--shadow-lg); /* relative-luminance shadow */
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
+  box-sizing: border-box;
 }
 
 .ctaBgImage {
@@ -34,7 +51,7 @@
 .ctaScrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(20, 28, 45, 0.55) 0%, rgba(20, 28, 45, 0.75) 100%);
+  background: linear-gradient(180deg, rgba(46, 46, 46, 0.45) 0%, rgba(46, 46, 46, 0.65) 100%);
   z-index: 1;
 }
 
@@ -44,50 +61,50 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 880px;
+  max-width: 720px;
   width: 100%;
 }
 
 .ctaHeading {
-  font-family: var(--font-display), sans-serif;
-  font-size: clamp(32px, 4.5vw, 54px);
-  font-weight: 500;
+  font-family: var(--font-heading);
+  font-size: clamp(32px, 4vw, 44px);
+  font-weight: 600; /* locked display/H1/H2 weight */
   color: #ffffff;
-  line-height: 1.12;
+  line-height: 1.2;
   margin: 0 0 16px;
-  letter-spacing: -0.02em;
-  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  letter-spacing: -0.01em;
+  text-shadow: 0 4px 16px rgba(46, 46, 46, 0.45);
 }
 
 .ctaSubtext {
-  font-size: clamp(14px, 1.8vw, 16px);
-  line-height: 1.65;
-  color: rgba(255, 255, 255, 0.85);
-  max-width: 640px;
-  margin: 0 0 40px;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 540px;
+  margin: 0 0 32px;
+  text-shadow: 0 2px 10px rgba(46, 46, 46, 0.4);
 }
 
 /* --- Search Engine styled Pill Bar --- */
 .searchPillBar {
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-radius: 999px;
+  background: var(--color-bg-soft);
+  border-radius: var(--radius-pill); /* tags/pills use radius-pill */
   padding: 8px 8px 8px 24px;
-  box-shadow: 0 16px 40px -12px rgba(20, 28, 45, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--color-border-subtle);
   width: 100%;
-  max-width: 840px;
+  max-width: 800px;
   margin: 0 auto;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform var(--duration-normal) var(--ease-standard), box-shadow var(--duration-normal) var(--ease-standard);
+  box-sizing: border-box;
 }
 
 .searchPillBar:hover {
   transform: translateY(-2px);
-  box-shadow: 0 24px 48px -10px rgba(20, 28, 45, 0.35);
+  box-shadow: var(--shadow-lg);
 }
 
 .pillItem {
@@ -98,24 +115,25 @@
   text-align: left;
   position: relative;
   padding-right: 12px;
+  box-sizing: border-box;
 }
 
 .pillItem:not(:last-of-type)::after {
   content: '';
   position: absolute;
   right: 0;
-  top: 15%;
-  bottom: 15%;
+  top: 20%;
+  bottom: 20%;
   width: 1px;
-  background: rgba(20, 28, 45, 0.12);
+  background: var(--color-border-strong);
 }
 
 .pillIconWrapper {
   width: 32px;
   height: 32px;
-  border-radius: 50%;
-  background: rgba(28, 43, 72, 0.06);
-  color: var(--midnight);
+  border-radius: var(--radius-pill);
+  background: var(--color-bg-surface);
+  color: var(--color-text-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -128,55 +146,33 @@
 }
 
 .pillLabel {
-  font-size: 12.5px;
-  font-weight: 600;
-  color: #141413;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-primary);
   line-height: 1.2;
 }
 
 .pillDesc {
-  font-size: 10.5px;
-  color: #72716d;
+  font-size: 11px;
+  color: var(--color-text-secondary);
 }
 
-.pillButton {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 24px;
-  background: var(--midnight);
-  color: #ffffff;
-  border: none;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  flex-shrink: 0;
-}
-
-.pillButton:hover {
-  background: #17a1cf;
-  transform: scale(1.02);
-}
-
-/* --- 2. Spaced Off-White Footer Section --- */
+/* --- 2. Spacious Sand-Colored Footer Section --- */
 .footerSection {
-  max-width: 1400px;
+  max-width: var(--container-max);
   margin: 0 auto;
-  background: var(--color-bg-elevated);
-  border: 1px solid var(--color-border);
-  padding: 72px 72px 32px;
-  border-radius: 28px;
-  box-shadow: var(--shadow-card);
-  transition: background 0.3s ease, border-color 0.3s ease;
+  background: var(--color-bg-surface); /* background is bg-surface (#D6C4AB) */
+  padding: 48px 48px 32px; /* padding 48px 0 desktop - adjusted slightly for inner cards */
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border-subtle);
+  box-sizing: border-box;
 }
 
 .footerGrid {
   display: grid;
-  grid-template-columns: 2fr repeat(3, 1.2fr) 2.5fr;
-  gap: 48px;
-  margin-bottom: 64px;
+  grid-template-columns: 2fr repeat(3, 1fr) 2fr;
+  gap: 40px;
+  margin-bottom: 48px;
 }
 
 .brandCol {
@@ -198,10 +194,11 @@
 }
 
 .brandDesc {
-  font-size: 13.5px;
-  line-height: 1.65;
-  color: var(--color-text-muted);
-  margin: 0 0 24px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  margin: 0 0 20px;
   max-width: 240px;
 }
 
@@ -211,22 +208,23 @@
 }
 
 .socialIcon {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  border: 1px solid var(--color-border);
-  color: var(--color-text-muted);
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border-strong);
+  color: var(--color-text-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.25s ease;
+  transition: all var(--duration-fast) var(--ease-standard);
   text-decoration: none;
+  box-sizing: border-box;
 }
 
 .socialIcon:hover {
-  border-color: var(--midnight);
-  color: var(--midnight);
-  background: rgba(28, 43, 72, 0.04);
+  border-color: var(--color-text-primary);
+  color: var(--color-text-primary);
+  background: var(--color-bg-soft);
   transform: translateY(-2px);
 }
 
@@ -236,13 +234,13 @@
 }
 
 .colTitle {
-  font-size: 11px;
-  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  font-family: var(--font-body);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--color-text-muted);
+  letter-spacing: 0.08em;
+  color: var(--color-text-secondary);
   margin-bottom: 20px;
-  font-weight: 600;
+  font-weight: 500; /* Overline weight locked to 500 */
 }
 
 .linksList {
@@ -252,17 +250,17 @@
 }
 
 .footerLink {
-  font-size: 13.5px;
-  color: var(--color-text-muted);
+  font-size: 14px; /* StyreneB 14px */
+  font-family: var(--font-body);
+  color: var(--color-text-secondary);
   text-decoration: none;
   cursor: pointer;
   width: fit-content;
-  transition: all 0.2s ease;
+  transition: color var(--duration-fast) var(--ease-standard);
 }
 
 .footerLink:hover {
-  color: #17a1cf;
-  transform: translateX(3px);
+  color: var(--color-text-primary); /* dense links clutter, hover just changes color, no underline */
 }
 
 /* --- Right Column: Newsletter area --- */
@@ -273,16 +271,16 @@
 
 .newsletterTitle {
   font-size: 14px;
-  font-weight: 600;
-  color: var(--color-text);
+  font-weight: 500;
+  color: var(--color-text-primary);
   margin-bottom: 12px;
 }
 
 .newsletterSubtext {
-  font-size: 12.5px;
-  line-height: 1.6;
-  color: var(--color-text-muted);
-  margin-bottom: 20px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  margin-bottom: 16px;
 }
 
 .newsletterForm {
@@ -300,79 +298,65 @@
 .mailIcon {
   position: absolute;
   left: 14px;
-  color: var(--color-text-subtle);
+  color: var(--color-text-secondary);
   pointer-events: none;
 }
 
 .newsletterInput {
   width: 100%;
   padding: 12px 14px 12px 38px;
-  border: 1.5px solid var(--color-border);
-  border-radius: 12px;
+  border: 1.5px solid var(--color-border-strong);
+  border-radius: var(--radius-sm); /* Inputs use radius-sm (8px) */
   font-family: inherit;
-  font-size: 13px;
+  font-size: 14px;
   outline: none;
-  background: var(--color-bg);
-  color: var(--color-text);
-  transition: border-color 0.2s ease;
+  background: var(--color-bg-soft);
+  color: var(--color-text-primary);
+  transition: border-color var(--duration-fast) var(--ease-standard);
+  box-sizing: border-box;
 }
 
 .newsletterInput:focus {
-  border-color: var(--midnight);
-}
-
-.newsletterButton {
-  padding: 12px 20px;
-  background: var(--midnight);
-  color: #ffffff;
-  border: none;
-  border-radius: 12px;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-align: center;
-}
-
-.newsletterButton:hover {
-  background: #17a1cf;
+  border-color: var(--color-border-focus);
 }
 
 .newsletterSuccess {
-  background: oklch(95% 0.02 145);
-  border: 1.5px solid oklch(80% 0.1 145);
-  border-radius: 12px;
+  background: var(--color-success-surface);
+  border: 1.5px solid var(--color-success);
+  border-radius: var(--radius-sm);
   padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 4px;
+  box-sizing: border-box;
 }
 
 .successHeading {
-  font-size: 13.5px;
-  font-weight: 600;
-  color: oklch(40% 0.1 145);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-primary);
 }
 
 .successDesc {
   font-size: 12px;
-  color: oklch(50% 0.08 145);
+  color: var(--color-text-secondary);
 }
 
 /* --- Bottom Section --- */
 .bottomSection {
   padding-top: 24px;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--color-border-subtle);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 11px;
-  font-family: var(--font-mono), monospace;
-  color: var(--color-text-muted);
+  font-size: 14px; /* StyreneB 14px caption copy */
+  font-family: var(--font-body);
+  color: var(--color-text-secondary);
+  box-sizing: border-box;
 }
 
 .copyright {
-  color: var(--color-text-muted);
+  color: var(--color-text-secondary);
 }
 
 .vCredit {
@@ -381,24 +365,18 @@
 }
 
 .vCredit span {
-  color: var(--color-text-muted);
+  color: var(--color-text-secondary);
 }
 
 /* --- Responsive Adjustments --- */
-@media (max-width: 1200px) {
-  .footerGrid {
-    grid-template-columns: 1.8fr repeat(3, 1.1fr) 2fr;
-    gap: 32px;
-  }
-}
-
 @media (max-width: 1024px) {
   .ctaBanner {
-    padding: 80px 32px;
+    padding: 64px 32px;
+    margin-bottom: var(--space-8);
   }
 
   .searchPillBar {
-    border-radius: 28px;
+    border-radius: var(--radius-xl);
     padding: 16px;
     flex-direction: column;
     gap: 16px;
@@ -417,16 +395,11 @@
     top: auto;
     height: 1px;
     width: auto;
-    background: rgba(20, 28, 45, 0.08);
-  }
-
-  .pillButton {
-    width: 100%;
-    justify-content: center;
+    background: var(--color-border-subtle);
   }
 
   .footerSection {
-    padding: 48px 48px 24px;
+    padding: 32px 32px 24px; /* padding 32px mobile */
   }
 
   .footerGrid {
@@ -442,19 +415,12 @@
 }
 
 @media (max-width: 768px) {
-  .footer {
-    padding: 0 16px 16px;
-  }
-
   .ctaBanner {
-    border-radius: 20px;
-    margin-bottom: 40px;
-    padding: 64px 20px;
+    padding: 48px 24px;
   }
 
   .footerSection {
-    padding: 40px 24px 24px;
-    border-radius: 20px;
+    padding: 32px 24px 24px;
   }
 
   .footerGrid {

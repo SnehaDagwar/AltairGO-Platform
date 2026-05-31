@@ -1,10 +1,13 @@
+import React from 'react';
+
 export default function EmptyState({
-  icon,
+  icon: IconComponent,
   title,
   description,
   action,
   className = '',
   style = {},
+  ...rest
 }) {
   return (
     <div
@@ -14,28 +17,60 @@ export default function EmptyState({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: 'var(--space-4)',
-        padding: 'var(--space-12) var(--space-6)',
         textAlign: 'center',
+        maxWidth: '480px', /* max-width: 480px */
+        margin: '0 auto',
+        padding: '64px 24px', /* 64px minimum top/bottom padding */
+        boxSizing: 'border-box',
         ...style,
       }}
+      {...rest}
     >
-      {icon && (
-        <div style={{ fontSize: '3rem', color: 'var(--color-text-muted)', lineHeight: 1 }}>
-          {icon}
+      {IconComponent && (
+        <div style={{ color: 'var(--color-text-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {/* Render the icon component directly or pass a custom node */}
+          {React.isValidElement(IconComponent) ? (
+            IconComponent
+          ) : (
+            <IconComponent size={48} strokeWidth={2} /> /* icon-xl (48px) outline, 2px stroke */
+          )}
         </div>
       )}
+      
       {title && (
-        <h3 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text)', margin: 0 }}>
+        <h3 style={{ 
+          fontFamily: 'var(--font-heading)', 
+          fontSize: '24px', /* Copernicus 24px */
+          fontWeight: '500', /* H3 weight: 500 */
+          color: 'var(--color-text-primary)', 
+          marginTop: '16px', /* margin-top: 16px */
+          marginBottom: 0,
+          lineHeight: 1.3
+        }}>
           {title}
         </h3>
       )}
+
       {description && (
-        <p style={{ fontSize: 'var(--font-size-base)', color: 'var(--color-text-muted)', maxWidth: '320px', margin: 0, lineHeight: 'var(--line-height-relaxed)' }}>
+        <p style={{ 
+          fontFamily: 'var(--font-body)',
+          fontSize: '16px', /* StyreneB 16px */
+          fontWeight: '400', /* Body weight: 400 */
+          color: 'var(--color-text-secondary)', 
+          marginTop: '8px', /* margin-top: 8px */
+          marginBottom: 0,
+          lineHeight: 1.6,
+          maxWidth: '360px',
+        }}>
           {description}
         </p>
       )}
-      {action && <div>{action}</div>}
+
+      {action && (
+        <div style={{ marginTop: '24px' }}> {/* margin-top: 24px */}
+          {action}
+        </div>
+      )}
     </div>
   );
 }

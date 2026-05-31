@@ -3,9 +3,9 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
 
 const borderColors = {
-  success: 'var(--color-success)',
+  success: 'var(--color-primary)',
   error:   'var(--color-error)',
-  warning: 'var(--color-accent)',
+  warning: 'var(--color-warning)',
   info:    'var(--color-info)',
 };
 
@@ -51,12 +51,12 @@ function ToastContainer({ toasts, onDismiss }) {
     <div
       style={{
         position: 'fixed',
-        bottom: 'var(--space-6)',
-        right: 'var(--space-6)',
-        zIndex: 9999,
+        bottom: '24px', /* space-6 */
+        right: '24px',  /* space-6 */
+        zIndex: 600,    /* z-toast: 600 */
         display: 'flex',
         flexDirection: 'column',
-        gap: 'var(--space-3)',
+        gap: '12px',    /* space-3 */
         pointerEvents: 'none',
       }}
     >
@@ -64,24 +64,32 @@ function ToastContainer({ toasts, onDismiss }) {
         {toasts.map((t) => (
           <motion.div
             key={t.id}
-            initial={{ opacity: 0, x: 80 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 80 }}
-            transition={{ duration: 0.25 }}
+            initial={{ opacity: 0, x: 80, scale: 0.95 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={{ opacity: 0, x: 80, scale: 0.95 }}
+            transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }} /* transition-fade ease */
             style={{
-              background: 'var(--color-bg-elevated)',
-              borderLeft: `4px solid ${borderColors[t.variant]}`,
-              boxShadow: 'var(--shadow-lg)',
-              borderRadius: 'var(--radius-lg)',
-              padding: 'var(--space-3) var(--space-4)',
+              background: 'var(--color-bg-soft)', /* Surface bg-soft (#F6F1E6) */
+              borderLeft: `4px solid ${borderColors[t.variant] || 'var(--color-primary)'}`,
+              boxShadow: 'var(--shadow-lg)', /* shadow-lg for floating overlays */
+              borderRadius: 'var(--radius-xl)', /* Radius: 16px radius-xl */
+              padding: '16px 20px',
               maxWidth: '360px',
               display: 'flex',
               alignItems: 'center',
-              gap: 'var(--space-3)',
+              gap: '16px',
               pointerEvents: 'all',
+              overflow: 'hidden',
             }}
           >
-            <span style={{ flex: 1, fontSize: 'var(--font-size-sm)', color: 'var(--color-text)', lineHeight: 'var(--line-height-normal)' }}>
+            <span style={{ 
+              flex: 1, 
+              fontSize: '14px', /* StyreneB 14px */
+              color: 'var(--color-text-primary)', 
+              fontFamily: 'var(--font-body)',
+              fontWeight: '400',
+              lineHeight: 1.5 
+            }}>
               {t.message}
             </span>
             <button
@@ -91,11 +99,29 @@ function ToastContainer({ toasts, onDismiss }) {
                 background: 'none',
                 border: 'none',
                 cursor: 'pointer',
-                color: 'var(--color-text-muted)',
-                padding: 0,
+                color: 'var(--color-text-secondary)',
+                padding: '4px',
+                borderRadius: 'var(--radius-sm)',
                 display: 'flex',
                 alignItems: 'center',
+                justifyContent: 'center',
                 flexShrink: 0,
+                outline: 'none',
+                transition: 'color var(--duration-fast) var(--ease-standard), background var(--duration-fast) var(--ease-standard)'
+              }}
+              onFocus={(e) => {
+                e.target.style.outline = '2px solid var(--color-primary)';
+              }}
+              onBlur={(e) => {
+                e.target.style.outline = 'none';
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = 'var(--color-text-primary)';
+                e.currentTarget.style.background = 'var(--color-bg-surface)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = 'var(--color-text-secondary)';
+                e.currentTarget.style.background = 'none';
               }}
             >
               <X size={16} />

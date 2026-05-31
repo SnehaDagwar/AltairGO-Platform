@@ -1,67 +1,71 @@
-const variantColors = {
-  primary: 'var(--color-primary)',
-  success: 'var(--color-success)',
-  warning: 'var(--color-accent)',
-  error:   'var(--color-error)',
-};
-
-const sizeHeights = {
-  sm: '4px',
-  md: '8px',
-  lg: '12px',
-};
+import React from 'react';
 
 export default function ProgressBar({
   value = 0,
-  variant = 'primary',
-  size = 'md',
+  indeterminate = false,
   showLabel = false,
-  animated = false,
   className = '',
   style = {},
+  ...rest
 }) {
   const clamped = Math.min(100, Math.max(0, value));
 
   return (
-    <div className={className} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1)', ...style }}>
+    <div 
+      className={className} 
+      style={{ display: 'flex', flexDirection: 'column', gap: '8px', ...style }}
+      {...rest}
+    >
       {showLabel && (
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)', fontWeight: 'var(--font-weight-medium)' }}>
-            {clamped}%
+          <span style={{ fontSize: '14px', color: 'var(--color-text-primary)', fontWeight: '500', fontFamily: 'var(--font-body)' }}>
+            {indeterminate ? 'Loading...' : `${clamped}%`}
           </span>
         </div>
       )}
       <div
         role="progressbar"
-        aria-valuenow={clamped}
-        aria-valuemin={0}
-        aria-valuemax={100}
+        aria-valuenow={indeterminate ? undefined : clamped}
+        aria-valuemin={indeterminate ? undefined : 0}
+        aria-valuemax={indeterminate ? undefined : 100}
         style={{
           width: '100%',
-          height: sizeHeights[size],
-          background: 'var(--color-bg-subtle)',
-          borderRadius: 'var(--radius-full)',
+          height: '8px', /* Height exactly 8px */
+          background: 'var(--color-bg-surface)', /* Track bg is bg-surface (#D6C4AB) */
+          borderRadius: 'var(--radius-pill)', /* Track is pill shape */
           overflow: 'hidden',
+          position: 'relative',
         }}
       >
         <div
           style={{
             height: '100%',
-            width: `${clamped}%`,
-            background: animated && clamped < 100
-              ? `linear-gradient(90deg, ${variantColors[variant]} 40%, color-mix(in srgb, ${variantColors[variant]} 60%, white) 60%, ${variantColors[variant]} 80%)`
-              : variantColors[variant],
-            backgroundSize: animated ? '200% 100%' : undefined,
-            animation: animated && clamped < 100 ? 'altair-progress-shimmer 1.5s infinite linear' : undefined,
-            borderRadius: 'var(--radius-full)',
-            transition: 'width 500ms ease',
+            borderRadius: 'var(--radius-pill)',
+            background: 'var(--color-primary)', /* Fill is primary (#A3B18A) */
+            
+            // Determinate properties
+            ...(!indeterminate ? {
+              width: `${clamped}%`,
+              transition: 'width 400ms var(--ease-expo-out)', /* 400ms cubic-bezier(0.16,1,0.3,1) */
+            } : {
+              // Indeterminate shimmer animation properties
+              width: '40%',
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              animation: 'altair-progress-indeterminate 1400ms infinite var(--ease-standard)',
+            }),
           }}
         />
       </div>
       <style>{`
-        @keyframes altair-progress-shimmer {
-          0%   { background-position: 200% 0; }
-          100% { background-position: -200% 0; }
+        @keyframes altair-progress-indeterminate {
+          0% {
+            left: -40%;
+          }
+          100% {
+            left: 100%;
+          }
         }
       `}</style>
     </div>

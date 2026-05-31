@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext.jsx';
 import logo from '../../assets/logo.png';
+import Button from '../ui/Button.jsx';
 import styles from './Navbar.module.css';
 
 const NAV_LINKS = [
@@ -10,54 +11,56 @@ const NAV_LINKS = [
   { label: 'Explore', to: '/explore' },
   { label: 'AI Planner', to: '/planner' },
   { label: 'Destinations', to: '/discover' },
-  { label: 'About', to: '/about' },
-  { label: 'Contact', to: '/contact' }
+  { label: 'Blogs', to: '/blogs' }
 ];
 
 function Logo() {
   return (
-    <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-      <img src={logo} alt="AltairGO" style={{ height: 28, objectFit: 'contain' }} />
+    <Link to="/" className={styles.logoArea}>
+      <img src={logo} alt="AltairGO" style={{ height: '28px', objectFit: 'contain' }} />
     </Link>
   );
 }
 
 const ArrowIcon = () => (
-  <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-    <path d="M2.5 6.5h8M7 3l3.5 3.5L7 10" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ marginLeft: '4px' }}>
+    <path d="M2.5 7h9M8 3.5L11.5 7L8 10.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
 
 const UserIcon = () => (
-  <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-    <circle cx="6.5" cy="4.5" r="2.2" stroke="currentColor" strokeWidth="1.3" />
-    <path d="M1.5 11.5c0-2.2 2.2-4 5-4s5 1.8 5 4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <circle cx="7" cy="5" r="2.2" stroke="currentColor" strokeWidth="2" />
+    <path d="M2 12c0-2.2 2.2-4 5-4s5 1.8 5 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
   </svg>
 );
 
 const HamburgerIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    <path d="M3 6h14M3 10h14M3 14h14" stroke="#1a1814" strokeWidth="1.6" strokeLinecap="round" />
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <path d="M4 6h16M4 12h16M4 18h16" stroke="var(--color-text-primary)" strokeWidth="2" strokeLinecap="round" />
   </svg>
 );
 
 const CloseIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    <path d="M4 4l12 12M16 4L4 16" stroke="#1a1814" strokeWidth="1.6" strokeLinecap="round" />
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <path d="M6 6l12 12M18 6L6 18" stroke="var(--color-text-primary)" strokeWidth="2" strokeLinecap="round" />
   </svg>
 );
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [scrolledToBottom, setScrolledToBottom] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleScroll = () => {
-      const isBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100;
-      setScrolledToBottom(isBottom);
+      if (window.scrollY > 40) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -73,18 +76,10 @@ const Navbar = () => {
   };
 
   return (
-    <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100 }}>
-      {/* ── Main pill bar ── */}
-      <div className={styles.navPill}>
-        <div style={{
-          opacity: scrolledToBottom ? 0 : 1,
-          pointerEvents: scrolledToBottom ? 'none' : 'auto',
-          transition: 'opacity 0.3s ease',
-          display: 'flex',
-          alignItems: 'center'
-        }}>
-          <Logo />
-        </div>
+    <header className={`${styles.navbarWrapper} ${isScrolled ? styles.scrolled : ''}`}>
+      <div className={styles.navContainer}>
+        {/* Logo area */}
+        <Logo />
 
         {/* Desktop links */}
         <nav className={styles.desktopLinks}>
@@ -92,19 +87,7 @@ const Navbar = () => {
             <Link
               key={item.to}
               to={item.to}
-              className={styles.desktopLink}
-              style={{
-                textDecoration: 'none',
-                padding: '9px 14px',
-                fontSize: 13.5,
-                lineHeight: 1,
-                fontWeight: 500,
-                color: isActive(item.to) ? 'var(--ink, #1a1814)' : 'var(--ink-soft, #6b6356)',
-                display: 'inline-flex',
-                alignItems: 'center',
-                borderBottom: isActive(item.to) ? '1.5px solid var(--ink, #1a1814)' : '1.5px solid transparent',
-                transition: 'color 0.2s, border-color 0.2s',
-              }}
+              className={`${styles.navLink} ${isActive(item.to) ? styles.activeNavLink : ''}`}
             >
               {item.label}
             </Link>
@@ -113,21 +96,33 @@ const Navbar = () => {
 
         {/* CTA group */}
         <div className={styles.ctaGroup}>
-          <button
+          <div className={styles.signInDesktop}>
+            {user ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <Link to="/trips" className={styles.navLink} style={{ fontSize: '14px', fontWeight: 500 }}>
+                  My Trips
+                </Link>
+                <Button variant="secondary" size="sm" onClick={handleLogout}>
+                  Sign Out
+                </Button>
+              </div>
+            ) : (
+              <Button variant="secondary" size="sm" onClick={() => navigate('/login')}>
+                <UserIcon /> Sign In
+              </Button>
+            )}
+          </div>
+
+          <Button
+            variant="primary"
+            size="sm"
             onClick={() => navigate('/planner')}
             className={styles.planDesktop}
-            style={{
-              all: 'unset', cursor: 'pointer', fontSize: 13.5, fontWeight: 600,
-              padding: '10px 20px', background: 'var(--ink, #1a1814)',
-              color: 'var(--page-bg, #faf7f2)', borderRadius: 999,
-              display: 'inline-flex', alignItems: 'center', gap: 6,
-              transition: 'all 0.2s ease', boxShadow: '0 4px 14px rgba(0,0,0,0.18)',
-            }}
           >
-            Start Planning <ArrowIcon />
-          </button>
+            Plan Trip <ArrowIcon />
+          </Button>
 
-          {/* Hamburger Menu Only for Mobile (Visible via CSS media query) */}
+          {/* Hamburger Menu Only for Mobile */}
           <button
             className={styles.hamburger}
             onClick={() => setMobileOpen((o) => !o)}
@@ -138,31 +133,25 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* ── Mobile dropdown ── */}
+      {/* Mobile dropdown */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
             className={styles.mobileMenu}
-            initial={{ opacity: 0, y: -6, scale: 0.98 }}
+            initial={{ opacity: 0, y: -8, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -6, scale: 0.98 }}
-            transition={{ duration: 0.18, ease: 'easeOut' }}
+            exit={{ opacity: 0, y: -8, scale: 0.98 }}
+            transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }} /* transition-rise Standard Easing */
           >
-            {NAV_LINKS.map((item, i) => (
-              <motion.div
+            {NAV_LINKS.map((item) => (
+              <Link
                 key={item.to}
-                initial={{ opacity: 0, x: -8 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.2, delay: i * 0.04, ease: 'easeOut' }}
+                to={item.to}
+                onClick={() => setMobileOpen(false)}
+                className={`${styles.menuLink} ${isActive(item.to) ? styles.activeMenuLink : ''}`}
               >
-                <Link
-                  to={item.to}
-                  onClick={() => setMobileOpen(false)}
-                  className={`${styles.menuLink} ${isActive(item.to) ? styles.activeMenuLink : ''}`}
-                >
-                  {item.label}
-                </Link>
-              </motion.div>
+                {item.label}
+              </Link>
             ))}
             {user && (
               <Link to="/trips" className={styles.menuLink} onClick={() => setMobileOpen(false)}>
@@ -170,47 +159,29 @@ const Navbar = () => {
               </Link>
             )}
 
-            <motion.div
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.22, delay: 0.14, ease: 'easeOut' }}
-              style={{ marginTop: 8 }}
-            >
+            <div style={{ marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {user ? (
-                <button
+                <Button
+                  variant="danger"
                   onClick={handleLogout}
-                  style={{
-                    all: 'unset', cursor: 'pointer',
-                    padding: '13px 20px', fontSize: 15, fontWeight: 600,
-                    color: '#dc2626', borderRadius: 14,
-                    border: '1.5px solid #fecaca', background: '#fef2f2',
-                    display: 'flex', alignItems: 'center', gap: 8,
-                    justifyContent: 'center', width: '100%', boxSizing: 'border-box',
-                  }}
+                  style={{ width: '100%' }}
                 >
                   Sign Out
-                </button>
+                </Button>
               ) : (
-                <button
+                <Button
+                  variant="primary"
                   onClick={() => { navigate('/login'); setMobileOpen(false); }}
-                  style={{
-                    all: 'unset', cursor: 'pointer',
-                    padding: '14px 20px', fontSize: 15, fontWeight: 600,
-                    color: 'var(--page-bg, #faf9f5)',
-                    background: 'var(--ink, #141413)',
-                    borderRadius: 14,
-                    display: 'flex', alignItems: 'center', gap: 8,
-                    justifyContent: 'center', width: '100%', boxSizing: 'border-box',
-                  }}
+                  style={{ width: '100%' }}
                 >
                   <UserIcon /> Sign In
-                </button>
+                </Button>
               )}
-            </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </header>
   );
 };
 

@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { AlertCircle } from 'lucide-react';
 
 export default function Input({
   label,
@@ -16,6 +17,7 @@ export default function Input({
   ...rest
 }) {
   const [focused, setFocused] = useState(false);
+  const [isFocusVisible, setIsFocusVisible] = useState(false);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', width: '100%', ...style }} className={className}>
@@ -23,14 +25,16 @@ export default function Input({
         <label
           htmlFor={id}
           style={{
-            fontSize: 'var(--font-size-sm)',
-            fontWeight: 'var(--font-weight-medium)',
-            color: 'var(--color-text)',
-            marginBottom: 'var(--space-1)',
+            fontSize: '14px',
+            fontWeight: '400', /* UI Label / Tag / input weight is 400 */
+            color: 'var(--color-text-primary)',
+            marginBottom: '8px', /* Label -> Input: 8px */
+            display: 'flex',
+            alignItems: 'center',
           }}
         >
           {label}
-          {required && <span style={{ color: 'var(--color-error)', marginLeft: '2px' }}>*</span>}
+          {required && <span style={{ color: 'var(--color-error)', marginLeft: '4px' }}>*</span>}
         </label>
       )}
       <input
@@ -41,19 +45,39 @@ export default function Input({
         placeholder={placeholder}
         required={required}
         disabled={disabled}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
+        onFocus={(e) => {
+          setFocused(true);
+          if (e.target.matches(':focus-visible')) {
+            setIsFocusVisible(true);
+          }
+        }}
+        onBlur={() => {
+          setFocused(false);
+          setIsFocusVisible(false);
+        }}
+        aria-invalid={error ? 'true' : 'false'}
+        aria-describedby={error ? `${id}-error` : hint ? `${id}-hint` : undefined}
         style={{
           width: '100%',
-          border: `1px solid ${error ? 'var(--color-error)' : focused ? 'var(--color-primary)' : 'var(--color-border)'}`,
-          borderRadius: 'var(--radius-md)',
-          padding: 'var(--space-2) var(--space-3)',
-          fontSize: 'var(--font-size-base)',
-          background: disabled ? 'var(--color-bg-subtle)' : 'var(--color-bg-elevated)',
-          color: 'var(--color-text)',
+          height: '44px', /* Min height 44px */
+          border: error 
+            ? '1.5px solid var(--color-error)' 
+            : focused 
+              ? '1.5px solid var(--color-border-focus)' 
+              : 'none', /* No border at rest */
+          borderRadius: 'var(--radius-sm)', /* radius-sm (8px) */
+          padding: '12px 16px', /* Padding 12px 16px */
+          fontSize: '16px', /* StyreneB 16px */
+          fontFamily: 'var(--font-body)',
+          fontWeight: '400',
+          background: disabled 
+            ? 'rgba(214, 196, 171, 0.5)' /* bg.surface @ 50% opacity */
+            : 'var(--color-bg-surface)', /* bg.surface */
+          color: 'var(--color-text-primary)',
           outline: 'none',
-          boxShadow: focused && !error ? '0 0 0 3px rgba(79,70,229,0.1)' : 'none',
-          transition: 'border-color 150ms ease, box-shadow 150ms ease',
+          boxShadow: isFocusVisible ? '0 0 0 2px var(--color-border-focus)' : 'none',
+          outlineOffset: isFocusVisible ? '3px' : undefined,
+          transition: 'border-color var(--duration-fast) var(--ease-standard), box-shadow var(--duration-fast) var(--ease-standard)',
           cursor: disabled ? 'not-allowed' : undefined,
           opacity: disabled ? 0.6 : 1,
           boxSizing: 'border-box',
@@ -61,12 +85,34 @@ export default function Input({
         {...rest}
       />
       {error && (
-        <span style={{ color: 'var(--color-error)', fontSize: 'var(--font-size-sm)', marginTop: 'var(--space-1)' }}>
+        <span 
+          id={`${id}-error`}
+          style={{ 
+            color: 'var(--color-error)', 
+            fontSize: '14px', 
+            marginTop: '4px', /* Input -> Helper text: 4px */
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '4px',
+            fontFamily: 'var(--font-body)',
+            fontWeight: '400'
+          }}
+        >
+          <AlertCircle size={16} />
           {error}
         </span>
       )}
       {!error && hint && (
-        <span style={{ color: 'var(--color-text-muted)', fontSize: 'var(--font-size-sm)', marginTop: 'var(--space-1)' }}>
+        <span 
+          id={`${id}-hint`}
+          style={{ 
+            color: 'var(--color-text-secondary)', 
+            fontSize: '14px', 
+            marginTop: '4px', /* Input -> Helper text: 4px */
+            fontFamily: 'var(--font-body)',
+            fontWeight: '400'
+          }}
+        >
           {hint}
         </span>
       )}
