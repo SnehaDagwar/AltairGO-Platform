@@ -7,6 +7,7 @@ import heroBg from '../assets/hero-page-image.png';
 import philJaipur from '../assets/phil-jaipur.png';
 import philKerala from '../assets/phil-kerala.png';
 import philGoa from '../assets/phil-goa.png';
+import luxuryResortImg from '../assets/luxury-resort.jpg';
 import philHimalayas from '../assets/phil-himalayas.png';
 import destGoa from '../assets/dest-goa.png';
 import destKashmir from '../assets/dest-kashmir.png';
@@ -659,7 +660,7 @@ const INSPIRATION_CARDS = [
     id: 'luxury',
     title: 'Luxury Retreats',
     subtitle: 'Palaces, wellness resorts, curated stays',
-    img: philGoa,
+    img: luxuryResortImg,
     gridClass: ''
   }
 ];
