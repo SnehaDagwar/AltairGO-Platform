@@ -96,71 +96,29 @@ function ItineraryCard({ variant, onCycle }) {
   const [hover, setHover] = useState(null);
 
   return (
-    <div className={styles.cardWrapper}>
+    <div className={styles.heroCardWrapper}>
       {/* Left side: itinerary */}
       <div className={styles.cardLeft}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{ 
-              width: '36px', 
-              height: '36px', 
-              borderRadius: 'var(--radius-pill)', 
-              background: 'var(--color-primary)', 
-              display: 'grid', 
-              placeItems: 'center', 
-              color: 'var(--color-text-primary)', 
-              fontSize: '14px', 
-              fontWeight: 500 
-            }}>
-              {data.dest.charAt(0)}
-            </div>
-            <div>
-              <div style={{ fontSize: '12px', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.08em', fontFamily: 'var(--font-body)' }}>{data.tag}</div>
-              <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-text-primary)', fontFamily: 'var(--font-body)' }}>{data.dest}</div>
-            </div>
+          <div style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: 500, color: 'var(--color-text-primary)', lineHeight: 1.2 }}>
+            {data.dest.split(',')[0]} <span style={{ fontStyle: 'italic', color: 'var(--color-active)' }}>itinerary</span>
           </div>
           <Button variant="secondary" size="sm" onClick={onCycle} style={{ height: '28px', padding: '0 8px', fontSize: '12px' }}>
             {variant + 1}/3 →
           </Button>
-        </div>
-
-        <div style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: '8px', lineHeight: 1.2 }}>
-          {data.dest.split(',')[0]} <span style={{ fontStyle: 'italic', color: 'var(--color-active)' }}>itinerary</span>
         </div>
         
         <div style={{ fontFamily: 'var(--font-body)', fontSize: '14px', lineHeight: 1.6, color: 'var(--color-text-secondary)', marginBottom: '16px' }}>
           {data.blurb}
         </div>
 
-        <div style={{ display: 'flex', gap: '16px', marginBottom: '16px', paddingBottom: '16px', borderBottom: '1px dashed var(--color-border-strong)' }}>
+        <div style={{ display: 'flex', gap: '16px' }}>
           {data.meta.map((m, i) =>
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: 'var(--color-text-secondary)', fontFamily: 'var(--font-body)' }}>
               {m.i === 'plane' && <I.plane />}
               {m.i === 'bed' && <I.bed />}
               {m.i === 'clock' && <I.clock />}
               {m.t}
-            </div>
-          )}
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          {data.days.slice(0, 5).map((day, i) =>
-            <div key={i}
-              onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(null)}
-              style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                gap: '12px', 
-                padding: '8px 12px', 
-                borderRadius: 'var(--radius-sm)', 
-                background: hover === i ? 'var(--color-bg-surface)' : 'transparent', 
-                transition: 'background var(--duration-fast) var(--ease-standard)' 
-              }}
-            >
-              <div style={{ fontFamily: 'var(--mono)', fontSize: '12px', color: 'var(--color-text-secondary)', width: '32px' }}>{day.d}</div>
-              <div style={{ width: '6px', height: '6px', borderRadius: 'var(--radius-pill)', background: 'var(--color-active)' }} />
-              <div style={{ fontSize: '14px', color: 'var(--color-text-primary)', flex: 1, fontFamily: 'var(--font-body)' }}>{day.l}</div>
-              <div style={{ fontSize: '12px', fontFamily: 'var(--mono)', color: 'var(--color-text-secondary)' }}>{day.c}</div>
             </div>
           )}
         </div>
@@ -233,125 +191,122 @@ function ItineraryCard({ variant, onCycle }) {
   );
 }
 
-/* ---------- Hero (v3.1) ---------- */
+/* ---------- Hero (v3.1 Cinematic) ---------- */
 function Hero({ onPlan }) {
-  const [variant, setVariant] = useState(0);
-
   return (
-    <div style={{ position: 'relative', minHeight: '100vh', padding: '16px', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }} className={styles.sectionContainer}>
-      {/* Luxury Frame Container */}
-      <div style={{
-        position: 'relative',
-        flex: 1,
-        borderRadius: 'var(--radius-xl)',
-        overflow: 'hidden',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        boxShadow: 'var(--shadow-xl)',
-        background: 'var(--color-bg-soft)'
-      }}>
-        {/* Background Image & Scrim Overlay */}
-        <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
-          <img 
-            src={heroBg} 
-            alt="Pristine Lakeside Palace Sunrise" 
-            style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }} 
-          />
-          {/* Gentle veil so navbar/logo reads well */}
-          <div style={{ 
-            position: 'absolute', inset: 0, 
-            background: 'linear-gradient(to bottom, rgba(46,46,46,0.55) 0%, rgba(46,46,46,0.1) 38%, rgba(46,46,46,0.0) 60%, rgba(46,46,46,0.6) 100%)'
-          }} />
-          {/* Soft warm-to-cool atmospheric tint matching image palette */}
-          <div style={{ 
-            position: 'absolute', inset: 0, 
-            background: 'linear-gradient(160deg, rgba(231,162,123,0.08) 0%, rgba(163,177,138,0.06) 50%, rgba(46,46,46,0.18) 100%)'
-          }} />
+    <div style={{ position: 'relative', height: '100vh', display: 'flex', flexDirection: 'column', boxSizing: 'border-box', background: 'var(--color-bg-soft)', width: '100%', overflow: 'hidden' }}>
+      {/* Background Image & Scrim Overlay */}
+      <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+        <img 
+          src={heroBg} 
+          alt="Pristine Lakeside Palace Sunrise" 
+          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }} 
+        />
+        {/* Layer 1: Gentle top scrim for nav readability, deeper bottom scrim for text contrast */}
+        <div style={{ 
+          position: 'absolute', inset: 0, 
+          background: 'linear-gradient(to bottom, rgba(46,46,46,0.65) 0%, rgba(46,46,46,0.15) 30%, rgba(46,46,46,0.0) 60%, rgba(46,46,46,0.65) 100%)'
+        }} />
+        {/* Layer 2: Soft warm-to-cool atmospheric tint matching image palette */}
+        <div style={{ 
+          position: 'absolute', inset: 0, 
+          background: 'linear-gradient(160deg, rgba(231,162,123,0.15) 0%, rgba(163,177,138,0.08) 50%, rgba(46,46,46,0.2) 100%)'
+        }} />
+
+        {/* Floating Organic Vector Waves in Corners for Premium Depth */}
+        <svg style={{ position: 'absolute', right: '-40px', bottom: '12%', height: '70%', width: '35%', zIndex: 1, pointerEvents: 'none', transform: 'scaleX(-1)' }} viewBox="0 0 100 200">
+          <path d="M0,200 C35,170 55,110 35,0" fill="none" stroke="rgba(255, 255, 255, 0.22)" strokeWidth="0.8" strokeLinecap="round" />
+          <path d="M12,200 C48,170 68,110 48,0" fill="none" stroke="rgba(255, 255, 255, 0.1)" strokeWidth="0.6" strokeLinecap="round" />
+        </svg>
+
+        <svg style={{ position: 'absolute', left: '-40px', top: '10%', height: '60%', width: '30%', zIndex: 1, pointerEvents: 'none' }} viewBox="0 0 100 200">
+          <path d="M0,200 C30,160 50,100 30,0" fill="none" stroke="rgba(255, 255, 255, 0.12)" strokeWidth="0.8" strokeLinecap="round" />
+        </svg>
+      </div>
+
+      {/* Smooth Organic Section Edge Transition at bottom */}
+      <div style={{ position: 'absolute', bottom: -1, left: 0, right: 0, height: 48, zIndex: 3, pointerEvents: 'none' }}>
+        <svg viewBox="0 0 1440 48" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
+          <path d="M0,48 L1440,48 L1440,24 C1080,-8 360,-8 0,24 Z" fill="var(--color-bg-main)" />
+        </svg>
+      </div>
+
+      {/* Hero Content Container Bounded to 1280px for alignment with Navbar & Footer */}
+      <div className={styles.heroContentContainer}>
+        
+        {/* Center Content: Giant Editorial Typography & Spacing */}
+        <div style={{ textAlign: 'center', marginBlock: 'auto 0' }}>
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+            style={{ 
+              fontFamily: 'var(--font-heading)', fontSize: 'clamp(56px, 12vw, 154px)', lineHeight: 0.82, 
+              letterSpacing: '0.08em', fontWeight: 500, margin: 0, color: '#ffffff',
+              textTransform: 'uppercase', textShadow: '0 4px 24px rgba(46,46,46,0.55), 0 12px 60px rgba(46,46,46,0.3)'
+            }}
+          >
+            ALTAIRGO
+          </motion.h1>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
+            style={{ marginTop: 24, display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+          >
+            <h2 style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(11px, 1.8vw, 13px)', fontWeight: 500, color: 'rgba(246, 241, 230, 0.95)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 16, textShadow: '0 2px 12px rgba(46,46,46,0.5)' }}>
+              India’s AI-First Travel Intelligence Platform
+            </h2>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: '16px', fontWeight: 400, lineHeight: 1.65, color: 'rgba(255,255,255,0.92)', maxWidth: 540, margin: '0 auto', textShadow: '0 2px 16px rgba(46,46,46,0.7)' }}>
+              Bespoke journeys mapped to the rhythm of India. Spontaneous road trips, slow boutique havelis, and deep heritage itineraries structured seamlessly by real-time travel intelligence.
+            </p>
+          </motion.div>
         </div>
 
-        {/* Smooth Organic Section Edge Transition at bottom */}
-        <div style={{ position: 'absolute', bottom: -1, left: 0, right: 0, height: 48, zIndex: 3, pointerEvents: 'none' }}>
-          <svg viewBox="0 0 1440 48" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
-            <path d="M0,48 L1440,48 L1440,24 C1080,-8 360,-8 0,24 Z" fill="var(--color-bg-main)" />
-          </svg>
-        </div>
-
-        {/* Hero Content Container */}
-        <div style={{ position: 'relative', zIndex: 2, width: '100%', display: 'flex', flexDirection: 'column', height: '100%', flex: 1, justifyContent: 'space-between', padding: '120px 48px 80px' }} className={styles.responsiveGrid}>
+        {/* Bottom Area: Left Content Block & Interactive ItineraryCard */}
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'flex-end', 
+          marginTop: '80px',
+          width: '100%',
+          flexWrap: 'wrap',
+          gap: '32px'
+        }}>
           
-          {/* Center Content: Giant Editorial Typography & Spacing */}
-          <div style={{ textAlign: 'center', marginBlock: 'auto 0' }}>
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-              style={{ 
-                fontFamily: 'var(--font-heading)', fontSize: 'clamp(48px, 10vw, 120px)', lineHeight: 0.82, 
-                letterSpacing: '0.08em', fontWeight: 600, margin: 0, color: '#ffffff',
-                textTransform: 'uppercase', textShadow: '0 4px 24px rgba(46,46,46,0.55), 0 12px 60px rgba(46,46,46,0.3)'
-              }}
-            >
-              ALTAIRGO
-            </motion.h1>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
-              style={{ marginTop: 24, display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-            >
-              <h2 style={{ fontFamily: 'var(--mono)', fontSize: 'clamp(11px, 1.8vw, 13px)', fontWeight: 500, color: 'rgba(246, 241, 230, 0.95)', letterSpacing: '0.28em', textTransform: 'uppercase', marginBottom: 16, textShadow: '0 2px 12px rgba(46,46,46,0.5)' }}>
-                India’s AI-First Travel Intelligence Platform
-              </h2>
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: '16px', lineHeight: 1.65, color: 'rgba(255,255,255,0.92)', maxWidth: 540, margin: '0 auto', textShadow: '0 2px 16px rgba(46,46,46,0.7)' }}>
-                Bespoke journeys mapped to the rhythm of India. Spontaneous road trips, slow boutique havelis, and deep heritage itineraries structured seamlessly by real-time travel intelligence.
-              </p>
-            </motion.div>
-          </div>
-
-          {/* Bottom Area: Left Content Block & Floating Glass Stats Badge */}
-          <div style={{ 
-            display: 'flex', 
-            justifyContent: 'space-between', 
-            alignItems: 'flex-end', 
-            marginTop: '80px',
-            width: '100%',
-            flexWrap: 'wrap',
-            gap: '32px'
-          }}>
+          {/* Left Block: Breathtaking Editorial Signature Title & CTA */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}
+          >
+            <div style={{ position: 'relative', marginBottom: 20 }}>
+              <h3 style={{ 
+                fontFamily: 'var(--font-heading)', fontSize: 'clamp(36px, 5vw, 52px)', 
+                fontWeight: 500, color: '#ffffff', margin: 0, lineHeight: 0.85, 
+                letterSpacing: '-0.02em', textShadow: '0 4px 16px rgba(46,46,46,0.3)' 
+              }}>
+                Traveling
+              </h3>
+              <span style={{ 
+                fontFamily: 'var(--font-heading)', display: 'block', fontWeight: 400, 
+                fontStyle: 'italic',
+                color: 'var(--color-accent)', 
+                fontSize: 'clamp(34px, 4.5vw, 48px)', 
+                margin: '-4px 0 0 8px', textTransform: 'none', 
+                textShadow: '0 4px 16px rgba(46,46,46,0.2)' 
+              }}>
+                Beyond
+              </span>
+            </div>
             
-            {/* Left Block: Breathtaking Editorial Signature Title & CTA */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}
+            <Button 
+              variant="primary" 
+              onClick={onPlan}
             >
-              <div style={{ position: 'relative', marginBottom: 20 }}>
-                <h3 style={{ 
-                  fontFamily: 'var(--font-heading)', fontSize: 'clamp(32px, 4vw, 44px)', 
-                  fontWeight: 600, color: '#ffffff', margin: 0, lineHeight: 0.9, 
-                  letterSpacing: '-0.02em', textShadow: '0 4px 16px rgba(46,46,46,0.3)' 
-                }}>
-                  Traveling Beyond
-                </h3>
-              </div>
-              
-              <Button 
-                variant="primary" 
-                onClick={onPlan}
-              >
-                Booking Now <I.arrow />
-              </Button>
-            </motion.div>
+              Booking Now <I.arrow />
+            </Button>
+          </motion.div>
 
-            {/* Right Interactive Preview Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1], delay: 0.6 }}
-              style={{ flex: 1, maxWidth: '640px', minWidth: '320px', zIndex: 10 }}
-            >
-              <ItineraryCard variant={variant} onCycle={() => setVariant(p => (p + 1) % 3)} />
-            </motion.div>
-          </div>
         </div>
       </div>
     </div>
