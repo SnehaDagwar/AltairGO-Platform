@@ -308,15 +308,6 @@ function Hero({ onPlan }) {
           }} />
         </div>
 
-        {/* Floating Organic Vector Waves in Corners for Premium Depth */}
-        <svg style={{ position: 'absolute', right: '-40px', bottom: '12%', height: '70%', width: '35%', zIndex: 1, pointerEvents: 'none', transform: 'scaleX(-1)' }} viewBox="0 0 100 200">
-          <path d="M0,200 C35,170 55,110 35,0" fill="none" stroke="rgba(255, 255, 255, 0.28)" strokeWidth="0.8" strokeLinecap="round" />
-          <path d="M12,200 C48,170 68,110 48,0" fill="none" stroke="rgba(255, 255, 255, 0.12)" strokeWidth="0.6" strokeLinecap="round" />
-        </svg>
-
-        <svg style={{ position: 'absolute', left: '-40px', top: '10%', height: '60%', width: '30%', zIndex: 1, pointerEvents: 'none' }} viewBox="0 0 100 200">
-          <path d="M0,200 C30,160 50,100 30,0" fill="none" stroke="rgba(255, 255, 255, 0.15)" strokeWidth="0.8" strokeLinecap="round" />
-        </svg>
 
         {/* Smooth Organic Section Edge Transition at bottom */}
         <div style={{ position: 'absolute', bottom: -1, left: 0, right: 0, height: 48, zIndex: 3, pointerEvents: 'none' }}>
