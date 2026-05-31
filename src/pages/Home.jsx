@@ -183,7 +183,7 @@ function ItineraryCard({ variant, onCycle }) {
           )}
         </div>
 
-        <Button variant="primary" style={{ marginTop: '16px' }} onClick={onCycle}>
+        <Button variant="teal" style={{ marginTop: '16px' }} onClick={onCycle}>
           <I.spark /> Refine Itinerary
         </Button>
       </div>
@@ -285,7 +285,7 @@ function Hero({ onPlan }) {
             </div>
             
             <Button 
-              variant="primary" 
+              variant="gradient" 
               onClick={onPlan}
             >
               Booking Now <I.arrow />

@@ -26,11 +26,14 @@ export default function Button({
   if (variant === 'secondary' || variant === 'glass') {
     variantClass = 'btn-glass';
   } else if (variant === 'ghost') {
-    // Ghost can be glass without border or shadow, but for now we'll map to glass
     variantClass = 'btn-glass';
+  } else if (variant === 'teal') {
+    variantClass = 'btn-teal';
+  } else if (variant === 'gradient') {
+    variantClass = 'btn-gradient';
+  } else if (variant === 'lavender') {
+    variantClass = 'btn-lavender';
   } else if (variant === 'danger') {
-    // For danger, we'll keep it primary but override in style if needed
-    // The design system doesn't specify danger, so we use a red tint
     variantClass = 'btn-danger';
   }
 
