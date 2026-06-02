@@ -113,18 +113,6 @@
   }
 }
 
-/* Itinerary Card wrapper in Hero */
-.cardWrapper {
-  display: grid;
-  width: 100% !important;
-  grid-template-columns: 1.2fr 1fr !important;
-  background: var(--surface) !important;
-  border-radius: var(--radius-lg) !important; 
-  border: 1px solid var(--border) !important;
-  box-shadow: var(--shadow-md) !important;
-  overflow: hidden;
-}
-
 /* Custom full-screen flex layout for Hero content, bypassing global responsiveGrid layout rules */
 .heroContentContainer {
   position: relative;
@@ -137,7 +125,7 @@
   flex-direction: column;
   height: 100%;
   flex: 1;
-  justify-content: space-between;
+  justify-content: center;
   box-sizing: border-box;
 }
 
@@ -154,20 +142,113 @@
   }
 }
 
-.cardLeft {
-  border-right: 1px solid var(--border) !important;
-  padding: 24px !important; /* space-6 spacing */
+/* --- Hero v5.0 Bright Minimal Column System --- */
+.heroTextColMinimal {
+  max-width: 750px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin: 0 auto;
+  z-index: 5;
+  padding: 0;
+  --hero-teal: #1F5F6B; /* Elegant, high-contrast dark teal for light mode */
 }
 
-@media (max-width: 900px) {
-  .cardWrapper {
-    grid-template-columns: 1fr !important;
-  }
-  .cardLeft {
-    border-right: none !important;
-    border-bottom: 1px solid var(--border) !important;
+[data-theme="dark"] .heroTextColMinimal {
+  --hero-teal: var(--color-teal); /* Glow teal in dark mode */
+}
+
+
+/* --- Theme-Aware Gradient Scrim Overlays --- */
+.heroOverlayHorizontal {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 253, 242, 0.16); /* Slightly increased uniform softening overlay */
+  z-index: 1;
+}
+
+[data-theme="dark"] .heroOverlayHorizontal {
+  background: rgba(18, 18, 18, 0.16);
+}
+
+.heroOverlayVertical {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, 
+    transparent 0%, 
+    transparent 65%, 
+    rgba(255, 253, 242, 0.6) 88%, 
+    var(--bg) 100%
+  );
+  z-index: 2;
+}
+
+[data-theme="dark"] .heroOverlayVertical {
+  background: linear-gradient(to bottom, 
+    transparent 0%, 
+    transparent 65%, 
+    rgba(18, 18, 18, 0.6) 88%, 
+    var(--bg) 100%
+  );
+}
+
+/* --- Editorial Accent & Typography --- */
+.scriptAccent {
+  font-family: var(--font-accent);
+  font-size: clamp(64px, 8vw, 96px); /* Elevated to main headline size */
+  color: var(--hero-teal);
+  margin-bottom: 8px;
+  margin-left: 8px;
+  transform: rotate(-1.5deg); /* Subtle, elegant rotation */
+  z-index: 2;
+  text-shadow: 0 1px 6px rgba(255, 255, 255, 0.8);
+}
+
+[data-theme="dark"] .scriptAccent {
+  text-shadow: 0 1px 6px rgba(18, 18, 18, 0.8);
+}
+
+.heroDisplayTitle {
+  font-family: var(--font-display);
+  font-size: clamp(64px, 8.5vw, 120px); /* Increased title size */
+  font-weight: 400;
+  line-height: 0.85;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+  margin: 0 0 16px 0;
+  text-transform: uppercase;
+  text-shadow: 0 2px 12px rgba(255, 253, 242, 0.95);
+}
+
+[data-theme="dark"] .heroDisplayTitle {
+  text-shadow: 0 2px 12px rgba(18, 18, 18, 0.95);
+}
+
+.heroSubtitle {
+  font-family: var(--font-body);
+  font-size: clamp(14px, 1.8vw, 18px); /* Redesigned subtitle size */
+  font-weight: 500;
+  letter-spacing: 0.22em; /* Premium letter spacing */
+  color: var(--fg); /* Aligned with fg with opacity */
+  opacity: 0.8;
+  margin: 0 0 24px 0;
+  text-transform: uppercase;
+  text-shadow: 0 1px 6px rgba(255, 255, 255, 0.8);
+}
+
+[data-theme="dark"] .heroSubtitle {
+  text-shadow: 0 1px 6px rgba(18, 18, 18, 0.8);
+}
+
+
+@media (max-width: 768px) {
+  .scriptAccent {
+    margin-left: 0;
   }
 }
+
+
 
 /* --- Travel Inspiration Grid (v3.1) --- */
 .inspirationGrid {

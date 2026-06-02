@@ -217,6 +217,12 @@ img {
   gap: 12px;
   letter-spacing: 0.02em;
 }
+.btn:hover {
+  transform: translateY(-2px);
+}
+.btn:active {
+  transform: translateY(0) scale(0.97);
+}
 .btn-primary { background: var(--color-black); color: white; }
 .btn-primary:hover { 
   background: var(--color-teal);

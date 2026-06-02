@@ -113,14 +113,7 @@ const Navbar = () => {
             )}
           </div>
 
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={() => navigate('/planner')}
-            className={styles.planDesktop}
-          >
-            Plan Trip <ArrowIcon />
-          </Button>
+
 
           {/* Hamburger Menu Only for Mobile */}
           <button
