@@ -170,26 +170,6 @@
 
 @media (max-width: 1024px) {
   .navbarWrapper {
-    height: 64px;
-  }
-  
-  .navContainer {
-    padding: 0 24px;
-  }
-  
-  .scrolled {
-    top: 12px;
-    width: calc(100% - 48px);
-    height: 60px;
-  }
-
-  .scrolled .navContainer {
-    padding: 0 20px;
-  }
-}
-
-@media (max-width: 768px) {
-  .navbarWrapper {
     height: 56px;
   }
 
@@ -257,16 +237,6 @@
 }
 
 @media (max-width: 1024px) {
-  .mobileMenu {
-    top: 64px;
-  }
-  
-  .scrolled .mobileMenu {
-    top: 68px; /* 60px height + 8px gap */
-  }
-}
-
-@media (max-width: 768px) {
   .mobileMenu {
     top: 56px;
   }
