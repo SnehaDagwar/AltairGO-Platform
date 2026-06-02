@@ -22,14 +22,12 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--color-black);
-  background: rgba(255, 253, 242, 0.85); /* Creamy white frosted glass */
-  border: 1px solid rgba(31, 95, 107, 0.2); /* Deep teal-tinged border */
+  background: var(--color-cream); /* Solid creamy white background */
+  border: 1px solid rgba(31, 95, 107, 0.25); /* Deep teal-tinged border */
   box-shadow: 
     inset 0 1px 0 rgba(255, 255, 255, 0.4),
     0 4px 12px rgba(31, 95, 107, 0.05),
     0 16px 32px rgba(31, 95, 107, 0.04);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   cursor: pointer;
   outline: none;
   overflow: hidden;
@@ -41,8 +39,8 @@
 
 [data-theme="dark"] .buttonBase {
   color: var(--color-white);
-  background: rgba(18, 18, 18, 0.75); /* Deep charcoal frosted glass */
-  border: 1px solid rgba(108, 176, 189, 0.25);
+  background: var(--color-black); /* Solid deep charcoal background */
+  border: 1px solid rgba(108, 176, 189, 0.35);
   box-shadow: 
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
     0 4px 12px rgba(0, 0, 0, 0.15),
@@ -54,11 +52,10 @@
   position: absolute;
   inset: -12px;
   border-radius: 9999px;
-  background: radial-gradient(circle, rgba(108, 176, 189, 0.22) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(108, 176, 189, 0.15) 0%, transparent 70%);
   filter: blur(6px);
   pointer-events: none;
   z-index: -1;
-  mix-blend-mode: plus-lighter;
 }
 
 [data-theme="dark"] .glowAura {

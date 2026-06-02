@@ -460,3 +460,34 @@
     grid-column: span 1;
   }
 }
+
+.connectionBannerContainer {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  height: auto; /* Proportional natural height */
+  margin-top: 64px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.connectionImage {
+  width: 100%;
+  height: auto; /* Scale height proportionally with width */
+  display: block;
+}
+
+@media (max-width: 1024px) {
+  .connectionBannerContainer {
+    margin-top: 48px;
+  }
+}
+
+@media (max-width: 768px) {
+  .connectionBannerContainer {
+    margin-top: 32px;
+  }
+}

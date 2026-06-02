@@ -17,6 +17,7 @@ import {
 import Button from '../../common/Button.jsx';
 import styles from './Footer.module.css';
 import logo from '../../../assets/logo.png';
+import connectionImg from '../../../assets/connection.webp';
 
 const Footer = () => {
   const location = useLocation();
@@ -70,93 +71,25 @@ const Footer = () => {
   ];
 
   return (
-    <footer className={styles.footer}>
-      {/* 1. Large Cinematic CTA Banner (Floating Container) */}
+    <>
+      {/* 1. Cinematic Connection Image Banner */}
       {showCTABanner && (
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.1 }}
-          transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }} /* transition-slow (350ms) */
-          className={styles.ctaBanner}
+          transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
+          className={styles.connectionBannerContainer}
         >
-          {/* Parallax Background Visual */}
-          <motion.img 
-            src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2000&auto=format&fit=crop" 
-            alt="Cinematic Indian Twilight Coastline"
-            className={styles.ctaBgImage}
-            animate={{ scale: [1, 1.04] }}
-            transition={{ duration: 25, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
+          <img 
+            src={connectionImg} 
+            alt="Connecting Journeys" 
+            className={styles.connectionImage}
           />
-          {/* Readability scrim layer */}
-          <div className={styles.ctaScrim} />
-
-          {/* Centered CTA Content */}
-          <div className={styles.ctaContent}>
-            <h2 className={styles.ctaHeading}>Discover Smarter Travel with Altairgo</h2>
-            <p className={styles.ctaSubtext}>
-              Thoughtfully planned Indian journeys, crafted around your travel style
-            </p>
-
-            {/* Horizontal Search-Style Feature Pill Bar */}
-            <div className={styles.searchPillBar}>
-              {/* Feature 1: AI Planning */}
-              <div className={styles.pillItem}>
-                <div className={styles.pillIconWrapper}>
-                  <Sparkles size={16} />
-                </div>
-                <div className={styles.pillTextCol}>
-                  <span className={styles.pillLabel}>AI Planning</span>
-                  <span className={styles.pillDesc}>Bespoke paths</span>
-                </div>
-              </div>
-
-              {/* Feature 2: Seasonal */}
-              <div className={styles.pillItem}>
-                <div className={styles.pillIconWrapper}>
-                  <Compass size={16} />
-                </div>
-                <div className={styles.pillTextCol}>
-                  <span className={styles.pillLabel}>Seasonal Routing</span>
-                  <span className={styles.pillDesc}>Optimal weather</span>
-                </div>
-              </div>
-
-              {/* Feature 3: Multimodal */}
-              <div className={styles.pillItem}>
-                <div className={styles.pillIconWrapper}>
-                  <MapPin size={16} />
-                </div>
-                <div className={styles.pillTextCol}>
-                  <span className={styles.pillLabel}>Train + Roadtrip</span>
-                  <span className={styles.pillDesc}>End-to-end aware</span>
-                </div>
-              </div>
-
-              {/* Feature 4: Personalized */}
-              <div className={styles.pillItem}>
-                <div className={styles.pillIconWrapper}>
-                  <User size={16} />
-                </div>
-                <div className={styles.pillTextCol}>
-                  <span className={styles.pillLabel}>Personalized</span>
-                  <span className={styles.pillDesc}>Tailored pacing</span>
-                </div>
-              </div>
-
-              {/* Pill CTA Button */}
-              <Button 
-                variant="primary"
-                size="sm"
-                onClick={() => navigate('/planner')} 
-              >
-                Plan Trip <ArrowRight size={14} />
-              </Button>
-            </div>
-          </div>
         </motion.div>
       )}
 
+      <footer className={styles.footer}>
       {/* 2. Bottom Spaced Sand Footer Section */}
       <div className={styles.footerSection}>
         <div className={styles.footerGrid}>
@@ -275,6 +208,7 @@ const Footer = () => {
         </div>
       </div>
     </footer>
+    </>
   );
 };
 
