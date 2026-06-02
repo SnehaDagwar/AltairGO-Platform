@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getBlog } from '../../services/api';
-import { DetailPageSkeleton } from '../../components/Skeleton/Skeleton';
-import BlogContent from '../../components/Blogs/BlogContent';
+import { DetailPageSkeleton } from '../../components/skeletons/Skeleton';
+import BlogContent from '../../components/blogs/BlogContent';
 
 const BlogDetails = () => {
   const { id } = useParams();

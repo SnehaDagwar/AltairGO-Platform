@@ -2,10 +2,10 @@ import React, { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext.jsx';
-import Navbar from './components/Navbar/Navbar.jsx';
-import Footer from './components/Footer/Footer.jsx';
-import ErrorBoundary from './components/ErrorBoundary.jsx';
-import LoadingOverlay from './components/LoadingOverlay.jsx';
+import Navbar from './components/layout/Navbar/Navbar.jsx';
+import Footer from './components/layout/Footer/Footer.jsx';
+import ErrorBoundary from './components/common/ErrorBoundary.jsx';
+import LoadingOverlay from './components/common/LoadingOverlay.jsx';
 import './App.css';
 
 // Pages (eager load critical ones)

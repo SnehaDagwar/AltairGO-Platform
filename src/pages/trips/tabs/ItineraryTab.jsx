@@ -211,7 +211,7 @@ export default function ItineraryTab({
                           )}
 
                           {act.local_secret && (
-                            <div style={{ marginTop: '6px', padding: '6px 10px', background: '#E8F8F2', borderRadius: '8px', borderLeft: '3px solid #0BA060' }}>
+                            <div style={{ marginTop: '6px', padding: '8px 12px', background: '#E8F8F2', borderRadius: '8px', border: '1px solid #c6edd6' }}>
                               <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#088A52' }}>💡 Local tip: </span>
                               <span style={{ fontSize: '0.78rem', color: '#0BA060' }}>{act.local_secret}</span>
                             </div>

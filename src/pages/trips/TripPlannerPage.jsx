@@ -4,10 +4,10 @@ import { useAuth } from '../../context/AuthContext.jsx';
 import { ChevronRight, ChevronLeft, MapPin, Search, X, Plus, Minus, Sparkles, Check, Calendar, Users, DollarSign, Heart } from 'lucide-react';
 import { getCountries, search as searchDestinations, recommend, generateItinerary } from '../../services/api.js';
 import toast from 'react-hot-toast';
-import Button from '../../components/ui/Button.jsx';
-import Card from '../../components/ui/Card.jsx';
-import Input from '../../components/ui/Input.jsx';
-import Badge from '../../components/ui/Badge.jsx';
+import Button from '../../components/common/Button.jsx';
+import Card from '../../components/common/Card.jsx';
+import Input from '../../components/common/Input.jsx';
+import Badge from '../../components/common/Badge.jsx';
 
 const STYLES = ['adventure', 'cultural', 'relaxation', 'photography', 'food', 'spiritual', 'family'];
 const TRAVELER_TYPES = [

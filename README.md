@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://img.shields.io/badge/AltairGO-Platform-4F46E5?style=for-the-badge&logo=react&logoColor=white" alt="AltairGO Platform" />
+<img src="https://img.shields.io/badge/AltairGO-Platform-6CB0BD?style=for-the-badge&logo=react&logoColor=white" alt="AltairGO Platform" />
 
 # AltairGO Platform
 
@@ -9,12 +9,11 @@
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev)
 [![Vite](https://img.shields.io/badge/Vite-8-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev)
 [![React Router](https://img.shields.io/badge/React%20Router-v7-CA4245?style=flat-square&logo=reactrouter&logoColor=white)](https://reactrouter.com)
-[![Tailwind](https://img.shields.io/badge/Tailwind-v4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
-[![Playwright](https://img.shields.io/badge/Playwright-E2E-45BA4B?style=flat-square&logo=playwright&logoColor=white)](https://playwright.dev)
+[![CSS Modules](https://img.shields.io/badge/CSS--Modules-scoped-4285F4?style=flat-square&logo=cssmodules&logoColor=white)](https://github.com/css-modules/css-modules)
 
 <br/>
 
-[Features](#-features) &bull; [Getting Started](#-getting-started) &bull; [Routes](#-routing-overview) &bull; [Testing](#-testing) &bull; [Design System](#-design-system)
+[Features](#-features) &bull; [Getting Started](#-getting-started) &bull; [Routes](#-routing-overview) &bull; [Project Structure](#-project-structure) &bull; [Design System](#-design-system)
 
 </div>
 
@@ -30,14 +29,15 @@ AltairGO Platform is a production-grade React SPA connecting to the [AltairGO En
 
 | Tool | Version | Purpose |
 |------|---------|---------|
-| React | 19 | UI framework |
-| Vite | 8 | Build tool + dev server |
-| React Router | v7 | Client-side routing |
+| React | 19.2 | UI framework (StrictMode enabled) |
+| Vite | 8.0 | Build tool + dev server (port 5173/5174) |
+| React Router | v7 | Client-side routing (v6-style `<Routes>` API) |
 | Framer Motion | 12 | Page transitions + animations |
 | Recharts | 3 | Charts (expenses, best-time widget) |
-| @dnd-kit | 6/10/3 | Drag-and-drop activity reorder |
+| @dnd-kit | core@6, sortable@10, utilities@3 | Drag-and-drop (activity reorder) |
 | Lucide React | 0.577 | Icon library |
 | react-hot-toast | 2.6 | Toast notifications |
+| DOMPurify | 3.3 | HTML sanitization (admin blog preview) |
 | CSS Modules | — | Scoped per-component styles |
 
 ---
@@ -129,18 +129,22 @@ npm run build   # output → dist/
 
 ## Project Structure
 
+The codebase is organized into modular layout, primitive, and domain pages directories for high maintainability:
+
 ```
 src/
 ├── App.jsx                  # All routes + ProtectedRoute + AdminRoute
-├── index.css                # Design system — CSS variables + keyframes
+├── index.css                # Canonical Design system — tokens, fonts, resets
 ├── context/
 │   └── AuthContext.jsx      # JWT auth state + auto-refresh + logout event
 ├── services/
-│   └── api.js               # 50+ named API functions
-├── components/
-│   ├── Navbar/
-│   ├── DestinationCard/     # Bento card (large/wide/tall/default sizes)
-│   └── ...                  # Footer, Skeleton, LoadingOverlay, ErrorBoundary
+│   └── api.js               # Central Fetch layer (60+ named API functions)
+├── components/              # Restructured components space
+│   ├── layout/              # Structural pages grids (Navbar, Footer)
+│   ├── common/              # Reusable UI primitives barrel-exported via index.js
+│   ├── destinations/        # Feature components (DestinationCard)
+│   ├── blogs/               # Feature components (BlogContent)
+│   └── skeletons/           # Complex loaders (Card, TripCard skeletons)
 └── pages/
     ├── Home.jsx
     ├── auth/                # Login + Register
@@ -155,66 +159,33 @@ src/
 
 ## Testing
 
-### Unit Tests
-
 ```bash
-python -m pytest ../AltairGO-Engine/backend/tests/ -q  # 188 passed (backend)
+# Backend pytest validation suite
+python -m pytest ../AltairGO-Engine/backend/tests/ -q  # 188 passed (backend engine)
 ```
-
-### E2E Tests (Playwright)
-
-Full browser-level E2E suite — 334 tests across 6 spec files. **Requires both backend + frontend running.**
-
-```bash
-# Individual suites
-npm run test:booking    # P1 — booking flow (create, approve, execute, cancel)
-npm run test:editor     # P2 — trip editor (hotel swap, activity CRUD, notes)
-npm run test:discover   # P3 — discover (recommend, best-time, compare, estimate)
-npm run test:tools      # P4 — trip tools (readiness, briefing, swap, review)
-npm run test:admin      # P5 — admin panel (auth, stats, flags, engine config)
-npm run test:mobile     # P6 — mobile (375px viewport, no overflow, all flows)
-
-# All tests
-npm run test:e2e
-
-# Interactive UI mode
-npm run test:e2e:ui
-```
-
-| Suite | Priority | Coverage |
-|-------|----------|----------|
-| `01_booking_flow.spec.js` | P1 | Full booking lifecycle + edge cases |
-| `02_trip_editor.spec.js` | P2 | Hotel swap, activity CRUD, notes |
-| `03_discover.spec.js` | P3 | Recommend, best-time, compare, estimate |
-| `04_trip_tools.spec.js` | P4 | Readiness, briefing, activity swap, review |
-| `05_admin.spec.js` | P5 | Admin CRUD, feature flags, engine settings |
-| `06_mobile.spec.js` | P6 | Pixel 5 viewport — all pages no overflow |
-
-**Debug scripts** (headless: false, with screenshots):
-
-```bash
-node tests/p1_booking_debug.cjs     # P1 — 13/13 PASS
-node tests/p2_trip_editor.cjs       # P2 — 29 PASS, 4 warnings
-node tests/p3_discover_debug.cjs    # P3 — 57 PASS, 0 FAIL
-```
-
-Screenshots output to `test-results/`.
 
 ---
 
 ## Design System
 
-Tokens defined in `src/index.css`:
+All layout parameters, theme tokens, and typography classes reside in `src/index.css`:
 
-| Token | Value | Use |
-|-------|-------|-----|
-| `--primary` | `#4F46E5` | Main CTA, active states |
-| `--accent` | `#F59E0B` | Highlights, badges |
-| `--background` | `#F8FAFC` | Page background |
-| `--surface` | `#F1F5F9` | Section backgrounds |
-| `--border` | `#E2E8F0` | Dividers |
+### Color Tokens (`:root`)
+```css
+--color-black:    #121212
+--color-white:    #FFFFFF
+--color-teal:     #6CB0BD       /* Primary accent — CTAs, active states */
+--color-sky:      #9BC6DB       /* Secondary accent */
+--color-lavender: #E2D4E1       /* Decorative gradient */
+--color-peach:    #FCE4D6       /* Decorative gradient */
+--color-cream:    #FFFDF2       /* Warm background tint */
+--color-ice:      #DFEDF4       /* Cool panel background */
+```
 
-Font: **Poppins** (300–700) via Google Fonts. Currency: `₹{n.toLocaleString('en-IN')}`.
+### Typography Fonts
+*   **Display Headers**: `'Instrument Serif', serif` (loaded via Google Fonts)
+*   **Body Typeface**: `'Aeonik', sans-serif` (geometric, clean)
+*   **Accent Scripts**: `'Satisfy', cursive` (premium handwritten accent styles)
 
 ---
 
@@ -233,11 +204,9 @@ All API calls go through `src/services/api.js`. Key field names to know:
 
 ---
 
-## Related
+## Related Projects
 
-| Project | Role |
-|---------|------|
-| [AltairGO-Engine](https://github.com/yash-dev007/AltairGO-Engine) | Flask backend — API, DB, Celery, Gemini AI |
+*   [AltairGO-Engine](https://github.com/yash-dev007/AltairGO-Engine): Flask backend handling PostgreSQL, Celery task cues, and Gemini AI.
 
 ---
 

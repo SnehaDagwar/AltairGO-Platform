@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import styles from './Home.module.css';
 import logoUrl from '../assets/logo.png';
-import heroBg from '../assets/hero-page-image.png';
+import heroBg from '../assets/hero-page-image.webp';
 import philJaipur from '../assets/phil-jaipur.png';
 import philKerala from '../assets/phil-kerala.png';
 import philGoa from '../assets/phil-goa.png';
@@ -30,9 +30,10 @@ import destJaisalmerNew from '../assets/jaisalmer-desert-camel.jpg';
 import destDarjeelingNew from '../assets/darjeeling-tea-pickers.jpg';
 import destRishikesh from '../assets/rishikesh-yoga.jpg';
 import destKashmirNew from '../assets/kashmir.jpg';
-import Button from '../components/ui/Button.jsx';
-import Card from '../components/ui/Card.jsx';
-import Badge from '../components/ui/Badge.jsx';
+import Button from '../components/common/Button.jsx';
+import PlanYourTripButton from '../components/common/PlanYourTripButton.jsx';
+import Card from '../components/common/Card.jsx';
+import Badge from '../components/common/Badge.jsx';
 
 /* ---------- Minimal inline strokes Icons ---------- */
 const I = {
@@ -48,154 +49,10 @@ const I = {
   spark: (p) => <svg width="14" height="14" viewBox="0 0 14 14" {...p}><path d="M7 1.5L8.2 5.3L12 6.5L8.2 7.7L7 11.5L5.8 7.7L2 6.5L5.8 5.3Z" fill="currentColor" /></svg>,
 };
 
-/* ---------- Dynamic Itinerary card variants (v3.1) ---------- */
-const CARD_DATA = [
-  {
-    dest: 'Jaipur, Rajasthan',
-    tag: 'Royal Heritage',
-    blurb: 'Five unhurried days through palaces, stepwells, and the old bazaars of the Pink City — paced for rooftop chai mornings and havelis by night.',
-    meta: [{ i: 'plane', t: 'Flight incl.' }, { i: 'bed', t: '2 havelis' }, { i: 'clock', t: '5 days' }],
-    days: [
-      { d: 'Mon', l: 'Amber Fort at sunrise', c: 'fort' },
-      { d: 'Tue', l: 'Hawa Mahal & Jantar Mantar', c: 'heritage' },
-      { d: 'Wed', l: 'Chand Baori stepwell', c: 'nature' },
-      { d: 'Thu', l: 'Johari Bazaar + thali', c: 'food' },
-      { d: 'Fri', l: 'Nahargarh & departure', c: 'fort' }
-    ]
-  },
-  {
-    dest: 'Kerala Backwaters',
-    tag: 'Slow Coastal',
-    blurb: 'A long weekend on a kettuvallam through Alleppey, with one day pulled out to the tea hills of Munnar and Ayurveda on Marari beach.',
-    meta: [{ i: 'plane', t: 'Flight incl.' }, { i: 'bed', t: 'Houseboat + resort' }, { i: 'clock', t: '4 days' }],
-    days: [
-      { d: 'Fri', l: 'Kochi — Fort & Jew Town', c: 'walk' },
-      { d: 'Sat', l: 'Alleppey houseboat', c: 'water' },
-      { d: 'Sun', l: 'Munnar tea gardens', c: 'nature' },
-      { d: 'Mon', l: 'Marari beach & fly out', c: 'beach' }
-    ]
-  },
-  {
-    dest: 'Leh-Ladakh',
-    tag: 'High Himalaya',
-    blurb: 'A week across moonscapes, monasteries, and the Nubra dunes — acclimatize in Leh, then climb to Pangong and back through Khardung La.',
-    meta: [{ i: 'plane', t: 'Flight incl.' }, { i: 'bed', t: 'Homestay + camp' }, { i: 'clock', t: '7 days' }],
-    days: [
-      { d: 'Sat', l: 'Leh arrival + rest', c: 'city' },
-      { d: 'Sun', l: 'Shanti Stupa & old town', c: 'heritage' },
-      { d: 'Mon', l: 'Hemis & Thiksey monasteries', c: 'temple' },
-      { d: 'Tue', l: 'Khardung La → Nubra', c: 'mountain' },
-      { d: 'Wed', l: 'Hunder dunes & camels', c: 'desert' },
-      { d: 'Thu', l: 'Pangong Tso night', c: 'lake' },
-      { d: 'Fri', l: 'Return & departure', c: 'city' }
-    ]
-  }
-];
-
-function ItineraryCard({ variant, onCycle }) {
-  const data = CARD_DATA[variant % CARD_DATA.length];
-  const [hover, setHover] = useState(null);
-
-  return (
-    <div className={styles.heroCardWrapper}>
-      {/* Left side: itinerary */}
-      <div className={styles.cardLeft}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-          <div style={{ fontFamily: 'var(--font-display)', fontSize: '24px', fontWeight: 500, color: 'var(--fg)', lineHeight: 1.2 }}>
-            {data.dest.split(',')[0]} <span style={{ fontStyle: 'italic', color: 'var(--color-teal)' }}>itinerary</span>
-          </div>
-          <Button variant="secondary" size="sm" onClick={onCycle} style={{ height: '28px', padding: '0 8px', fontSize: '12px' }}>
-            {variant + 1}/3 →
-          </Button>
-        </div>
-        
-        <div style={{ fontFamily: 'var(--font-body)', fontSize: '14px', lineHeight: 1.6, color: 'var(--muted)', marginBottom: '16px' }}>
-          {data.blurb}
-        </div>
-
-        <div style={{ display: 'flex', gap: '16px' }}>
-          {data.meta.map((m, i) =>
-            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: 'var(--muted)', fontFamily: 'var(--font-body)' }}>
-              {m.i === 'plane' && <I.plane />}
-              {m.i === 'bed' && <I.bed />}
-              {m.i === 'clock' && <I.clock />}
-              {m.t}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Right side: map + details */}
-      <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', background: 'var(--glass-bg)' }}>
-        <div style={{ position: 'relative', background: 'var(--surface)', borderRadius: 'var(--radius-lg)', height: '150px', border: '1px solid var(--border)', overflow: 'hidden', marginBottom: '16px' }}>
-          {/* stylized map */}
-          <svg viewBox="0 0 240 150" width="100%" height="100%">
-            <defs>
-              <pattern id="dots" width="8" height="8" patternUnits="userSpaceOnUse">
-                <circle cx="1" cy="1" r="0.7" fill="var(--fg)" opacity="0.15" />
-              </pattern>
-            </defs>
-            <rect width="240" height="150" fill="url(#dots)" />
-            <path d="M0,100 Q40,80 80,95 T160,80 T240,90" stroke="var(--color-teal)" strokeWidth="1.2" fill="none" opacity="0.5" strokeDasharray="2 3" />
-            <path d="M20,60 Q70,50 120,70 T220,50" stroke="var(--color-teal)" strokeWidth="1" fill="none" opacity="0.5" />
-            <path d={
-              variant === 0 ? "M60,100 C80,70 100,60 130,55 C160,50 180,70 195,85" :
-                variant === 1 ? "M50,80 C80,60 120,65 150,70 C180,75 200,60 200,50" :
-                  "M40,110 C60,90 90,70 120,60 C150,50 180,40 210,35 C195,60 180,80 160,100"
-            } stroke="var(--color-teal)" strokeWidth="1.8" fill="none" strokeLinecap="round" />
-            {data.days.slice(0, 5).map((_, i) => {
-              const pts = variant === 0 ? [[60, 100], [95, 75], [130, 55], [165, 60], [195, 85]] :
-                variant === 1 ? [[50, 80], [90, 67], [130, 70], [170, 65], [200, 50]] :
-                  [[40, 110], [85, 80], [130, 58], [180, 42], [210, 35]];
-              const [x, y] = pts[i] || [0, 0];
-              return <g key={i}>
-                <circle cx={x} cy={y} r="4" fill="#fff" stroke="var(--color-teal)" strokeWidth="1.5" />
-                <text x={x} y={y + 1.5} fontSize="5" fontFamily="var(--mono)" textAnchor="middle" fill="var(--color-teal)" fontWeight="600">{i + 1}</text>
-              </g>;
-            })}
-          </svg>
-          <div style={{ position: 'absolute', top: 10, left: 10, fontSize: '11px', fontFamily: 'var(--font-body)', color: 'var(--fg)', background: 'rgba(246, 241, 230, 0.85)', padding: '4px 8px', borderRadius: 'var(--radius-sm)' }}>
-            <I.pin style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: '4px' }} /> {data.dest}
-          </div>
-        </div>
-
-        <div style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '12px', fontWeight: 500, fontFamily: 'var(--font-body)' }}>
-          AI suggestions
-        </div>
-        
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
-          {[
-            { i: 'fork', t: 'Laxmi Misthan Bhandar thali', s: '+ ₹450 · Wed eve' },
-            { i: 'star', t: 'Patrika Gate photo stop', s: '+ 1h · Thu am' },
-            { i: 'spark', t: 'Block-printing workshop', s: '+ ₹1,200 · optional' }
-          ].map((s, i) =>
-            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '8px 12px', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', fontSize: '14px', background: 'rgba(255, 255, 255, 0.4)' }}>
-              <div style={{ width: '24px', height: '24px', borderRadius: 'var(--radius-pill)', background: 'var(--surface)', display: 'grid', placeItems: 'center', color: 'var(--color-teal)' }}>
-                {s.i === 'fork' && <I.fork />}
-                {s.i === 'star' && <I.star />}
-                {s.i === 'spark' && <I.spark />}
-              </div>
-              <div style={{ flex: 1, fontFamily: 'var(--font-body)' }}>
-                <div style={{ color: 'var(--fg)', fontSize: '13px', fontWeight: 500 }}>{s.t}</div>
-                <div style={{ fontSize: '11px', color: 'var(--muted)', fontFamily: 'var(--mono)' }}>{s.s}</div>
-              </div>
-              <I.plus style={{ color: 'var(--muted)' }} />
-            </div>
-          )}
-        </div>
-
-        <Button variant="primary" style={{ marginTop: '16px' }} onClick={onCycle}>
-          <I.spark /> Refine Itinerary
-        </Button>
-      </div>
-    </div>
-  );
-}
-
-/* ---------- Hero (v3.1 Cinematic) ---------- */
+/* ---------- Hero (v5.0 Cinematic Bright Minimal) ---------- */
 function Hero({ onPlan }) {
   return (
-    <div style={{ position: 'relative', height: '100vh', display: 'flex', flexDirection: 'column', boxSizing: 'border-box', background: 'var(--glass-bg)', width: '100%', overflow: 'hidden' }}>
+    <div style={{ position: 'relative', minHeight: '100dvh', display: 'flex', flexDirection: 'column', boxSizing: 'border-box', background: 'var(--color-cream)', width: '100%', overflow: 'hidden' }}>
       {/* Background Image & Scrim Overlay */}
       <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
         <img 
@@ -203,96 +60,35 @@ function Hero({ onPlan }) {
           alt="Pristine Lakeside Palace Sunrise" 
           style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }} 
         />
-        {/* Layer 1: Gentle top scrim for nav readability, deeper bottom scrim for text contrast */}
-        <div style={{ 
-          position: 'absolute', inset: 0, 
-          background: 'linear-gradient(to bottom, rgba(18,18,18,0.65) 0%, rgba(18,18,18,0.15) 30%, rgba(18,18,18,0.0) 60%, rgba(18,18,18,0.65) 100%)'
-        }} />
+        {/* Layer 1: Left-to-right soft cream gradient overlay for bright/minimal theme legibility */}
+        <div className={styles.heroOverlayHorizontal} />
+        {/* Layer 2: Top-to-bottom soft cream gradient for navbar and section transition */}
+        <div className={styles.heroOverlayVertical} />
       </div>
 
-      {/* Smooth Organic Section Edge Transition at bottom */}
-      <div style={{ position: 'absolute', bottom: -1, left: 0, right: 0, height: 48, zIndex: 3, pointerEvents: 'none' }}>
-        <svg viewBox="0 0 1440 48" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
-          <path d="M0,48 L1440,48 L1440,24 C1080,-8 360,-8 0,24 Z" fill="var(--bg)" />
-        </svg>
-      </div>
 
-      {/* Hero Content Container Bounded to 1280px for alignment with Navbar & Footer */}
+
+      {/* Hero Content Area */}
       <div className={styles.heroContentContainer}>
-        
-        {/* Center Content: Giant Editorial Typography & Spacing */}
-        <div style={{ textAlign: 'center', marginBlock: 'auto 0' }}>
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-            style={{ 
-              fontFamily: 'var(--font-display)', fontSize: 'clamp(56px, 12vw, 154px)', lineHeight: 0.82, 
-              letterSpacing: '0.08em', fontWeight: 500, margin: 0, color: 'var(--color-cream)',
-              textTransform: 'uppercase', textShadow: '0 4px 24px rgba(18,18,18,0.55), 0 12px 60px rgba(18,18,18,0.3)'
-            }}
-          >
-            ALTAIRGO
-          </motion.h1>
-
+        <div className={styles.heroTextColMinimal}>
           <motion.div
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
-            style={{ marginTop: 24, display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}
           >
-            <h2 style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(11px, 1.8vw, 13px)', fontWeight: 500, color: 'var(--color-cream)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 16, textShadow: '0 2px 12px rgba(18,18,18,0.5)' }}>
-              India’s AI-First Travel Intelligence Platform
-            </h2>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: '16px', fontWeight: 400, lineHeight: 1.65, color: 'var(--color-cream)', maxWidth: 540, margin: '0 auto', textShadow: '0 2px 16px rgba(18,18,18,0.7)' }}>
-              Bespoke journeys mapped to the rhythm of India. Spontaneous road trips, slow boutique havelis, and deep heritage itineraries structured seamlessly by real-time travel intelligence.
-            </p>
-          </motion.div>
-        </div>
-
-        {/* Bottom Area: Left Content Block & Interactive ItineraryCard */}
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'flex-end', 
-          marginTop: '80px',
-          width: '100%',
-          flexWrap: 'wrap',
-          gap: '32px'
-        }}>
-          
-          {/* Left Block: Breathtaking Editorial Signature Title & CTA */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
-            style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}
-          >
-            <div style={{ position: 'relative', marginBottom: 20 }}>
-              <h3 style={{ 
-                fontFamily: 'var(--font-display)', fontSize: 'clamp(36px, 5vw, 52px)', 
-                fontWeight: 500, color: 'var(--color-cream)', margin: 0, lineHeight: 0.85, 
-                letterSpacing: '-0.02em', textShadow: '0 4px 16px rgba(18,18,18,0.3)' 
-              }}>
-                Traveling
-              </h3>
-              <span style={{ 
-                fontFamily: 'var(--font-display)', display: 'block', fontWeight: 400, 
-                fontStyle: 'italic',
-                color: 'var(--color-sand)', 
-                fontSize: 'clamp(34px, 4.5vw, 48px)', 
-                margin: '-4px 0 0 8px', textTransform: 'none', 
-                textShadow: '0 4px 16px rgba(18,18,18,0.2)' 
-              }}>
-                Beyond
-              </span>
-            </div>
-            
-            <Button 
-              variant="primary" 
-              onClick={onPlan}
-            >
-              Booking Now <I.arrow />
-            </Button>
+            <div className={styles.scriptAccent}>Traveling Beyond</div>
+            <h2 className={styles.heroSubtitle}>Bespoke India Journeys</h2>
           </motion.div>
 
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
+            style={{ marginTop: 24 }}
+          >
+            <PlanYourTripButton onClick={onPlan} />
+          </motion.div>
         </div>
       </div>
     </div>
@@ -359,8 +155,30 @@ function AnimatedCounter({ value, duration = 1.5 }) {
   return <span ref={ref}>{count || value}</span>;
 }
 
+/* ---------- Window Size Hook for Dynamic Responsiveness ---------- */
+function useWindowSize() {
+  const [size, setSize] = useState({
+    width: typeof window !== 'undefined' ? window.innerWidth : 1200,
+    height: typeof window !== 'undefined' ? window.innerHeight : 800
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setSize({ width: window.innerWidth, height: window.innerHeight });
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return size;
+}
+
 /* ---------- Why Altairgo ---------- */
 function WhyAltairgo() {
+  const { width } = useWindowSize();
+  const isMobile = width < 768;
+  const isTablet = width < 1024;
+
   const cards = [
     { 
       value: 'AI', 
@@ -412,25 +230,25 @@ function WhyAltairgo() {
   ];
 
   return (
-    <section className={styles.sectionContainer} style={{ paddingBlock: '120px', background: 'var(--page-bg)', overflow: 'hidden' }}>
-      <div className={styles.responsiveGrid} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'center' }}>
+    <section className={styles.sectionContainer} style={{ paddingBlock: isMobile ? '60px' : '120px', background: 'var(--page-bg)', overflow: 'hidden' }}>
+      <div className={styles.responsiveGrid} style={{ display: 'grid', gridTemplateColumns: isTablet ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 60, alignItems: 'center' }}>
         
         {/* Left Side: Content & Feature Cards */}
         <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
-          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(36px, 4vw, 48px)', lineHeight: 1.15, letterSpacing: '-0.02em', fontWeight: 600, margin: '0 0 24px 0', color: 'var(--fg)' }}>
+          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(32px, 4vw, 48px)', lineHeight: 1.15, letterSpacing: '-0.02em', fontWeight: 600, margin: '0 0 24px 0', color: 'var(--fg)' }}>
             Unlock Smarter Indian Journeys
           </h2>
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: 16, lineHeight: 1.65, color: 'var(--fg)', opacity: 0.85, margin: '0 0 48px 0', maxWidth: 480 }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.65, color: 'var(--fg)', opacity: 0.85, margin: '0 0 32px 0', maxWidth: 480 }}>
             Altairgo helps you explore India smarter — from scenic road trips and train journeys to hidden escapes and cultural adventures. Personalized AI-powered itineraries designed for the way India actually travels.
           </p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)', gap: 16 }}>
             {cards.map((card, i) => (
               <Card 
                 key={i} 
                 variant="default"
                 hover={true} 
-                style={{ padding: '32px 24px', textAlign: 'left', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center' }}
+                style={{ padding: isMobile ? '24px 20px' : '32px 24px', textAlign: 'left', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center' }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, borderRadius: 'var(--radius-pill)', background: 'var(--surface)', color: 'var(--color-teal)' }}>
@@ -454,7 +272,7 @@ function WhyAltairgo() {
         {/* Right Side: Image Collage */}
         <motion.div 
           initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          style={{ position: 'relative', height: 640, display: 'flex', gap: 24, padding: '20px' }}
+          style={{ position: 'relative', height: isMobile ? 380 : (isTablet ? 480 : 640), display: 'flex', gap: isMobile ? 12 : 24, padding: isMobile ? '0px' : '20px' }}
         >
           {/* Subtle decorative dashed data path overlay */}
           <svg style={{ position: 'absolute', top: '-10%', left: '-20%', width: '140%', height: '120%', pointerEvents: 'none', zIndex: 0 }} viewBox="0 0 500 500">
@@ -463,31 +281,31 @@ function WhyAltairgo() {
           </svg>
 
           {/* Left Column (Two Stacked Images) */}
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 24, position: 'relative', zIndex: 1 }}>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: isMobile ? 12 : 24, position: 'relative', zIndex: 1 }}>
              <motion.img 
               whileHover={{ scale: 1.02, y: -4 }}
               transition={{ duration: 0.4 }}
               src={journalKerala} 
               alt="Kerala Backwaters Serene View" 
-              style={{ width: '100%', height: 280, objectFit: 'cover', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--border)' }}
+              style={{ width: '100%', height: isMobile ? 160 : 280, objectFit: 'cover', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--border)' }}
              />
              <motion.img 
               whileHover={{ scale: 1.02, y: -4 }}
               transition={{ duration: 0.4 }}
               src="https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?q=80&w=1000&auto=format&fit=crop" 
               alt="Desert Dunes Sunset" 
-              style={{ width: '100%', height: 280, objectFit: 'cover', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--border)' }}
+              style={{ width: '100%', height: isMobile ? 160 : 280, objectFit: 'cover', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--border)' }}
              />
           </div>
 
           {/* Right Column (Single Tall Image) */}
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative', zIndex: 1, paddingTop: 60 }}>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative', zIndex: 1, paddingTop: isMobile ? 30 : 60 }}>
              <motion.img 
               whileHover={{ scale: 1.02, y: -4 }}
               transition={{ duration: 0.4 }}
               src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1000&auto=format&fit=crop" 
               alt="Cinematic Himalayan Peaks" 
-              style={{ width: '100%', height: 460, objectFit: 'cover', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--border)' }}
+              style={{ width: '100%', height: isMobile ? 260 : 460, objectFit: 'cover', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--border)' }}
              />
           </div>
         </motion.div>
@@ -508,44 +326,49 @@ const FAQS = [
 
 function FAQ() {
   const [activeFaq, setActiveFaq] = useState(0);
+  const { width } = useWindowSize();
+  const isMobile = width < 768;
+  const isTablet = width < 1024;
 
   return (
-    <section className={styles.sectionContainer} style={{ paddingBlock: '120px', background: 'var(--page-bg)', borderTop: '1px solid var(--line)' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: 60, alignItems: 'start' }} className={styles.responsiveGrid}>
+    <section className={styles.sectionContainer} style={{ paddingBlock: isMobile ? '60px' : '120px', background: 'var(--page-bg)', borderTop: '1px solid var(--line)' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isTablet ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 60, alignItems: 'start' }} className={styles.responsiveGrid}>
         
         {/* Left Side: Floating Image Collage */}
-        <div style={{ position: 'relative', width: '100%', maxWidth: 440, aspectRatio: '440/640', margin: '0 auto', display: 'block' }}>
-          <motion.img 
-            src={destKashmir} 
-            animate={{ y: [0, -10, 0] }} transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-            style={{ position: 'absolute', top: '0%', left: '0%', width: '50%', height: '50%', objectFit: 'cover', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-lg)', zIndex: 1 }} 
-          />
-          <motion.img 
-            src={destRajasthan} 
-            animate={{ y: [0, 10, 0] }} transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
-            style={{ position: 'absolute', top: '28%', left: '36%', width: '54.5%', height: '43.7%', objectFit: 'cover', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-lg)', zIndex: 2 }} 
-          />
-          <motion.img 
-            src={destKerala} 
-            animate={{ y: [0, -8, 0] }} transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-            style={{ position: 'absolute', top: '53%', left: '4.5%', width: '45.4%', height: '40.6%', objectFit: 'cover', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-lg)', zIndex: 3 }} 
-          />
-          <motion.img 
-            src={destGoa} 
-            animate={{ y: [0, 8, 0] }} transition={{ duration: 6.5, repeat: Infinity, ease: 'easeInOut' }}
-            style={{ position: 'absolute', top: '81%', left: '41%', width: '36.3%', height: '17.1%', objectFit: 'cover', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-lg)', zIndex: 4 }} 
-          />
-        </div>
+        {!isMobile && (
+          <div style={{ position: 'relative', width: '100%', maxWidth: 440, aspectRatio: '440/640', margin: '0 auto', display: 'block' }}>
+            <motion.img 
+              src={destKashmir} 
+              animate={{ y: [0, -10, 0] }} transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+              style={{ position: 'absolute', top: '0%', left: '0%', width: '50%', height: '50%', objectFit: 'cover', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-lg)', zIndex: 1 }} 
+            />
+            <motion.img 
+              src={destRajasthan} 
+              animate={{ y: [0, 10, 0] }} transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+              style={{ position: 'absolute', top: '28%', left: '36%', width: '54.5%', height: '43.7%', objectFit: 'cover', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-lg)', zIndex: 2 }} 
+            />
+            <motion.img 
+              src={destKerala} 
+              animate={{ y: [0, -8, 0] }} transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+              style={{ position: 'absolute', top: '53%', left: '4.5%', width: '45.4%', height: '40.6%', objectFit: 'cover', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-lg)', zIndex: 3 }} 
+            />
+            <motion.img 
+              src={destGoa} 
+              animate={{ y: [0, 8, 0] }} transition={{ duration: 6.5, repeat: Infinity, ease: 'easeInOut' }}
+              style={{ position: 'absolute', top: '81%', left: '41%', width: '36.3%', height: '17.1%', objectFit: 'cover', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-lg)', zIndex: 4 }} 
+            />
+          </div>
+        )}
 
         {/* Right Side: Accordion */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <div style={{ marginBottom: 32 }}>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '40px', lineHeight: 1.1, letterSpacing: '-0.02em', fontWeight: 600, color: 'var(--fg)' }}>
+          <div style={{ marginBottom: isMobile ? 16 : 32 }}>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: isMobile ? '32px' : '40px', lineHeight: 1.15, letterSpacing: '-0.02em', fontWeight: 600, color: 'var(--fg)' }}>
               Still Have Questions? We've Got Answers.
             </h2>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             {FAQS.map((faq, i) => {
               const isActive = activeFaq === i;
               return (
@@ -566,11 +389,11 @@ function FAQ() {
                     cursor: 'pointer',
                     boxShadow: 'var(--shadow-sm)',
                     border: '1px solid var(--border)',
-                    padding: isActive ? '32px 32px 40px' : '16px 20px 16px 32px',
+                    padding: isActive ? (isMobile ? '24px 20px' : '32px 32px 40px') : (isMobile ? '12px 16px 12px 20px' : '16px 20px 16px 32px'),
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'center',
-                    minHeight: isActive ? 220 : 76
+                    minHeight: isActive ? (isMobile ? 180 : 220) : (isMobile ? 64 : 76)
                   }}
                 >
                   {/* Background Image for Active State */}
@@ -587,8 +410,8 @@ function FAQ() {
                   )}
 
                   {/* Header Row */}
-                  <div style={{ position: 'relative', zIndex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 20 }}>
-                    <h3 style={{ fontFamily: 'var(--font-body)', fontSize: '16px', fontWeight: 500, margin: 0, display: 'flex', gap: 12, alignItems: 'center', color: isActive ? '#fff' : 'var(--fg)' }}>
+                  <div style={{ position: 'relative', zIndex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16 }}>
+                    <h3 style={{ fontFamily: 'var(--font-body)', fontSize: isMobile ? '14px' : '16px', fontWeight: 500, margin: 0, display: 'flex', gap: 12, alignItems: 'center', color: isActive ? '#fff' : 'var(--fg)' }}>
                       <span style={{ opacity: isActive ? 0.9 : 0.5, fontWeight: 600 }}>0{i + 1}.</span> 
                       {faq.q}
                     </h3>
@@ -601,11 +424,11 @@ function FAQ() {
                         color: isActive ? 'var(--fg)' : 'var(--glass-bg)'
                       }}
                       style={{
-                        width: 44, height: 44, borderRadius: 'var(--radius-pill)', flexShrink: 0,
+                        width: isMobile ? 36 : 44, height: isMobile ? 36 : 44, borderRadius: 'var(--radius-pill)', flexShrink: 0,
                         display: 'grid', placeItems: 'center', boxShadow: 'var(--shadow-sm)'
                       }}
                     >
-                      <I.chev style={{ width: 14, height: 14, strokeWidth: 2 }} />
+                      <I.chev style={{ width: isMobile ? 12 : 14, height: isMobile ? 12 : 14, strokeWidth: 2 }} />
                     </motion.div>
                   </div>
 
@@ -615,9 +438,9 @@ function FAQ() {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.4, delay: 0.1 }}
-                      style={{ position: 'relative', zIndex: 1, marginTop: 16, paddingLeft: 35, maxWidth: 500 }}
+                      style={{ position: 'relative', zIndex: 1, marginTop: 16, paddingLeft: isMobile ? 24 : 35, maxWidth: 500 }}
                     >
-                      <p style={{ margin: 0, fontSize: '15px', lineHeight: 1.6, color: 'rgba(255,255,255,0.92)', fontFamily: 'var(--font-body)' }}>
+                      <p style={{ margin: 0, fontSize: isMobile ? '13px' : '15px', lineHeight: 1.6, color: 'rgba(255,255,255,0.92)', fontFamily: 'var(--font-body)' }}>
                         {faq.a}
                       </p>
                     </motion.div>
@@ -667,19 +490,23 @@ const INSPIRATION_CARDS = [
 
 function TravelInspiration() {
   const navigate = useNavigate();
+  const { width } = useWindowSize();
+  const isMobile = width < 768;
+  const isTablet = width < 1024;
+
   return (
-    <section style={{ paddingBlock: '120px', borderTop: '1px solid var(--line)', background: 'var(--page-bg)' }} className={styles.sectionContainer}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.6fr', gap: 64, alignItems: 'center' }} className={styles.responsiveGrid}>
+    <section style={{ paddingBlock: isMobile ? '60px' : '120px', borderTop: '1px solid var(--line)', background: 'var(--page-bg)' }} className={styles.sectionContainer}>
+      <div style={{ display: 'grid', gridTemplateColumns: isTablet ? '1fr' : '1fr 1.6fr', gap: isMobile ? 40 : 64, alignItems: 'center' }} className={styles.responsiveGrid}>
         
         {/* Left Side Content */}
         <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
           <div className={styles.mono} style={{ marginBottom: 16, fontSize: 13, color: 'var(--muted)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
             Explore with AltairGO
           </div>
-          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(40px, 4.5vw, 56px)', lineHeight: 1.1, letterSpacing: '-0.02em', fontWeight: 600, margin: '0 0 24px 0', color: 'var(--fg)' }}>
-            Travel India <br/><span style={{ fontStyle: 'italic', color: 'var(--color-teal)' }}>Your Way</span>
+          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(36px, 4.5vw, 56px)', lineHeight: 1.15, letterSpacing: '-0.02em', fontWeight: 600, margin: '0 0 24px 0', color: 'var(--fg)' }}>
+            Travel India <br/><span style={{ fontFamily: 'var(--font-accent)', color: 'var(--color-teal)', fontWeight: 'normal', fontSize: '1.15em', textTransform: 'none' }}>Your Way</span>
           </h2>
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: 16, lineHeight: 1.6, color: 'var(--muted)', margin: '0 0 40px 0', maxWidth: 460 }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.6, color: 'var(--muted)', margin: '0 0 32px 0', maxWidth: 460 }}>
             From Himalayan adventures and spiritual trails to luxury escapes and coastal getaways, AltairGO helps you discover journeys tailored to your vibe, budget, season, and travel style.
           </p>
           <Button variant="secondary" onClick={() => navigate('/discover')}>
@@ -719,12 +546,12 @@ function TravelInspiration() {
                 <div style={{ 
                   position: 'absolute', inset: 0, 
                   background: 'linear-gradient(to top, rgba(46,46,46,0.8) 0%, rgba(46,46,46,0) 60%)',
-                  display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '24px'
+                  display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: isMobile ? '16px' : '24px'
                 }}>
-                  <h3 style={{ color: '#fff', fontSize: 22, fontWeight: 500, letterSpacing: '-0.01em', margin: '0 0 6px 0', textShadow: '0 2px 8px rgba(46,46,46,0.3)', fontFamily: 'var(--font-display)' }}>
+                  <h3 style={{ color: '#fff', fontSize: isMobile ? 18 : 22, fontWeight: 500, letterSpacing: '-0.01em', margin: '0 0 6px 0', textShadow: '0 2px 8px rgba(46,46,46,0.3)', fontFamily: 'var(--font-display)' }}>
                     {card.title}
                   </h3>
-                  <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: 13.5, margin: 0, lineHeight: 1.4, fontWeight: 400, fontFamily: 'var(--font-body)' }}>
+                  <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: 13, margin: 0, lineHeight: 1.4, fontWeight: 400, fontFamily: 'var(--font-body)' }}>
                     {card.subtitle}
                   </p>
                 </div>
@@ -828,35 +655,46 @@ function CarouselImage({ src, alt }) {
 
 function TourSelection() {
   const [active, setActive] = useState(3);
+  const { width } = useWindowSize();
+  const isMobile = width < 768;
+  const isTablet = width < 1024;
 
   const handleNext = () => setActive(p => Math.min(p + 1, TOURS.length - 1));
   const handlePrev = () => setActive(p => Math.max(p - 1, 0));
 
+  const cardWidth = isMobile ? 250 : (isTablet ? 290 : 320);
+  const cardHeight = isMobile ? 340 : (isTablet ? 400 : 440);
+  const spacing = isMobile ? 90 : (isTablet ? 140 : 180);
+
   return (
-    <section id="tour-selection" className={styles.sectionContainer} style={{ paddingBlock: '110px', borderTop: '1px solid var(--line)', background: 'var(--page-bg)', position: 'relative', overflow: 'hidden' }}>
+    <section id="tour-selection" className={styles.sectionContainer} style={{ paddingBlock: isMobile ? '60px' : '110px', borderTop: '1px solid var(--line)', background: 'var(--page-bg)', position: 'relative', overflow: 'hidden' }}>
       <motion.div
         initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-        style={{ textAlign: 'center', marginBottom: 60 }}
+        style={{ textAlign: 'center', marginBottom: isMobile ? 40 : 60 }}
       >
-        <h2 className={styles.sectionHeadline} style={{ fontSize: 44, lineHeight: 1.05, letterSpacing: '-0.02em', fontWeight: 600, margin: '0 auto', maxWidth: 760, color: 'var(--fg)', fontFamily: 'var(--font-display)' }}>
-          Explore our <span style={{ fontStyle: 'italic', color: 'var(--color-teal)' }}>Indian</span> destinations
+        <h2 className={styles.sectionHeadline} style={{ fontSize: isMobile ? 32 : 44, lineHeight: 1.05, letterSpacing: '-0.02em', fontWeight: 600, margin: '0 auto', maxWidth: 760, color: 'var(--fg)', fontFamily: 'var(--font-display)' }}>
+          Explore our <span style={{ fontFamily: 'var(--font-accent)', color: 'var(--color-teal)', fontWeight: 'normal', fontSize: '1.15em', textTransform: 'none' }}>Indian</span> destinations
         </h2>
       </motion.div>
 
-      <div style={{ position: 'relative', height: 460, display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', maxWidth: '100vw', margin: '0 auto' }}>
+      <div style={{ position: 'relative', height: isMobile ? 360 : 460, display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', maxWidth: '100vw', margin: '0 auto' }}>
         {TOURS.map((tour, i) => {
           const diff = i - active;
           const absDiff = Math.abs(diff);
           const isActive = diff === 0;
           
-          let x = diff * 180;
+          let x = diff * spacing;
           let scale = 1 - (absDiff * 0.15);
           let zIndex = 10 - absDiff;
-          let opacity = 1 - (absDiff * 0.15);
+          let opacity = 1 - (absDiff * 0.25);
           let blur = absDiff > 0 ? 2 : 0;
 
-          if (absDiff > 2) opacity = 0;
+          if (isMobile && absDiff > 1) {
+            opacity = 0;
+          } else if (absDiff > 2) {
+            opacity = 0;
+          }
 
           return (
             <motion.div
@@ -865,7 +703,7 @@ function TourSelection() {
               transition={{ type: 'spring', stiffness: 260, damping: 25 }}
               onClick={() => setActive(i)}
               style={{
-                position: 'absolute', width: 320, height: 440, borderRadius: 'var(--radius-lg)', overflow: 'hidden',
+                position: 'absolute', width: cardWidth, height: cardHeight, borderRadius: 'var(--radius-lg)', overflow: 'hidden',
                 cursor: isActive ? 'default' : 'pointer',
                 boxShadow: isActive ? 'var(--shadow-xl)' : 'var(--shadow-md)',
                 border: '1px solid var(--border)'
@@ -873,12 +711,12 @@ function TourSelection() {
             >
               <CarouselImage src={tour.img} alt={tour.title} />
               
-              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, background: 'linear-gradient(to bottom, rgba(46,46,46,0.75) 0%, transparent 100%)', padding: '24px 16px 40px', textAlign: 'center' }}>
-                <h3 style={{ color: '#fff', margin: 0, fontSize: 18, fontWeight: 500, letterSpacing: '0.01em', textShadow: '0 2px 4px rgba(46,46,46,0.5)', fontFamily: 'var(--font-body)' }}>{tour.title}</h3>
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, background: 'linear-gradient(to bottom, rgba(46,46,46,0.75) 0%, transparent 100%)', padding: isMobile ? '16px 12px 30px' : '24px 16px 40px', textAlign: 'center' }}>
+                <h3 style={{ color: '#fff', margin: 0, fontSize: isMobile ? 16 : 18, fontWeight: 500, letterSpacing: '0.01em', textShadow: '0 2px 4px rgba(46,46,46,0.5)', fontFamily: 'var(--font-body)' }}>{tour.title}</h3>
               </div>
               
               <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', mixBlendMode: 'overlay' }}>
-                <span style={{ fontSize: 180, fontWeight: 300, color: 'transparent', WebkitTextStroke: '2px rgba(255,255,255,0.9)', fontFamily: 'var(--font-display)' }}>
+                <span style={{ fontSize: isMobile ? 120 : 180, fontWeight: 300, color: 'transparent', WebkitTextStroke: '2px rgba(255,255,255,0.9)', fontFamily: 'var(--font-display)' }}>
                   {tour.id}
                 </span>
               </div>
@@ -887,35 +725,35 @@ function TourSelection() {
         })}
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 60, marginTop: 40 }}>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: isMobile ? 32 : 60, marginTop: 40 }}>
         <button 
           onClick={handlePrev} disabled={active === 0}
           style={{ 
-            all: 'unset', cursor: active === 0 ? 'not-allowed' : 'pointer', width: 56, height: 56, 
+            all: 'unset', cursor: active === 0 ? 'not-allowed' : 'pointer', width: isMobile ? 44 : 56, height: isMobile ? 44 : 56, 
             borderRadius: '50%', border: '1px solid var(--border)', display: 'grid', placeItems: 'center', 
             color: 'var(--fg)', opacity: active === 0 ? 0.3 : 1, transition: 'all 0.2s ease', background: 'var(--glass-bg)', boxShadow: 'var(--shadow-sm)'
           }}
           onMouseEnter={(e) => { if(active !== 0) e.currentTarget.style.background = 'var(--surface)'; }}
           onMouseLeave={(e) => { if(active !== 0) e.currentTarget.style.background = 'var(--glass-bg)'; }}
         >
-          <I.arrow style={{ transform: 'rotate(180deg)', width: 18, height: 18 }} />
+          <I.arrow style={{ transform: 'rotate(180deg)', width: isMobile ? 14 : 18, height: isMobile ? 14 : 18 }} />
         </button>
 
-        <Button variant="secondary" onClick={() => navigate('/discover')}>
+        <Button variant="secondary" onClick={() => navigate('/discover')} size={isMobile ? "sm" : "md"}>
           Explore Now <I.arrow />
         </Button>
 
         <button 
           onClick={handleNext} disabled={active === TOURS.length - 1}
           style={{ 
-            all: 'unset', cursor: active === TOURS.length - 1 ? 'not-allowed' : 'pointer', width: 56, height: 56, 
+            all: 'unset', cursor: active === TOURS.length - 1 ? 'not-allowed' : 'pointer', width: isMobile ? 44 : 56, height: isMobile ? 44 : 56, 
             borderRadius: '50%', border: '1px solid var(--border)', display: 'grid', placeItems: 'center', 
             color: 'var(--fg)', opacity: active === TOURS.length - 1 ? 0.3 : 1, transition: 'all 0.2s ease', background: 'var(--glass-bg)', boxShadow: 'var(--shadow-sm)'
           }}
           onMouseEnter={(e) => { if(active !== TOURS.length - 1) e.currentTarget.style.background = 'var(--surface)'; }}
           onMouseLeave={(e) => { if(active !== TOURS.length - 1) e.currentTarget.style.background = 'var(--glass-bg)'; }}
         >
-          <I.arrow style={{ width: 18, height: 18 }} />
+          <I.arrow style={{ width: isMobile ? 14 : 18, height: isMobile ? 14 : 18 }} />
         </button>
       </div>
     </section>

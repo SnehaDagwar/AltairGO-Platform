@@ -216,8 +216,10 @@ const GeneratingPage = () => {
             height: '100%',
             borderRadius: '999px',
             background: 'linear-gradient(90deg, #5ac576, #22d3ee)',
-            width: `${progress}%`,
-            transition: 'width 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+            width: '100%',
+            transform: `scaleX(${progress / 100})`,
+            transformOrigin: 'left',
+            transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
           }} />
         </div>
 
