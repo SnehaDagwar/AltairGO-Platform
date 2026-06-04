@@ -66,6 +66,8 @@
   --font-accent: 'Satisfy', cursive;
 
   /* Spacing & Radii */
+  --space-8: 32px;
+  --space-4: 16px;
   --radius-sm: 8px;
   --radius-md: 16px;
   --radius-lg: 24px;

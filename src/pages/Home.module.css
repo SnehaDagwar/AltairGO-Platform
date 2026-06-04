@@ -23,6 +23,8 @@
   color: var(--ink);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .sectionContainer {
@@ -34,7 +36,8 @@
 
 @media (max-width: 768px) {
   .sectionContainer {
-    padding: 0 var(--space-4) !important; /* 16px on mobile */
+    padding-left: var(--space-4) !important; /* 16px on mobile */
+    padding-right: var(--space-4) !important;
   }
 }
 
