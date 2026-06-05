@@ -4,7 +4,7 @@ import { Mail, ArrowRight } from 'lucide-react';
 import toast from 'react-hot-toast';
 import styles from '../../components/blogs/Blogs.module.css';
 import { getBlogs } from '../../services/api';
-import philHimalayas from '../../assets/phil-himalayas.png';
+import journalHimachal from '../../assets/journal_himachal.png';
 
 const BlogsPage = () => {
   const navigate = useNavigate();
@@ -78,9 +78,8 @@ const BlogsPage = () => {
 
   return (
     <section className={styles.section}>
-      {/* Misty Mountains Background Illustration */}
       <div className={styles.pageBackground}>
-        <img src={philHimalayas} alt="" className={styles.bgIllustration} />
+        <img src={journalHimachal} alt="" className={styles.bgIllustration} />
         <div className={styles.bgGradientOverlay} />
       </div>
 
