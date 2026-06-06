@@ -4,6 +4,7 @@ import styles from './DestinationsPage.module.css';
 import DestinationCard from '../../components/destinations/DestinationCard/DestinationCard.jsx';
 import { getDestinations, recommend } from '../../services/api.js';
 import toast from 'react-hot-toast';
+import heroBg from '../../assets/hero-page-image.webp';
 
 const getCardVariant = (index) => {
   const i = index % 10;
@@ -110,10 +111,17 @@ const DestinationsPage = () => {
   );
 
   return (
-    <main style={{ paddingTop: '8rem', paddingBottom: '4rem', minHeight: '100vh', backgroundColor: '#fff' }}>
-      <div className={styles.container}>
+    <main style={{ paddingBottom: '4rem', minHeight: '100vh', background: 'var(--bg)' }}>
+      <div className={styles.pageHeaderWrapper}>
+        <img 
+          src={heroBg} 
+          alt="Atmospheric landscape" 
+          className={styles.headerBgImage} 
+        />
         <div className={styles.pageHeader}>
-          <h1 className={styles.pageTitle}>Explore the World</h1>
+          <h1 className={styles.pageTitle}>
+            Explore <span className={styles.accentTitleText}>the World</span>
+          </h1>
           <p className={styles.pageSubtitle}>
             Discover breathtaking locations handcrafted for your perfect getaway.
           </p>
@@ -159,26 +167,29 @@ const DestinationsPage = () => {
           </button>
 
           {/* Semantic AI search */}
-          <form onSubmit={handleAiSearch} style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem', maxWidth: '560px', margin: '0.75rem auto 0' }}>
-            <div style={{ position: 'relative', flex: 1 }}>
-              <Sparkles size={16} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#a855f7', pointerEvents: 'none' }} />
-              <input
-                type="text"
-                value={aiQuery}
-                onChange={e => setAiQuery(e.target.value)}
-                placeholder='AI search: "beaches for families" or "mountain treks"'
-                style={{ width: '100%', paddingLeft: '40px', paddingRight: '12px', paddingTop: '0.7rem', paddingBottom: '0.7rem', border: '1.5px solid #e0d7f7', borderRadius: '50px', fontFamily: 'inherit', fontSize: '0.9rem', outline: 'none', background: '#faf5ff', color: '#141413', boxSizing: 'border-box' }}
-              />
-            </div>
+          <form onSubmit={handleAiSearch} className={styles.aiSearchPanel}>
+            <span className={styles.aiSparkleIcon}>
+              <Sparkles size={16} />
+            </span>
+            <input
+              type="text"
+              className={styles.aiSearchInput}
+              value={aiQuery}
+              onChange={e => setAiQuery(e.target.value)}
+              placeholder='AI search: "beaches for families" or "mountain treks"'
+            />
             <button
               type="submit"
+              className={styles.aiSearchButton}
               disabled={aiSearchLoading || !aiQuery.trim()}
-              style={{ padding: '0.7rem 1.25rem', background: aiSearchLoading || !aiQuery.trim() ? '#c4b5fd' : '#7c3aed', color: 'white', border: 'none', borderRadius: '50px', fontFamily: 'inherit', fontWeight: 600, fontSize: '0.9rem', cursor: aiSearchLoading || !aiQuery.trim() ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap' }}
             >
               {aiSearchLoading ? '...' : 'Search'}
             </button>
           </form>
         </div>
+      </div>
+
+      <div className={styles.container} style={{ marginTop: '3rem' }}>
 
         {loading && destinations.length === 0 ? (
           <div className={styles.grid}>
