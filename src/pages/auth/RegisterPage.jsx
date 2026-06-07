@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext.jsx';
-import { Mail, Lock, User, ArrowRight, Globe, Shield, Sparkles, AlertCircle } from 'lucide-react';
+import { EnvelopeSimple, LockSimple, User, ArrowRight, GlobeSimple, ShieldCheck, Sparkle, WarningCircle } from '@phosphor-icons/react';
 import styles from './Auth.module.css';
 import logo from '../../assets/logo.png';
 
@@ -81,18 +82,28 @@ const RegisterPage = () => {
       </div>
 
       <div className={styles.formPanel}>
-        <div className={styles.formCard}>
+        <motion.div 
+          className={styles.formCard}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        >
           <div className={styles.formHeader}>
-            <div className={styles.formIcon}><Sparkles size={26} /></div>
+            <div className={styles.formIcon}><Sparkle size={24} weight="bold" /></div>
             <h1 className={styles.formTitle}>Create account</h1>
             <p className={styles.formSubtitle}>Start planning your dream trips today</p>
           </div>
 
           {error && (
-            <div className={styles.error}>
-              <AlertCircle size={16} />
+            <motion.div 
+              className={styles.error}
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            >
+              <WarningCircle size={16} weight="bold" />
               {error}
-            </div>
+            </motion.div>
           )}
 
           <form onSubmit={handleSubmit} className={styles.form}>
@@ -116,7 +127,7 @@ const RegisterPage = () => {
             <div className={styles.fieldGroup}>
               <label htmlFor="reg-email" className={styles.fieldLabel}>Email address</label>
               <div className={styles.inputGroup}>
-                <Mail size={18} className={styles.inputIcon} />
+                <EnvelopeSimple size={18} className={styles.inputIcon} />
                 <input
                   id="reg-email"
                   type="email"
@@ -133,7 +144,7 @@ const RegisterPage = () => {
             <div className={styles.fieldGroup}>
               <label htmlFor="reg-password" className={styles.fieldLabel}>Password</label>
               <div className={styles.inputGroup}>
-                <Lock size={18} className={styles.inputIcon} />
+                <LockSimple size={18} className={styles.inputIcon} />
                 <input
                   id="reg-password"
                   type="password"
@@ -155,7 +166,7 @@ const RegisterPage = () => {
             <div className={styles.fieldGroup}>
               <label htmlFor="reg-confirm" className={styles.fieldLabel}>Confirm password</label>
               <div className={styles.inputGroup}>
-                <Lock size={18} className={styles.inputIcon} />
+                <LockSimple size={18} className={styles.inputIcon} />
                 <input
                   id="reg-confirm"
                   type="password"
@@ -170,7 +181,7 @@ const RegisterPage = () => {
             </div>
 
             <button type="submit" className={styles.submitBtn} disabled={loading}>
-              {loading ? 'Creating account...' : 'Create account'} {!loading && <ArrowRight size={18} />}
+              {loading ? 'Creating account...' : 'Create account'} {!loading && <ArrowRight size={18} weight="bold" />}
             </button>
           </form>
 
@@ -180,11 +191,11 @@ const RegisterPage = () => {
           </div>
 
           <div className={styles.trustRow}>
-            <div className={styles.trustItem}><Shield size={14} /> Secure</div>
-            <div className={styles.trustItem}><Sparkles size={14} /> AI-Powered</div>
-            <div className={styles.trustItem}><Globe size={14} /> Free</div>
+            <div className={styles.trustItem}><ShieldCheck size={14} weight="bold" /> Secure</div>
+            <div className={styles.trustItem}><Sparkle size={14} weight="bold" /> AI-Powered</div>
+            <div className={styles.trustItem}><GlobeSimple size={14} weight="bold" /> Free</div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

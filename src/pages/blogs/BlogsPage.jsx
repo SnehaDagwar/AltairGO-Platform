@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Mail, ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { EnvelopeSimple, ArrowRight } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import styles from '../../components/blogs/Blogs.module.css';
 import { getBlogs } from '../../services/api';
-import philHimalayas from '../../assets/phil-himalayas.png';
 
 const BlogsPage = () => {
   const navigate = useNavigate();
@@ -12,6 +12,7 @@ const BlogsPage = () => {
   const [loading, setLoading] = useState(true);
   const [email, setEmail] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [visibleShortReadsCount, setVisibleShortReadsCount] = useState(4);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -48,41 +49,72 @@ const BlogsPage = () => {
     return styles.badgeTeal;
   };
 
-  // Separate the blogs into our specialized layout buckets
-  // 1. Featured Blog (Hidden Valleys of Meghalaya - id '1')
-  const featuredBlog = blogsData.find(b => b.id === '1') || blogsData[0];
+  // Separate the blogs into our specialized layout buckets dynamically
+  // 1. Featured Blog is the first blog (index 0)
+  const featuredBlog = blogsData[0];
   
-  // 2. Main Grid Blogs (Lakes, Beaches, Culture, Luxury - ids '2' to '5')
-  const mainGridBlogs = [
-    blogsData.find(b => b.id === '2') || blogsData[1],
-    blogsData.find(b => b.id === '3') || blogsData[2],
-    blogsData.find(b => b.id === '4') || blogsData[3],
-    blogsData.find(b => b.id === '5') || blogsData[4],
-  ].filter(Boolean);
+  // 2. Main Grid Blogs are the next 4 blogs (indices 1 to 4)
+  const mainGridBlogs = blogsData.slice(1, 5);
 
-  // 3. Short Reads Blogs (ids '6' to '9')
-  const shortReads = [
-    blogsData.find(b => b.id === '6') || blogsData[5],
-    blogsData.find(b => b.id === '7') || blogsData[6],
-    blogsData.find(b => b.id === '8') || blogsData[7],
-    blogsData.find(b => b.id === '9') || blogsData[8],
-  ].filter(Boolean);
+  // 3. Short Reads Blogs are sliced dynamically
+  const shortReads = blogsData.slice(5, 5 + visibleShortReadsCount);
+  const hasMore = blogsData.length > 5 + visibleShortReadsCount;
 
   if (loading) {
     return (
-      <div className={styles.loadingContainer}>
-        <div className={styles.spinner}></div>
-      </div>
+      <section className={styles.section}>
+        <div className={styles.container}>
+          {/* HERO AREA SKELETON */}
+          <div className={styles.heroGrid} style={{ pointerEvents: 'none' }}>
+            <div className={styles.heroLeft}>
+              <div className={styles.skeleton} style={{ width: '120px', height: '18px', marginBottom: '0.75rem', borderRadius: '4px' }} />
+              <div className={styles.skeleton} style={{ width: '280px', height: '48px', marginBottom: '0.5rem' }} />
+              <div className={styles.skeleton} style={{ width: '200px', height: '48px', marginBottom: '1.5rem' }} />
+              <div className={styles.skeleton} style={{ width: '100%', height: '16px', marginBottom: '0.5rem' }} />
+              <div className={styles.skeleton} style={{ width: '80%', height: '16px', marginBottom: '2.5rem' }} />
+              <div className={styles.skeleton} style={{ width: '180px', height: '44px', borderRadius: '999px' }} />
+            </div>
+
+            <div className={styles.heroRight}>
+              <div className={styles.skeletonCard} style={{ height: '430px' }}>
+                <div className={styles.skeleton} style={{ width: '130px', height: '24px', borderRadius: '999px', alignSelf: 'flex-start' }} />
+                <div className={styles.skeleton} style={{ width: '90%', height: '32px', marginTop: 'auto' }} />
+                <div className={styles.skeleton} style={{ width: '70%', height: '16px' }} />
+                <div className={styles.skeleton} style={{ width: '50%', height: '14px' }} />
+              </div>
+            </div>
+          </div>
+
+          {/* MAIN STORIES GRID SKELETON */}
+          <div className={styles.mainGrid}>
+            <div className={`${styles.skeletonCard} ${styles.tallCard}`} style={{ minHeight: '430px' }}>
+              <div className={styles.skeleton} style={{ width: '90px', height: '20px', borderRadius: '999px', alignSelf: 'flex-start' }} />
+              <div className={styles.skeleton} style={{ width: '85%', height: '24px', marginTop: 'auto' }} />
+              <div className={styles.skeleton} style={{ width: '50%', height: '14px' }} />
+            </div>
+            <div className={`${styles.skeletonCard} ${styles.wideCard}`} style={{ height: '200px' }}>
+              <div className={styles.skeleton} style={{ width: '90px', height: '20px', borderRadius: '999px', alignSelf: 'flex-start' }} />
+              <div className={styles.skeleton} style={{ width: '85%', height: '24px', marginTop: 'auto' }} />
+              <div className={styles.skeleton} style={{ width: '50%', height: '14px' }} />
+            </div>
+            <div className={`${styles.skeletonCard} ${styles.squareCardLeft}`} style={{ height: '200px' }}>
+              <div className={styles.skeleton} style={{ width: '90px', height: '20px', borderRadius: '999px', alignSelf: 'flex-start' }} />
+              <div className={styles.skeleton} style={{ width: '85%', height: '24px', marginTop: 'auto' }} />
+              <div className={styles.skeleton} style={{ width: '50%', height: '14px' }} />
+            </div>
+            <div className={`${styles.skeletonCard} ${styles.squareCardRight}`} style={{ height: '200px' }}>
+              <div className={styles.skeleton} style={{ width: '90px', height: '20px', borderRadius: '999px', alignSelf: 'flex-start' }} />
+              <div className={styles.skeleton} style={{ width: '85%', height: '24px', marginTop: 'auto' }} />
+              <div className={styles.skeleton} style={{ width: '50%', height: '14px' }} />
+            </div>
+          </div>
+        </div>
+      </section>
     );
   }
 
   return (
     <section className={styles.section}>
-      <div className={styles.pageBackground}>
-        <img src={philHimalayas} alt="" className={styles.bgIllustration} />
-        <div className={styles.bgGradientOverlay} />
-      </div>
-
       <div className={styles.container}>
         
         {/* HERO AREA: Intro text on Left, Featured Card on Right */}
@@ -100,7 +132,16 @@ const BlogsPage = () => {
             <button 
               className={styles.exploreBtn} 
               onClick={() => {
-                document.getElementById('main-stories-grid')?.scrollIntoView({ behavior: 'smooth' });
+                const element = document.getElementById('main-stories-grid') || document.getElementById('short-reads-section');
+                if (element) {
+                  const offset = 90; // height of fixed navbar + padding
+                  const elementPosition = element.getBoundingClientRect().top;
+                  const offsetPosition = elementPosition + (window.scrollY || window.pageYOffset) - offset;
+                  window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                  });
+                }
               }}
             >
               Explore All Stories <ArrowRight size={16} />
@@ -116,7 +157,6 @@ const BlogsPage = () => {
                 <img src={featuredBlog.image} alt={featuredBlog.title} className={featuredBlog.image ? styles.featuredImg : styles.featuredImgFallback} />
                 <div className={styles.featuredOverlay} />
                 <div className={styles.featuredContent}>
-                  <span className={`${styles.cardCategoryBadge} ${styles.badgeTealFeatured}`}>FEATURED STORY</span>
                   <h2 className={styles.featuredTitle}>{featuredBlog.title}</h2>
                   <p className={styles.featuredExcerpt}>{featuredBlog.excerpt}</p>
                   <div className={styles.featuredMeta}>
@@ -152,9 +192,6 @@ const BlogsPage = () => {
                   <div className={styles.cardImgWrapper}>
                     <img src={blog.image} alt={blog.title} className={styles.cardImg} />
                     <div className={styles.cardGradientOverlay} />
-                    <span className={`${styles.cardCategoryBadge} ${getBadgeClass(blog.category)}`}>
-                      {blog.category}
-                    </span>
                   </div>
                   <div className={styles.cardDetails}>
                     <h3 className={styles.cardTitle}>{blog.title}</h3>
@@ -177,7 +214,7 @@ const BlogsPage = () => {
 
         {/* SHORT READS SECTION */}
         {shortReads.length > 0 && (
-          <div className={styles.shortReadsSection}>
+          <div id="short-reads-section" className={styles.shortReadsSection}>
             <div className={styles.shortReadsHeader}>
               <span className={styles.shortReadsSub}>SHORT READS</span>
               <h2 className={styles.shortReadsTitle}>Quick reads for your wanderlust</h2>
@@ -206,16 +243,33 @@ const BlogsPage = () => {
                 </div>
               ))}
             </div>
+            {hasMore && (
+              <div className={styles.loadMoreWrapper}>
+                <button 
+                  className={styles.loadMoreBtn} 
+                  onClick={() => setVisibleShortReadsCount(prev => prev + 4)}
+                >
+                  Load More Stories
+                </button>
+              </div>
+            )}
           </div>
         )}
 
         {/* NEWSLETTER BANNER */}
-        <div className={styles.newsletterBanner}>
+        <motion.div 
+          className={styles.newsletterBanner}
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
+        >
           <div className={styles.newsletterLeft}>
             <div className={styles.mailIconCircle}>
-              <Mail size={24} className={styles.mailIcon} />
+              <EnvelopeSimple size={24} weight="bold" className={styles.mailIcon} />
             </div>
             <div className={styles.newsletterText}>
+              <span className={styles.newsletterLabel}>NEWSLETTER</span>
               <h2 className={styles.newsletterTitle}>Get travel stories straight to your inbox</h2>
               <p className={styles.newsletterSub}>
                 Curated stories, exclusive guides, and travel inspiration — delivered weekly.
@@ -233,10 +287,10 @@ const BlogsPage = () => {
               required
             />
             <button type="submit" className={styles.subscribeBtnUnified} disabled={submitting}>
-              {submitting ? 'Subscribing...' : 'Subscribe Now'} <ArrowRight size={16} />
+              {submitting ? 'Subscribing...' : 'Subscribe Now'} <ArrowRight size={16} weight="bold" />
             </button>
           </form>
-        </div>
+        </motion.div>
 
       </div>
     </section>

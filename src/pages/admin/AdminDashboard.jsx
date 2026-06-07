@@ -4,9 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import {
   Activity, Users, MapPin, Zap, RefreshCw, BarChart2, Clock, CheckCircle, AlertCircle,
-  Shield, LogOut, Play, TrendingUp, Database, BookOpen, Plus, Pencil, Trash2, Eye, EyeOff, X, Save, ArrowLeft
+  Shield, LogOut, Play, TrendingUp, Database, BookOpen, Plus, Pencil, Trash2, Eye, EyeOff, X, Save, ArrowLeft, User, Calendar
 } from 'lucide-react';
-import { adminGetOpsSummary, adminTriggerJob, adminGetStats, adminGetEngineConfig, adminUpdateEngineConfig, adminGetBlogs, adminCreateBlog, adminUpdateBlog, adminDeleteBlog, adminGetFeatureFlags, adminCreateFeatureFlag, adminUpdateFeatureFlag, adminDeleteFeatureFlag } from '../../services/api.js';
+import { adminGetOpsSummary, adminTriggerJob, adminGetStats, adminGetEngineConfig, adminUpdateEngineConfig, adminGetBlogs, adminCreateBlog, adminUpdateBlog, adminDeleteBlog, adminGetFeatureFlags, adminCreateFeatureFlag, adminUpdateFeatureFlag, adminDeleteFeatureFlag, resolveBlogImage } from '../../services/api.js';
 import toast from 'react-hot-toast';
 
 const StatCard = ({ icon, title, value, sub, color = '#141413' }) => (
@@ -46,7 +46,7 @@ const AdminDashboard = () => {
   const [blogSaving, setBlogSaving] = useState(false);
   const [previewBlog, setPreviewBlog] = useState(null);
   const [pendingDeleteId, setPendingDeleteId] = useState(null);
-  const EMPTY_BLOG = { title: '', category: '', date: '', readTime: '', image: '', excerpt: '', content: '', author: '', published: true };
+  const EMPTY_BLOG = { title: '', category: '', date: '', readTime: '', image: '', excerpt: '', content: '', author: '', published: true, tagsText: '' };
 
   // Feature Flags state
   const [featureFlags, setFeatureFlags] = useState([]);
@@ -179,15 +179,33 @@ const AdminDashboard = () => {
     finally { setBlogsLoading(false); }
   };
 
-  const openNewBlog = () => { setEditingBlog({ ...EMPTY_BLOG }); setBlogView('edit'); };
-  const openEditBlog = (b) => { setEditingBlog({ ...b, readTime: b.readTime || b.read_time || '' }); setBlogView('edit'); };
-  const openPreview = (b) => { setPreviewBlog(b); setBlogView('preview'); };
+  const openNewBlog = () => { setEditingBlog({ ...EMPTY_BLOG, tagsText: '' }); setBlogView('edit'); };
+  const openEditBlog = (b) => { 
+    setEditingBlog({ 
+      ...b, 
+      readTime: b.readTime || b.read_time || '',
+      tagsText: Array.isArray(b.tags) ? b.tags.join(', ') : ''
+    }); 
+    setBlogView('edit'); 
+  };
+  const openPreview = (b) => { 
+    const tags = b.tagsText 
+      ? b.tagsText.split(',').map(t => t.trim()).filter(Boolean)
+      : (b.tags || []);
+    setPreviewBlog({ ...b, tags }); 
+    setBlogView('preview'); 
+  };
 
   const handleSaveBlog = async () => {
     if (!editingBlog?.title?.trim()) { toast.error('Title is required'); return; }
     setBlogSaving(true);
     try {
-      const payload = { ...editingBlog };
+      const tags = editingBlog.tagsText 
+        ? editingBlog.tagsText.split(',').map(t => t.trim()).filter(Boolean)
+        : (editingBlog.tags || []);
+      const payload = { ...editingBlog, tags };
+      delete payload.tagsText;
+      
       if (editingBlog.id) {
         const res = await adminUpdateBlog(editingBlog.id, payload);
         setBlogs(prev => prev.map(b => b.id === editingBlog.id ? res.post : b));
@@ -245,6 +263,40 @@ const AdminDashboard = () => {
 
   return (
     <div style={{ minHeight: '100vh', background: '#141413', fontFamily: 'Poppins, sans-serif' }}>
+      <style>{`
+        /* Custom Scrollbar Styles for Admin Panel */
+        .admin-custom-scroll::-webkit-scrollbar {
+          width: 8px;
+          height: 8px;
+        }
+        .admin-custom-scroll::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .admin-custom-scroll::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.15);
+          border-radius: 999px;
+          border: 2px solid transparent;
+          background-clip: padding-box;
+        }
+        .admin-custom-scroll::-webkit-scrollbar-thumb:hover {
+          background: var(--color-teal, #437996);
+          border: 2px solid transparent;
+          background-clip: padding-box;
+        }
+        /* Handle light theme preview container scrollbar */
+        [data-theme="light"] .admin-custom-scroll::-webkit-scrollbar-thumb,
+        body:not([data-theme="dark"]) .admin-custom-scroll::-webkit-scrollbar-thumb {
+          background: rgba(0, 0, 0, 0.15);
+          border: 2px solid transparent;
+          background-clip: padding-box;
+        }
+        [data-theme="light"] .admin-custom-scroll::-webkit-scrollbar-thumb:hover,
+        body:not([data-theme="dark"]) .admin-custom-scroll::-webkit-scrollbar-thumb:hover {
+          background: var(--color-teal, #437996);
+          border: 2px solid transparent;
+          background-clip: padding-box;
+        }
+      `}</style>
       {/* Admin Header */}
       <div style={{ background: '#141413', borderBottom: '1px solid rgba(255,255,255,0.08)', padding: '1rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -472,7 +524,7 @@ const AdminDashboard = () => {
                           <div key={blog.id} style={{ background: '#141413', borderRadius: '14px', padding: '1.25rem 1.5rem', border: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
                             {/* Thumbnail */}
                             <div style={{ width: '64px', height: '48px', borderRadius: '8px', overflow: 'hidden', flexShrink: 0, background: 'rgba(255,255,255,0.05)' }}>
-                              {blog.image ? <img src={blog.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => { e.target.style.display = 'none'; }} /> : null}
+                              {blog.image ? <img src={resolveBlogImage(blog.image)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => { e.target.style.display = 'none'; }} /> : null}
                             </div>
                             {/* Info */}
                             <div style={{ flex: 1, minWidth: 0 }}>
@@ -567,19 +619,24 @@ const AdminDashboard = () => {
                         <input value={editingBlog.image} onChange={e => setEditingBlog(p => ({ ...p, image: e.target.value }))} placeholder="/assets/blog_photo.png or https://..." style={inputStyle} />
                         {editingBlog.image && (
                           <div style={{ marginTop: '0.5rem', borderRadius: '8px', overflow: 'hidden', height: '120px' }}>
-                            <img src={editingBlog.image} alt="preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => { e.target.style.display = 'none'; }} />
+                            <img src={resolveBlogImage(editingBlog.image)} alt="preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => { e.target.style.display = 'none'; }} />
                           </div>
                         )}
                       </div>
                       {/* Excerpt */}
                       <div style={{ gridColumn: '1 / -1' }}>
                         <label style={labelStyle}>Excerpt / Summary</label>
-                        <textarea value={editingBlog.excerpt} onChange={e => setEditingBlog(p => ({ ...p, excerpt: e.target.value }))} rows={3} placeholder="Short description shown on the blog listing page..." style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }} />
+                        <textarea className="admin-custom-scroll" value={editingBlog.excerpt} onChange={e => setEditingBlog(p => ({ ...p, excerpt: e.target.value }))} rows={3} placeholder="Short description shown on the blog listing page..." style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }} />
                       </div>
                       {/* Content */}
                       <div style={{ gridColumn: '1 / -1' }}>
                         <label style={labelStyle}>Content (HTML)</label>
-                        <textarea value={editingBlog.content} onChange={e => setEditingBlog(p => ({ ...p, content: e.target.value }))} rows={18} placeholder="<p>Your blog content here...</p><h3>Section heading</h3><p>More content...</p>" style={{ ...inputStyle, resize: 'vertical', fontFamily: 'monospace', fontSize: '0.82rem', lineHeight: 1.6 }} />
+                        <textarea className="admin-custom-scroll" value={editingBlog.content} onChange={e => setEditingBlog(p => ({ ...p, content: e.target.value }))} rows={18} placeholder="<p>Your blog content here...</p><h3>Section heading</h3><p>More content...</p>" style={{ ...inputStyle, resize: 'vertical', fontFamily: 'monospace', fontSize: '0.82rem', lineHeight: 1.6 }} />
+                      </div>
+                      {/* Tags */}
+                      <div style={{ gridColumn: '1 / -1' }}>
+                        <label style={labelStyle}>Tags (comma-separated)</label>
+                        <input value={editingBlog.tagsText || ''} onChange={e => setEditingBlog(p => ({ ...p, tagsText: e.target.value }))} placeholder="e.g. Adventure, Northeast, Nature" style={inputStyle} />
                       </div>
                       {/* Published toggle */}
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -608,43 +665,238 @@ const AdminDashboard = () => {
                       </button>
                       <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.3)' }}>Preview — as readers will see it</span>
                     </div>
-                    <div style={{ background: 'white', borderRadius: '16px', overflow: 'hidden', maxHeight: '75vh', overflowY: 'auto' }}>
-                      {previewBlog.image && (
-                        <div style={{ position: 'relative', height: '320px', background: '#141413' }}>
-                          <img src={previewBlog.image} alt={previewBlog.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => { e.target.style.display = 'none'; }} />
-                          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(20,20,19,0.8) 0%, transparent 60%)' }} />
-                          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '2rem' }}>
-                            {previewBlog.category && <span style={{ background: '#5ac576', color: 'white', fontSize: '0.72rem', fontWeight: 700, padding: '3px 10px', borderRadius: '20px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{previewBlog.category}</span>}
-                            <h1 style={{ color: 'white', fontSize: '1.75rem', fontWeight: 700, marginTop: '0.75rem', lineHeight: 1.25, fontFamily: 'Poppins, sans-serif' }}>{previewBlog.title}</h1>
-                            <div style={{ display: 'flex', gap: '1rem', marginTop: '0.75rem', color: 'rgba(255,255,255,0.65)', fontSize: '0.85rem', fontFamily: 'Poppins, sans-serif' }}>
-                              {previewBlog.author && <span>By {previewBlog.author}</span>}
-                              {previewBlog.date && <span>{previewBlog.date}</span>}
-                              {previewBlog.readTime && <span>{previewBlog.readTime}</span>}
+                    <div className="admin-custom-scroll" style={{ background: 'var(--bg, #fbfbfa)', color: 'var(--fg, #141413)', borderRadius: '24px', border: '1px solid var(--border, rgba(0,0,0,0.08))', overflow: 'hidden', maxHeight: '75vh', overflowY: 'auto' }}>
+                      <style>{`
+                        .admin-preview-container {
+                          display: grid;
+                          grid-template-columns: 1fr;
+                          gap: 2.5rem;
+                          padding: 2.5rem 1.5rem;
+                        }
+                        @media (min-width: 1024px) {
+                          .admin-preview-container {
+                            grid-template-columns: 4fr 6fr;
+                            gap: 4.5rem;
+                            padding: 4rem 3rem;
+                          }
+                        }
+                        .preview-left {
+                          display: flex;
+                          flex-direction: column;
+                          align-items: flex-start;
+                          gap: 2rem;
+                        }
+                        @media (min-width: 1024px) {
+                          .preview-left {
+                            position: sticky;
+                            top: 2rem;
+                            align-self: start;
+                          }
+                        }
+                        .preview-category {
+                          font-size: 0.8rem;
+                          font-weight: 700;
+                          color: var(--color-teal, #437996);
+                          letter-spacing: 0.15em;
+                          text-transform: uppercase;
+                        }
+                        .preview-title {
+                          font-family: var(--font-display), 'Instrument Serif', Georgia, serif;
+                          font-size: clamp(2rem, 3vw, 3rem);
+                          font-weight: 400;
+                          line-height: 1.15;
+                          margin-top: 0.5rem;
+                          letter-spacing: -0.01em;
+                        }
+                        .preview-meta-list {
+                          display: flex;
+                          flex-wrap: wrap;
+                          gap: 1.25rem;
+                          margin-top: 1rem;
+                        }
+                        .preview-meta-item {
+                          display: inline-flex;
+                          align-items: center;
+                          gap: 0.5rem;
+                          font-size: 0.85rem;
+                          color: var(--primary-light, #5e5d59);
+                          font-weight: 500;
+                        }
+                        .preview-meta-item svg {
+                          color: var(--color-teal, #437996);
+                          opacity: 0.8;
+                        }
+                        .preview-progress-wrapper {
+                          display: flex;
+                          flex-direction: column;
+                          gap: 0.75rem;
+                          width: 100%;
+                          margin-top: 2rem;
+                        }
+                        .preview-progress-label {
+                          font-size: 0.72rem;
+                          font-weight: 600;
+                          letter-spacing: 0.1em;
+                          text-transform: uppercase;
+                          color: var(--primary-light, #87867f);
+                        }
+                        .preview-progress-track {
+                          width: 100%;
+                          height: 2px;
+                          background: var(--border, rgba(0,0,0,0.08));
+                          border-radius: 999px;
+                          position: relative;
+                        }
+                        .preview-progress-fill {
+                          position: absolute;
+                          top: 0;
+                          left: 0;
+                          height: 100%;
+                          background: var(--color-teal, #437996);
+                          width: 60%;
+                          border-radius: 999px;
+                        }
+                        .preview-right {
+                          display: flex;
+                          flex-direction: column;
+                          gap: 2.5rem;
+                        }
+                        .preview-hero-wrapper {
+                          width: 100%;
+                          aspect-ratio: 16 / 10;
+                          border-radius: 20px;
+                          overflow: hidden;
+                          box-shadow: var(--shadow-md);
+                          border: 1px solid var(--border, rgba(0,0,0,0.08));
+                        }
+                        .preview-lead {
+                          font-size: 1.15rem;
+                          line-height: 1.7;
+                          color: var(--fg, #141413);
+                          border-left: 3px solid var(--color-sand, #d4a373);
+                          padding-left: 1.5rem;
+                          margin-bottom: 0.5rem;
+                        }
+                        .preview-prose {
+                          font-size: 1.05rem;
+                          line-height: 1.8;
+                          opacity: 0.95;
+                        }
+                        .preview-prose p {
+                          margin-bottom: 1.5rem;
+                        }
+                        .preview-prose h2, .preview-prose h3 {
+                          font-family: var(--font-display), 'Instrument Serif', Georgia, serif;
+                          font-weight: 400;
+                          color: var(--color-teal, #437996);
+                          margin-top: 2.5rem;
+                          margin-bottom: 1rem;
+                          line-height: 1.3;
+                        }
+                        .preview-prose h2 {
+                          font-size: 1.75rem;
+                        }
+                        .preview-prose h3 {
+                          font-size: 1.45rem;
+                        }
+                        .preview-tags-container {
+                          display: flex;
+                          gap: 0.5rem;
+                          flex-wrap: wrap;
+                          margin-top: 1.5rem;
+                          padding-top: 1.5rem;
+                          border-top: 1px solid var(--border, rgba(0,0,0,0.08));
+                        }
+                        .preview-tag-badge {
+                          background: var(--surface, rgba(0,0,0,0.03));
+                          border: 1px solid var(--border, rgba(0,0,0,0.06));
+                          color: var(--primary-light, #5e5d59);
+                          font-size: 0.75rem;
+                          font-weight: 600;
+                          padding: 4px 12px;
+                          border-radius: 9999px;
+                          transition: all 0.2s;
+                        }
+                        [data-theme="dark"] .preview-tag-badge {
+                          background: rgba(255, 255, 255, 0.05);
+                          border-color: rgba(255, 255, 255, 0.08);
+                          color: rgba(255, 255, 255, 0.7);
+                        }
+                      `}</style>
+
+                      <div className="admin-preview-container">
+                        {/* Left Column: Meta details */}
+                        <div className="preview-left">
+                          <div style={{ width: '100%' }}>
+                            <span className="preview-category">{previewBlog.category || 'Travel Story'}</span>
+                            <h1 className="preview-title">{previewBlog.title}</h1>
+                            
+                            <div className="preview-meta-list">
+                              {previewBlog.author && (
+                                <span className="preview-meta-item">
+                                  <User size={15} />
+                                  {previewBlog.author}
+                                </span>
+                              )}
+                              {previewBlog.date && (
+                                <span className="preview-meta-item">
+                                  <Calendar size={15} />
+                                  {previewBlog.date}
+                                </span>
+                              )}
+                              {previewBlog.readTime && (
+                                <span className="preview-meta-item">
+                                  <Clock size={15} />
+                                  {previewBlog.readTime}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="preview-progress-wrapper">
+                            <span className="preview-progress-label">Reading Progress (Demo)</span>
+                            <div className="preview-progress-track">
+                              <div className="preview-progress-fill" />
                             </div>
                           </div>
                         </div>
-                      )}
-                      <div style={{ padding: '2.5rem', maxWidth: '720px', margin: '0 auto', fontFamily: 'Poppins, sans-serif' }}>
-                        {!previewBlog.image && (
-                          <>
-                            {previewBlog.category && <span style={{ background: '#ecfccb', color: '#3d9a58', fontSize: '0.72rem', fontWeight: 700, padding: '3px 10px', borderRadius: '20px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{previewBlog.category}</span>}
-                            <h1 style={{ color: '#141413', fontSize: '1.75rem', fontWeight: 700, margin: '0.75rem 0', lineHeight: 1.25 }}>{previewBlog.title}</h1>
-                            <div style={{ display: 'flex', gap: '1rem', color: '#87867f', fontSize: '0.85rem', marginBottom: '1.5rem' }}>
-                              {previewBlog.author && <span>By {previewBlog.author}</span>}
-                              {previewBlog.date && <span>{previewBlog.date}</span>}
-                              {previewBlog.readTime && <span>{previewBlog.readTime}</span>}
+
+                        {/* Right Column: Hero Image & Prose Content */}
+                        <div className="preview-right">
+                          {previewBlog.image ? (
+                            <div className="preview-hero-wrapper">
+                              <img
+                                src={resolveBlogImage(previewBlog.image)}
+                                alt={previewBlog.title}
+                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                onError={(e) => { e.target.style.display = 'none'; }}
+                              />
                             </div>
-                          </>
-                        )}
-                        {previewBlog.excerpt && (
-                          <p style={{ fontSize: '1.1rem', color: '#5e5d59', border: '1px solid rgba(90, 197, 118, 0.25)', background: 'rgba(90, 197, 118, 0.05)', borderRadius: 'var(--radius-md)', padding: '1rem 1.25rem', marginBottom: '1.5rem', lineHeight: 1.7 }}>{previewBlog.excerpt}</p>
-                        )}
-                        {previewBlog.content && (
-                          <div
-                            style={{ fontSize: '1rem', color: '#141413', lineHeight: 1.8 }}
-                            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(previewBlog.content) }}
-                          />
-                        )}
+                          ) : (
+                            <div className="preview-hero-wrapper" style={{ background: 'linear-gradient(135deg, #141413 0%, #30302e 100%)' }} />
+                          )}
+
+                          <div>
+                            {previewBlog.excerpt && (
+                              <p className="preview-lead">{previewBlog.excerpt}</p>
+                            )}
+
+                            {previewBlog.content && (
+                              <div
+                                className="preview-prose"
+                                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(previewBlog.content) }}
+                              />
+                            )}
+
+                            {previewBlog.tags && previewBlog.tags.length > 0 && (
+                              <div className="preview-tags-container">
+                                {previewBlog.tags.map((tag, i) => (
+                                  <span key={i} className="preview-tag-badge">{tag}</span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </>

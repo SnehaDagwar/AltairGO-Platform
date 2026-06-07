@@ -10,6 +10,53 @@ import imgRishikesh from '../assets/rishikesh-yoga.jpg';
 
 const BASE = import.meta.env.VITE_API_URL || '';
 
+const BLOG_IMAGES = {
+  'meghalaya-bridges.jpg': imgMeghalaya,
+  'kashmir.jpg': imgKashmir,
+  'andaman-islands.jpg': imgAndaman,
+  'journal_varanasi.png': imgVaranasi,
+  'luxury-resort.jpg': imgLuxury,
+  'munnar-tea.jpg': imgMunnar,
+  'jaipur-hawa.jpg': imgJaipur,
+  'journal_himachal.png': imgTrain,
+  'rishikesh-yoga.jpg': imgRishikesh,
+};
+
+export const resolveBlogImage = (imageName) => {
+  if (!imageName) return imageName;
+  if (imageName.startsWith('http://') || imageName.startsWith('https://')) return imageName;
+  const filename = imageName.split('/').pop();
+  return BLOG_IMAGES[filename] || imageName;
+};
+
+export const formatDate = (dateStr) => {
+  if (!dateStr) return '';
+  if (/^[A-Za-z]{3}\s\d{1,2},\s\d{4}$/.test(dateStr.trim())) return dateStr;
+  
+  try {
+    const match = dateStr.trim().match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (match) {
+      const [_, year, month, day] = match;
+      const date = new Date(year, month - 1, day);
+      return date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+      });
+    }
+    const parsed = Date.parse(dateStr);
+    if (isNaN(parsed)) return dateStr;
+    const date = new Date(parsed);
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  } catch (e) {
+    return dateStr;
+  }
+};
+
 function getToken() { return localStorage.getItem('ag_token'); }
 function getAdminToken() { return localStorage.getItem('ag_admin_token'); }
 
@@ -241,22 +288,49 @@ export const getBlogs = async (params = {}) => {
     const { signal, ...rest } = params;
     const qs = new URLSearchParams(rest).toString();
     const data = await req(`/blogs${qs ? '?' + qs : ''}`, { auth: false, signal });
-    if (Array.isArray(data) && data.length > 0) return data;
-    if (data && Array.isArray(data.blogs) && data.blogs.length > 0) return data.blogs;
-    return MOCK_BLOGS;
+    
+    let blogs = [];
+    if (Array.isArray(data)) {
+      blogs = data;
+    } else if (data && Array.isArray(data.blogs)) {
+      blogs = data.blogs;
+    } else {
+      blogs = MOCK_BLOGS;
+    }
+
+    return blogs.map(b => ({
+      ...b,
+      image: resolveBlogImage(b.image),
+      date: formatDate(b.date)
+    }));
   } catch (err) {
     console.warn("Failed to fetch blogs from server, falling back to mock data.", err);
-    return MOCK_BLOGS;
+    return MOCK_BLOGS.map(b => ({
+      ...b,
+      image: resolveBlogImage(b.image),
+      date: formatDate(b.date)
+    }));
   }
 };
 
 export const getBlog = async (id) => {
   try {
-    return await req(`/blogs/${id}`, { auth: false });
+    const b = await req(`/blogs/${id}`, { auth: false });
+    return {
+      ...b,
+      image: resolveBlogImage(b.image),
+      date: formatDate(b.date)
+    };
   } catch (err) {
     console.warn(`Failed to fetch blog ${id} from server, falling back to mock data.`, err);
-    const mock = MOCK_BLOGS.find(b => b.id === String(id));
-    if (mock) return mock;
+    const mock = MOCK_BLOGS.find(b => String(b.id) === String(id));
+    if (mock) {
+      return {
+        ...mock,
+        image: resolveBlogImage(mock.image),
+        date: formatDate(mock.date)
+      };
+    }
     throw err;
   }
 };
