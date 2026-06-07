@@ -8,6 +8,8 @@ import Button from '../../components/common/Button.jsx';
 import Card from '../../components/common/Card.jsx';
 import Input from '../../components/common/Input.jsx';
 import Badge from '../../components/common/Badge.jsx';
+import styles from './TripPlannerPage.module.css';
+import heroBg from '../../assets/hero-page-image.webp';
 
 const STYLES = ['adventure', 'cultural', 'relaxation', 'photography', 'food', 'spiritual', 'family'];
 const TRAVELER_TYPES = [
@@ -202,88 +204,85 @@ const TripPlannerPage = () => {
   ];
 
   return (
-    <div style={{ paddingTop: '72px', minHeight: '100vh', background: 'var(--bg)', boxSizing: 'border-box' }}>
-      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '48px 24px', boxSizing: 'border-box' }}>
+    <div className={styles.pageContainer}>
+      <img src={heroBg} alt="Background" className={styles.bgImage} />
+      <div className={styles.bgOverlay} />
+      <div className={styles.contentWrapper}>
 
         {/* Progress Steps */}
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0', marginBottom: '48px', boxSizing: 'border-box' }}>
-          {STEPS.map((s, i) => (
-            <React.Fragment key={s.num}>
-              <div
-                style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', cursor: s.num < step ? 'pointer' : 'default' }}
-                onClick={() => s.num < step && setStep(s.num)}
-              >
-                <div style={{
-                  width: '36px', height: '36px', borderRadius: 'var(--radius-pill)',
-                  background: step >= s.num ? 'var(--color-teal)' : 'var(--surface)',
-                  color: 'var(--fg)', /* Locked active stepper contrast is dark #2E2E2E */
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontWeight: 500, fontSize: '14px', transition: 'all var(--duration-normal) var(--ease-standard)',
-                  fontFamily: 'var(--font-body)',
-                }}>
-                  {step > s.num ? <Check size={16} strokeWidth={2.5} /> : s.num}
+        <div className={styles.stepperRow}>
+          {STEPS.map((s, i) => {
+            const isCompleted = step > s.num;
+            const isActive = step === s.num;
+            return (
+              <React.Fragment key={s.num}>
+                <div
+                  className={`${styles.stepNode} ${isActive ? styles.stepNodeActive : ''} ${isCompleted ? styles.stepNodeCompleted : ''}`}
+                  onClick={() => s.num < step && setStep(s.num)}
+                >
+                  <div className={styles.stepCircle}>
+                    {isCompleted ? <Check size={16} strokeWidth={2.5} /> : s.num}
+                  </div>
+                  <span className={styles.stepLabel}>{s.label}</span>
                 </div>
-                <span style={{ fontSize: '12px', fontWeight: 500, fontFamily: 'var(--font-body)', color: step >= s.num ? 'var(--fg)' : 'var(--muted)', whiteSpace: 'nowrap' }}>{s.label}</span>
-              </div>
-              {i < STEPS.length - 1 && (
-                <div style={{ flex: 1, height: '2px', background: step > s.num ? 'var(--color-teal)' : 'var(--border)', margin: '0 8px', marginBottom: '22px', transition: 'background var(--duration-normal)' }} />
-              )}
-            </React.Fragment>
-          ))}
+                {i < STEPS.length - 1 && (
+                  <div className={`${styles.stepConnector} ${step > s.num ? styles.stepConnectorActive : ''}`} />
+                )}
+              </React.Fragment>
+            );
+          })}
         </div>
 
         {/* Custom Card component for central planning form */}
-        <Card variant="default" padding="lg" style={{ boxShadow: 'var(--shadow-lg)' }}>
+        <div className={styles.planningCard}>
+          {/* Floral leaf motif for premium background overlay */}
+          <svg className={styles.cardLeaf} viewBox="0 0 120 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M60 280 C 60 210, 60 140, 60 20" stroke="var(--color-teal)" strokeWidth="1.5" strokeOpacity="0.15" strokeLinecap="round" />
+            <path d="M60 240 C 35 220, 25 190, 60 170" stroke="var(--color-teal)" strokeWidth="1.5" strokeOpacity="0.15" fill="var(--color-teal)" fillOpacity="0.03" />
+            <path d="M60 180 C 30 160, 20 130, 60 110" stroke="var(--color-teal)" strokeWidth="1.5" strokeOpacity="0.15" fill="var(--color-teal)" fillOpacity="0.03" />
+            <path d="M60 120 C 32 100, 22 70, 60 50" stroke="var(--color-teal)" strokeWidth="1.5" strokeOpacity="0.15" fill="var(--color-teal)" fillOpacity="0.03" />
+            <path d="M60 210 C 85 190, 95 160, 60 140" stroke="var(--color-teal)" strokeWidth="1.5" strokeOpacity="0.15" fill="var(--color-teal)" fillOpacity="0.03" />
+            <path d="M60 150 C 90 130, 100 100, 60 80" stroke="var(--color-teal)" strokeWidth="1.5" strokeOpacity="0.15" fill="var(--color-teal)" fillOpacity="0.03" />
+            <path d="M60 90 C 88 70, 98 40, 60 20" stroke="var(--color-teal)" strokeWidth="1.5" strokeOpacity="0.15" fill="var(--color-teal)" fillOpacity="0.03" />
+          </svg>
+          <div className={styles.stepContainer}>
 
           {/* STEP 1: Where */}
           {step === 1 && (
             <div>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '32px', fontWeight: 600, color: 'var(--fg)', marginBottom: '8px', lineHeight: 1.2 }}>Where do you want to go?</h2>
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: '16px', color: 'var(--muted)', marginBottom: '32px' }}>Type a destination or let AI suggest the perfect place for you</p>
+              <h2 className={styles.title}>
+                Where do you <span className={styles.titleAccent}>want to go?</span>
+              </h2>
+              <p className={styles.subtitle}>Type a destination or let AI suggest the perfect place for you</p>
 
-              <div style={{ position: 'relative', marginBottom: '16px', width: '100%' }}>
-                <Search size={18} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--muted)', pointerEvents: 'none', zIndex: 10 }} />
+              <div className={styles.inputWrapper}>
+                <Search size={18} className={styles.searchIcon} />
                 <input
                   type="text"
                   placeholder="Search — Goa, Manali, Rajasthan..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter' && searchResults.length > 0) addDest(searchResults[0]); }}
-                  style={{ 
-                    width: '100%', 
-                    height: '44px',
-                    padding: '12px 16px 12px 42px', 
-                    border: 'none',
-                    borderRadius: 'var(--radius-sm)', 
-                    fontFamily: 'var(--font-body)', 
-                    fontSize: '16px', 
-                    fontWeight: '400',
-                    background: 'var(--surface)',
-                    color: 'var(--fg)',
-                    outline: 'none',
-                    boxSizing: 'border-box'
-                  }}
+                  className={styles.textInput}
                   onFocus={() => { if (hasMounted && searchQuery.length < 2 && searchResults.length === 0) handleRecommend(); }}
                   autoFocus
                 />
               </div>
 
               {searchResults.length > 0 && (
-                <div style={{ border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', overflow: 'hidden', marginBottom: '24px', background: 'var(--glass-bg)' }}>
+                <div className={styles.suggestionsDropdown}>
                   {searchResults.map(dest => (
                     <div
                       key={dest.id}
                       onClick={() => addDest(dest)}
-                      style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', cursor: 'pointer', borderBottom: '1px solid var(--border)', transition: 'background var(--duration-fast)' }}
-                      onMouseEnter={(e) => e.currentTarget.style.background = 'var(--surface)'}
-                      onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                      className={styles.suggestionItem}
                     >
-                      <div style={{ width: '32px', height: '32px', borderRadius: 'var(--radius-sm)', background: 'var(--surface)', display: 'flex', alignItems: 'center', justifycontent: 'center', flexShrink: 0 }}>
-                        <MapPin size={16} color="var(--muted)" style={{ margin: 'auto' }} />
+                      <div className={styles.pinIconWrapper}>
+                        <MapPin size={16} color="var(--color-teal)" style={{ margin: 'auto' }} />
                       </div>
-                      <div style={{ fontFamily: 'var(--font-body)' }}>
-                        <div style={{ fontWeight: 500, color: 'var(--fg)', fontSize: '15px' }}>{dest.name}</div>
-                        <div style={{ fontSize: '12px', color: 'var(--muted)' }}>{dest.state_name || dest.country_name || ''}</div>
+                      <div className={styles.suggestionDetails}>
+                        <div className={styles.suggestionName}>{dest.name}</div>
+                        <div className={styles.suggestionLoc}>{dest.state_name || dest.country_name || ''}</div>
                       </div>
                       <Plus size={16} style={{ marginLeft: 'auto', color: 'var(--muted)' }} />
                     </div>
@@ -291,24 +290,51 @@ const TripPlannerPage = () => {
                 </div>
               )}
 
-              <Button
-                variant="ghost"
-                size="sm"
-                loading={recommendLoading}
+              <button
+                type="button"
                 onClick={handleRecommend}
-                style={{ marginBottom: '24px', border: '1px solid var(--border)', background: 'var(--surface)' }}
+                disabled={recommendLoading}
+                className={styles.recommendBtn}
               >
                 <Sparkles size={16} /> {recommendLoading ? 'Loading Suggestions...' : 'Recommend me destinations!'}
-              </Button>
+              </button>
+
+              {/* Trending Picks Section */}
+              {selectedDests.length === 0 && (
+                <div className={styles.trendingSection}>
+                  <div className={styles.trendingHeader}>
+                    <h3 className={styles.trendingTitle}>Trending Picks</h3>
+                    <p className={styles.trendingSubtitle}>Popular choices among travelers</p>
+                  </div>
+                  <div className={styles.trendingList}>
+                    {[
+                      { name: 'Kerala', category: 'Nature & Backwaters' },
+                      { name: 'Goa', category: 'Beaches & Nightlife' },
+                      { name: 'Ladakh', category: 'Adventure & Mountains' },
+                      { name: 'Rishikesh', category: 'Spiritual & Adventure' },
+                    ].map((pick) => (
+                      <button 
+                        key={pick.name} 
+                        type="button"
+                        className={styles.trendingCard}
+                        onClick={() => addDest({ name: pick.name, id: pick.name })}
+                      >
+                        <span className={styles.trendingName}>{pick.name}</span>
+                        <span className={styles.trendingCategory}>{pick.category}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {selectedDests.length > 0 && (
                 <div style={{ marginBottom: '16px' }}>
                   <div style={{ fontWeight: 500, color: 'var(--fg)', marginBottom: '8px', fontSize: '14px', fontFamily: 'var(--font-body)' }}>Selected destinations:</div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                  <div className={styles.selectedList}>
                     {selectedDests.map(d => (
-                      <div key={d.id || d.name} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--color-teal)', color: 'var(--fg)', padding: '6px 14px', borderRadius: 'var(--radius-pill)', fontSize: '14px', fontWeight: 500, fontFamily: 'var(--font-body)' }}>
+                      <div key={d.id || d.name} className={styles.destPill}>
                         <MapPin size={12} /> {d.name}
-                        <button onClick={() => removeDest(d.id || d.name)} style={{ background: 'none', border: 'none', color: 'var(--fg)', cursor: 'pointer', display: 'flex', padding: 0 }}>
+                        <button onClick={() => removeDest(d.id || d.name)} className={styles.destPillRemove}>
                           <X size={14} />
                         </button>
                       </div>
@@ -322,8 +348,8 @@ const TripPlannerPage = () => {
           {/* STEP 2: When */}
           {step === 2 && (
             <div>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '32px', fontWeight: 600, color: 'var(--fg)', marginBottom: '8px', lineHeight: 1.2 }}>When are you going?</h2>
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: '16px', color: 'var(--muted)', marginBottom: '32px' }}>Pick your travel dates and how long you'll be away</p>
+              <h2 className={styles.title}>When are you going?</h2>
+              <p className={styles.subtitle}>Pick your travel dates and how long you'll be away</p>
 
               <div style={{ marginBottom: '24px' }}>
                 <label style={{ display: 'block', fontWeight: 500, color: 'var(--fg)', marginBottom: '8px', fontSize: '14px', fontFamily: 'var(--font-body)' }}>Start Date (optional)</label>
@@ -394,8 +420,8 @@ const TripPlannerPage = () => {
           {/* STEP 3: Budget */}
           {step === 3 && (
             <div>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '32px', fontWeight: 600, color: 'var(--fg)', marginBottom: '8px', lineHeight: 1.2 }}>Budget & Style</h2>
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: '16px', color: 'var(--muted)', marginBottom: '32px' }}>Set your total budget and travel style preferences</p>
+              <h2 className={styles.title}>Budget & Style</h2>
+              <p className={styles.subtitle}>Set your total budget and travel style preferences</p>
 
               <div style={{ marginBottom: '32px' }}>
                 <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 500, color: 'var(--fg)', marginBottom: '12px', fontSize: '14px', fontFamily: 'var(--font-body)' }}>
@@ -508,8 +534,8 @@ const TripPlannerPage = () => {
           {/* STEP 4: About You */}
           {step === 4 && (
             <div>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '32px', fontWeight: 600, color: 'var(--fg)', marginBottom: '8px', lineHeight: 1.2 }}>Who's going?</h2>
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: '16px', color: 'var(--muted)', marginBottom: '32px' }}>Just the essentials — we'll handle the rest</p>
+              <h2 className={styles.title}>Who's going?</h2>
+              <p className={styles.subtitle}>Just the essentials — we'll handle the rest</p>
 
               {/* Traveler type */}
               <div style={{ marginBottom: '24px' }}>
@@ -676,8 +702,8 @@ const TripPlannerPage = () => {
           {/* STEP 5: Review */}
           {step === 5 && (
             <div>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '32px', fontWeight: 600, color: 'var(--fg)', marginBottom: '8px', lineHeight: 1.2 }}>Review & Generate</h2>
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: '16px', color: 'var(--muted)', marginBottom: '32px' }}>Confirm your trip details before generating</p>
+              <h2 className={styles.title}>Review & Generate</h2>
+              <p className={styles.subtitle}>Confirm your trip details before generating</p>
 
               <div style={{ background: 'var(--surface)', borderRadius: 'var(--radius-lg)', padding: '24px', marginBottom: '32px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 {[
@@ -718,20 +744,20 @@ const TripPlannerPage = () => {
           )}
 
           {/* Navigation controls */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '40px', paddingTop: '32px', borderTop: '1px solid var(--border)' }}>
-            <Button
-              variant="secondary"
-              size="md"
+          <div className={styles.btnGroup}>
+            <button
+              type="button"
+              className={styles.btnBack}
               onClick={() => setStep(s => Math.max(1, s - 1))}
               disabled={step === 1}
             >
               <ChevronLeft size={18} /> Back
-            </Button>
+            </button>
 
             {step < 5 && (
-              <Button
-                variant="primary"
-                size="md"
+              <button
+                type="button"
+                className={styles.btnContinue}
                 onClick={() => {
                   if (step === 1 && selectedDests.length === 0) {
                     toast.dismiss();
@@ -742,10 +768,11 @@ const TripPlannerPage = () => {
                 }}
               >
                 Continue <ChevronRight size={18} />
-              </Button>
+              </button>
             )}
           </div>
-        </Card>
+          </div> {/* end stepContainer */}
+        </div> {/* end planningCard */}
       </div>
     </div>
   );

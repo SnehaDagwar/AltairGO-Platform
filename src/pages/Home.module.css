@@ -167,12 +167,12 @@
 .heroOverlayHorizontal {
   position: absolute;
   inset: 0;
-  background: rgba(255, 253, 242, 0.16); /* Slightly increased uniform softening overlay */
+  background: radial-gradient(circle at 50% 50%, rgba(255, 253, 242, 0.75) 0%, rgba(255, 253, 242, 0.1) 60%);
   z-index: 1;
 }
 
 [data-theme="dark"] .heroOverlayHorizontal {
-  background: rgba(18, 18, 18, 0.16);
+  background: radial-gradient(circle at 50% 50%, rgba(18, 18, 18, 0.75) 0%, rgba(18, 18, 18, 0.1) 60%);
 }
 
 .heroOverlayVertical {
@@ -180,8 +180,8 @@
   inset: 0;
   background: linear-gradient(to bottom, 
     transparent 0%, 
-    transparent 65%, 
-    rgba(255, 253, 242, 0.6) 88%, 
+    transparent 80%, 
+    rgba(255, 253, 242, 0.3) 90%, 
     var(--bg) 100%
   );
   z-index: 2;
@@ -190,65 +190,114 @@
 [data-theme="dark"] .heroOverlayVertical {
   background: linear-gradient(to bottom, 
     transparent 0%, 
-    transparent 65%, 
-    rgba(18, 18, 18, 0.6) 88%, 
+    transparent 80%, 
+    rgba(18, 18, 18, 0.3) 90%, 
     var(--bg) 100%
   );
 }
 
-/* --- Editorial Accent & Typography --- */
-.scriptAccent {
-  font-family: var(--font-accent);
-  font-size: clamp(64px, 8vw, 96px); /* Elevated to main headline size */
-  color: var(--hero-teal);
-  margin-bottom: 8px;
-  margin-left: 8px;
-  transform: rotate(-1.5deg); /* Subtle, elegant rotation */
-  z-index: 2;
-  text-shadow: 0 1px 6px rgba(255, 255, 255, 0.8);
+/* --- Hero Redesign Content --- */
+.heroHeadlineGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  margin-bottom: 24px;
 }
 
-[data-theme="dark"] .scriptAccent {
-  text-shadow: 0 1px 6px rgba(18, 18, 18, 0.8);
-}
-
-.heroDisplayTitle {
+.heroHeadline {
   font-family: var(--font-display);
-  font-size: clamp(64px, 8.5vw, 120px); /* Increased title size */
+  font-size: clamp(64px, 8vw, 100px);
   font-weight: 400;
-  line-height: 0.85;
-  letter-spacing: -0.01em;
-  color: var(--fg);
-  margin: 0 0 16px 0;
-  text-transform: uppercase;
-  text-shadow: 0 2px 12px rgba(255, 253, 242, 0.95);
+  color: var(--color-black);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  margin: 0;
+  text-align: center;
+  z-index: 2;
 }
 
-[data-theme="dark"] .heroDisplayTitle {
-  text-shadow: 0 2px 12px rgba(18, 18, 18, 0.95);
+[data-theme="dark"] .heroHeadline {
+  color: var(--color-white);
 }
 
-.heroSubtitle {
-  font-family: var(--font-body);
-  font-size: clamp(14px, 1.8vw, 18px); /* Redesigned subtitle size */
-  font-weight: 500;
-  letter-spacing: 0.22em; /* Premium letter spacing */
-  color: var(--fg); /* Aligned with fg with opacity */
+.heroHeadlineCursive {
+  font-family: var(--font-accent);
+  font-size: clamp(48px, 6vw, 84px);
+  color: var(--color-teal);
+  margin-top: -16px;
+  margin-left: 20px;
+  text-align: center;
+  z-index: 3;
+}
+
+.heroDivider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  width: 100%;
+  max-width: 320px;
   opacity: 0.8;
-  margin: 0 0 24px 0;
-  text-transform: uppercase;
-  text-shadow: 0 1px 6px rgba(255, 255, 255, 0.8);
 }
 
-[data-theme="dark"] .heroSubtitle {
-  text-shadow: 0 1px 6px rgba(18, 18, 18, 0.8);
+.heroDividerLine {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-teal), transparent);
 }
 
+.heroDividerIcon {
+  color: var(--color-teal);
+}
 
-@media (max-width: 768px) {
-  .scriptAccent {
-    margin-left: 0;
-  }
+.heroSubheadline {
+  font-family: var(--font-body);
+  font-size: clamp(16px, 1.8vw, 20px);
+  color: rgba(18, 18, 18, 0.75);
+  max-width: 600px;
+  text-align: center;
+  line-height: 1.6;
+  margin: 0 auto;
+  font-weight: 400;
+}
+
+[data-theme="dark"] .heroSubheadline {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.heroCtaBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--color-teal);
+  color: var(--color-white);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 500;
+  padding: 16px 36px;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(108, 176, 189, 0.4);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.heroCtaBtn:hover {
+  background: #5A9BA8; /* slightly darker teal */
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(108, 176, 189, 0.5);
+}
+
+.heroCtaIcon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  padding: 2px;
 }
 
 

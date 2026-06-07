@@ -118,6 +118,7 @@ const DestinationsPage = () => {
           alt="Atmospheric landscape" 
           className={styles.headerBgImage} 
         />
+        <div className={styles.headerOverlay} />
         <div className={styles.pageHeader}>
           <h1 className={styles.pageTitle}>
             Explore <span className={styles.accentTitleText}>the World</span>
@@ -161,10 +162,7 @@ const DestinationsPage = () => {
             ))}
           </div>
 
-          <button className={styles.recommendBtn} onClick={handleRecommend} disabled={recommendLoading}>
-            <Sparkles size={16} />
-            {recommendLoading ? 'Loading...' : 'Not sure? Get AI Recommendations'}
-          </button>
+
 
           {/* Semantic AI search */}
           <form onSubmit={handleAiSearch} className={styles.aiSearchPanel}>

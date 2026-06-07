@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkle, MapTrifold, Signpost, CloudSun } from '@phosphor-icons/react';
+import { Sparkle, MapTrifold, Signpost, CloudSun, Compass } from '@phosphor-icons/react';
 import styles from './Home.module.css';
 import logoUrl from '../assets/logo.png';
 import heroBg from '../assets/hero-page-image.webp';
@@ -78,17 +78,35 @@ function Hero({ onPlan }) {
             transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
             style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}
           >
-            <div className={styles.scriptAccent}>Traveling Beyond</div>
-            <h2 className={styles.heroSubtitle}>Bespoke India Journeys</h2>
+            <div className={styles.heroHeadlineGroup}>
+              <h1 className={styles.heroHeadline}>Discover More</h1>
+              <div className={styles.heroHeadlineCursive}>Than Destinations</div>
+            </div>
+            
+            <div className={styles.heroDivider}>
+              <div className={styles.heroDividerLine}></div>
+              <I.spark className={styles.heroDividerIcon} width="20" height="20" />
+              <div className={styles.heroDividerLine}></div>
+            </div>
+
+            <p className={styles.heroSubheadline}>
+              AI-powered itineraries, intelligent trip planning, seamless bookings, and travel insights designed around the way you explore.
+            </p>
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
-            style={{ marginTop: 24 }}
+            style={{ marginTop: 40 }}
           >
-            <PlanYourTripButton onClick={onPlan} />
+            <button className={styles.heroCtaBtn} onClick={onPlan}>
+              <div className={styles.heroCtaIcon}>
+                <Compass size={16} weight="regular" />
+              </div>
+              <span>Start Your Journey</span>
+              <I.arrow />
+            </button>
           </motion.div>
         </div>
       </div>

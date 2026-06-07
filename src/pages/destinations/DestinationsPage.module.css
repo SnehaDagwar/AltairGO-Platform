@@ -38,15 +38,33 @@
   height: 100%;
   object-fit: cover;
   object-position: center 30%;
-  opacity: 0.12;
-  mix-blend-mode: multiply;
+  opacity: 0.6;
   z-index: 0;
   transition: opacity var(--t-reveal);
 }
 
 [data-theme="dark"] .headerBgImage {
-  opacity: 0.08;
-  mix-blend-mode: screen;
+  opacity: 0.25;
+}
+
+.headerOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-image:
+    radial-gradient(circle at 95% 5%, var(--color-peach) 0%, transparent 45%),
+    radial-gradient(circle at 5% 95%, var(--color-lavender) 0%, transparent 45%),
+    linear-gradient(to right, transparent 0%, var(--bg) 28%, var(--bg) 72%, transparent 100%),
+    linear-gradient(to bottom, transparent 60%, var(--bg) 100%);
+  pointer-events: none;
+}
+
+[data-theme="dark"] .headerOverlay {
+  background-image:
+    radial-gradient(circle at 95% 5%, oklch(35% 0.08 30 / 18%) 0%, transparent 45%),
+    radial-gradient(circle at 5% 95%, oklch(35% 0.08 280 / 18%) 0%, transparent 45%),
+    linear-gradient(to right, transparent 0%, var(--bg) 28%, var(--bg) 72%, transparent 100%),
+    linear-gradient(to bottom, transparent 60%, var(--bg) 100%);
 }
 
 .pageHeader {
