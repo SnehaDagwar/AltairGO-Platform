@@ -45,26 +45,6 @@
   background: linear-gradient(to bottom, transparent 40%, var(--bg) 100%);
 }
 
-/* Spinner */
-.loadingContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 50vh;
-}
-
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid rgba(0, 0, 0, 0.05);
-  border-top-color: var(--color-teal);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
 
 /* Hero Section */
 .heroGrid {
@@ -218,7 +198,7 @@
   -webkit-backdrop-filter: blur(4px);
   padding: 0.35rem 0.85rem;
   border-radius: var(--radius-pill);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.85rem;
   border: 1px solid rgba(255, 255, 255, 0.15);
   color: #fff;
 }
@@ -555,72 +535,64 @@
 
 /* Newsletter Banner styling */
 .newsletterBanner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: linear-gradient(135deg, var(--color-ice) 0%, var(--color-lavender) 100%);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  background: linear-gradient(135deg, var(--color-ice) 0%, var(--color-white) 100%);
   border-radius: var(--radius-lg);
-  padding: 3.5rem 4rem;
+  padding: 3.5rem 2.5rem;
   border: 1px solid var(--border);
-  gap: 3rem;
-  box-shadow: var(--shadow-md);
+  box-shadow: 
+    var(--shadow-md),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
   position: relative;
   overflow: hidden;
 }
 
-/* Faint background mountain visual in newsletter banner */
-.newsletterBanner::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 300px;
-  height: 150px;
-  background-image: url('../../assets/phil-himalayas.png');
-  background-position: right bottom;
-  background-size: contain;
-  background-repeat: no-repeat;
-  opacity: 0.18;
-  z-index: 1;
-  pointer-events: none;
+@media (min-width: 1024px) {
+  .newsletterBanner {
+    grid-template-columns: 1.15fr 0.85fr; /* Asymmetric grid alignment */
+    gap: 4rem;
+    padding: 4.5rem 5rem;
+  }
 }
 
 [data-theme="dark"] .newsletterBanner {
-  background: oklch(18% 0.01 240);
+  background: oklch(16% 0.01 240);
   background-image: 
-    radial-gradient(circle at top right, oklch(45% 0.08 210 / 12%), transparent 50%),
-    radial-gradient(circle at bottom left, oklch(45% 0.08 280 / 12%), transparent 50%);
-}
-
-[data-theme="dark"] .newsletterBanner::after {
-  opacity: 0.05;
-  filter: invert(1) brightness(0.6);
+    radial-gradient(circle at top right, oklch(45% 0.08 210 / 10%), transparent 55%),
+    radial-gradient(circle at bottom left, oklch(45% 0.08 280 / 10%), transparent 55%);
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
 .newsletterLeft {
   display: flex;
   align-items: center;
-  gap: 1.75rem;
-  flex: 1.1;
-  position: relative;
+  gap: 1.5rem;
   z-index: 2;
+  position: relative;
 }
 
 .mailIconCircle {
-  width: 60px;
-  height: 60px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 
+    var(--shadow-sm),
+    0 10px 20px -8px oklch(75% 0.1 210 / 0.25);
+  backdrop-filter: blur(8px);
 }
 
 [data-theme="dark"] .mailIconCircle {
   background: var(--surface);
   border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
 }
 
 .mailIcon {
@@ -630,12 +602,24 @@
 .newsletterText {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.35rem;
+}
+
+.newsletterLabel {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #437996;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+[data-theme="dark"] .newsletterLabel {
+  color: var(--color-teal);
 }
 
 .newsletterTitle {
   font-family: var(--font-display);
-  font-size: 2.2rem;
+  font-size: clamp(1.8rem, 2.8vw, 2.3rem);
   font-weight: 400;
   color: var(--fg);
   line-height: 1.15;
@@ -644,6 +628,8 @@
 .newsletterSub {
   font-size: 0.95rem;
   color: var(--muted);
+  max-width: 45ch;
+  line-height: 1.5;
 }
 
 /* Unified subscription field wrapper */
@@ -654,17 +640,22 @@
   border-radius: 9999px;
   padding: 6px;
   border: 1px solid var(--border);
-  flex: 0.9;
-  max-width: 480px;
-  box-shadow: var(--shadow-sm);
-  transition: border-color var(--t-hover), box-shadow var(--t-hover);
+  box-shadow: 
+    var(--shadow-sm),
+    inset 0 1px 2px rgba(0, 0, 0, 0.02);
+  transition: 
+    border-color var(--t-hover), 
+    box-shadow var(--t-hover);
   position: relative;
   z-index: 2;
+  width: 100%;
+  max-width: 480px;
+  align-self: center;
 }
 
 .subscribeFormWrapper:focus-within {
   border-color: var(--color-teal);
-  box-shadow: 0 0 0 3px oklch(75% 0.1 210 / 0.15);
+  box-shadow: 0 0 0 3px oklch(75% 0.1 210 / 0.15), var(--shadow-md);
 }
 
 [data-theme="dark"] .subscribeFormWrapper {
@@ -700,8 +691,11 @@
   border: none;
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  transition: all var(--t-hover);
+  gap: 0.6rem;
+  transition: 
+    background-color var(--t-hover), 
+    color var(--t-hover), 
+    transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
   white-space: nowrap;
   cursor: pointer;
 }
@@ -718,6 +712,44 @@
 
 [data-theme="dark"] .subscribeBtnUnified:hover {
   background: #fff;
+  color: var(--color-black);
+}
+
+.subscribeBtnUnified:active {
+  transform: scale(0.96);
+}
+
+.loadMoreWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 3.5rem;
+}
+
+.loadMoreBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1.5px solid var(--color-teal);
+  color: var(--color-teal);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.8rem 2.5rem;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: all var(--t-hover);
+  box-shadow: var(--shadow-sm);
+}
+
+.loadMoreBtn:hover {
+  background: var(--color-teal);
+  color: var(--color-black);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px oklch(75% 0.1 210 / 0.25);
+}
+
+[data-theme="dark"] .loadMoreBtn:hover {
   color: var(--color-black);
 }
 
@@ -773,15 +805,15 @@
   }
 
   .newsletterBanner {
-    flex-direction: column;
-    padding: 3rem;
-    gap: 2rem;
+    padding: 3rem 2rem;
+    gap: 2.5rem;
     text-align: center;
   }
 
   .newsletterLeft {
     flex-direction: column;
     gap: 1.25rem;
+    align-items: center;
   }
 
   .subscribeFormWrapper {
@@ -793,6 +825,22 @@
 @media (max-width: 768px) {
   .section {
     padding: 6rem 0 6rem;
+  }
+
+  .container {
+    padding: 0 1.5rem;
+  }
+
+  .featuredCard {
+    height: 320px;
+  }
+
+  .featuredContent {
+    padding: 1.5rem;
+  }
+
+  .cardDetails {
+    padding: 1.25rem;
   }
 
   .heroHeading {
@@ -846,4 +894,29 @@
     justify-content: center;
     padding: 0.95rem;
   }
+}
+
+/* Skeleton loader animations */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+.skeleton {
+  animation: pulse 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  background: var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.skeletonCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  height: 100%;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 1rem;
 }
