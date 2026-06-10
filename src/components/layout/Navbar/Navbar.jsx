@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../../context/AuthContext.jsx';
@@ -22,11 +22,6 @@ function Logo() {
   );
 }
 
-const ArrowIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ marginLeft: '4px' }}>
-    <path d="M2.5 7h9M8 3.5L11.5 7L8 10.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
 
 const UserIcon = () => (
   <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -47,6 +42,12 @@ const CloseIcon = () => (
   </svg>
 );
 
+// Extracted style constants to avoid re-creating objects on every render
+const SIGNED_IN_CONTAINER_STYLE = { display: 'flex', alignItems: 'center', gap: '16px' };
+const MY_TRIPS_LINK_STYLE = { fontSize: '14px', fontWeight: 500 };
+const MOBILE_ACTIONS_STYLE = { marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '8px' };
+const FULL_WIDTH_STYLE = { width: '100%' };
+
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -54,20 +55,23 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
+  // Close mobile menu on route change (handles browser back/forward)
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname]);
+
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 40) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      const shouldBeScrolled = window.scrollY > 40;
+      setIsScrolled(prev => prev === shouldBeScrolled ? prev : shouldBeScrolled);
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const isActive = (to) =>
-    to === '/' ? location.pathname === '/' : location.pathname.startsWith(to);
+  const isActive = useCallback((to) =>
+    to === '/' ? location.pathname === '/' : location.pathname.startsWith(to),
+  [location.pathname]);
 
   const handleLogout = () => {
     logout();
@@ -98,8 +102,8 @@ const Navbar = () => {
         <div className={styles.ctaGroup}>
           <div className={styles.signInDesktop}>
             {user ? (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                <Link to="/trips" className={styles.navLink} style={{ fontSize: '14px', fontWeight: 500 }}>
+              <div style={SIGNED_IN_CONTAINER_STYLE}>
+                <Link to="/trips" className={styles.navLink} style={MY_TRIPS_LINK_STYLE}>
                   My Trips
                 </Link>
                 <Button variant="glass" size="sm" onClick={handleLogout}>
@@ -152,12 +156,12 @@ const Navbar = () => {
               </Link>
             )}
 
-            <div style={{ marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={MOBILE_ACTIONS_STYLE}>
               {user ? (
                 <Button
                   variant="danger"
                   onClick={handleLogout}
-                  style={{ width: '100%' }}
+                  style={FULL_WIDTH_STYLE}
                 >
                   Sign Out
                 </Button>
@@ -165,7 +169,7 @@ const Navbar = () => {
                 <Button
                   variant="primary"
                   onClick={() => { navigate('/login'); setMobileOpen(false); }}
-                  style={{ width: '100%' }}
+                  style={FULL_WIDTH_STYLE}
                 >
                   <UserIcon /> Sign In
                 </Button>

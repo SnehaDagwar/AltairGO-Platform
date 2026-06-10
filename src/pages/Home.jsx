@@ -1,15 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+// eslint-disable-next-line no-unused-vars
+import { motion } from 'framer-motion';
 import { Sparkle, MapTrifold, Signpost, CloudSun, Compass } from '@phosphor-icons/react';
 import styles from './Home.module.css';
-import logoUrl from '../assets/logo.png';
 import heroBg from '../assets/hero-page-image.webp';
-import philJaipur from '../assets/phil-jaipur.png';
-import philKerala from '../assets/phil-kerala.png';
-import philGoa from '../assets/phil-goa.png';
 import luxuryResortImg from '../assets/luxury-resort.jpg';
-import philHimalayas from '../assets/phil-himalayas.png';
 import destGoa from '../assets/dest-goa.png';
 import destKashmir from '../assets/dest-kashmir.png';
 import destRajasthan from '../assets/dest-rajasthan.png';
@@ -32,9 +28,7 @@ import destDarjeelingNew from '../assets/darjeeling-tea-pickers.jpg';
 import destRishikesh from '../assets/rishikesh-yoga.jpg';
 import destKashmirNew from '../assets/kashmir.jpg';
 import Button from '../components/common/Button.jsx';
-import PlanYourTripButton from '../components/common/PlanYourTripButton.jsx';
 import Card from '../components/common/Card.jsx';
-import Badge from '../components/common/Badge.jsx';
 
 /* ---------- Minimal inline strokes Icons ---------- */
 const I = {
@@ -116,7 +110,7 @@ function Hero({ onPlan }) {
 
 /* ---------- Animated Counter component for Stats ---------- */
 function AnimatedCounter({ value, duration = 1.5 }) {
-  const [count, setCount] = useState('');
+  const [count, setCount] = useState(value);
   const ref = useRef(null);
   const [isIntersecting, setIsIntersecting] = useState(false);
 
@@ -136,19 +130,17 @@ function AnimatedCounter({ value, duration = 1.5 }) {
 
   useEffect(() => {
     if (!isIntersecting) {
-      setCount(value);
       return;
     }
-    
     const match = value.match(/^([$]?)([0-9.]+)([a-zA-Z%+]*)$/);
     if (!match) {
-      setCount(value);
       return;
     }
     const [_, prefix, numStr, suffix] = match;
     const target = parseFloat(numStr);
     let start = 0;
     const startTime = performance.now();
+    let animationFrameId;
 
     const animate = (currentTime) => {
       const elapsed = (currentTime - startTime) / 1000;
@@ -164,11 +156,17 @@ function AnimatedCounter({ value, duration = 1.5 }) {
       setCount(`${prefix}${formatted}${suffix}`);
 
       if (progress < 1) {
-        requestAnimationFrame(animate);
+        animationFrameId = requestAnimationFrame(animate);
       }
     };
 
-    requestAnimationFrame(animate);
+    animationFrameId = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+    };
   }, [isIntersecting, value, duration]);
 
   return <span ref={ref}>{count || value}</span>;
@@ -193,10 +191,7 @@ function useWindowSize() {
 }
 
 /* ---------- Why Altairgo ---------- */
-function WhyAltairgo() {
-  const { width } = useWindowSize();
-  const isMobile = width < 768;
-  const isTablet = width < 1024;
+function WhyAltairgo({ isMobile, isTablet }) {
 
   const cards = [
     { 
@@ -337,11 +332,8 @@ const FAQS = [
   { q: "Does the AI help manage my travel budget?", a: "Yes. The planner provides estimated costs for hotels, transport, activities, and food to help you stay within your budget.", bg: journalVaranasi }
 ];
 
-function FAQ() {
+function FAQ({ isMobile, isTablet }) {
   const [activeFaq, setActiveFaq] = useState(0);
-  const { width } = useWindowSize();
-  const isMobile = width < 768;
-  const isTablet = width < 1024;
 
   const h2FontSize = isMobile ? '28px' : isTablet ? '36px' : '44px';
   const cursiveFontSize = isMobile ? '34px' : isTablet ? '42px' : '52px';
@@ -361,24 +353,24 @@ function FAQ() {
           {/* Left Side: Floating Image Collage (Hidden on Tablet & Mobile to ensure comfortable layout spacing) */}
           {!isTablet && (
             <div style={{ position: 'relative', width: '100%', maxWidth: 440, aspectRatio: '440/640', margin: '0 auto', display: 'block' }}>
-              <motion.img 
+              <img 
                 src={destKashmir} 
-                animate={{ y: [0, -10, 0] }} transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+                alt="Scenic view of Kashmir valley"
                 style={{ position: 'absolute', top: '0%', left: '0%', width: '50%', height: '50%', objectFit: 'cover', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-lg)', zIndex: 1 }} 
               />
-              <motion.img 
+              <img 
                 src={destRajasthan} 
-                animate={{ y: [0, 10, 0] }} transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+                alt="Intricately styled palace in Rajasthan"
                 style={{ position: 'absolute', top: '28%', left: '36%', width: '54.5%', height: '43.7%', objectFit: 'cover', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-lg)', zIndex: 2 }} 
               />
-              <motion.img 
+              <img 
                 src={destKerala} 
-                animate={{ y: [0, -8, 0] }} transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+                alt="Tranquil backwaters houseboats in Kerala"
                 style={{ position: 'absolute', top: '53%', left: '4.5%', width: '45.4%', height: '40.6%', objectFit: 'cover', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-lg)', zIndex: 3 }} 
               />
-              <motion.img 
+              <img 
                 src={destGoa} 
-                animate={{ y: [0, 8, 0] }} transition={{ duration: 6.5, repeat: Infinity, ease: 'easeInOut' }}
+                alt="Golden sand beach of Goa"
                 style={{ position: 'absolute', top: '81%', left: '41%', width: '36.3%', height: '17.1%', objectFit: 'cover', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-lg)', zIndex: 4 }} 
               />
             </div>
@@ -398,7 +390,16 @@ function FAQ() {
                 return (
                   <div
                     key={i}
+                    role="button"
+                    tabIndex={0}
+                    aria-expanded={isActive}
                     onClick={() => setActiveFaq(isActive ? null : i)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setActiveFaq(isActive ? null : i);
+                      }
+                    }}
                     style={{
                       position: 'relative',
                       cursor: 'pointer',
@@ -491,11 +492,8 @@ const INSPIRATION_CARDS = [
   }
 ];
 
-function TravelInspiration() {
+function TravelInspiration({ isMobile, isTablet }) {
   const navigate = useNavigate();
-  const { width } = useWindowSize();
-  const isMobile = width < 768;
-  const isTablet = width < 1024;
 
   return (
     <section style={{ width: '100%', borderTop: '1px solid var(--line)', background: 'var(--page-bg)', overflow: 'hidden' }}>
@@ -658,14 +656,19 @@ function CarouselImage({ src, alt }) {
   );
 }
 
-function TourSelection() {
-  const [active, setActive] = useState(3);
-  const { width } = useWindowSize();
-  const isMobile = width < 768;
-  const isTablet = width < 1024;
+function TourSelection({ isMobile, isTablet }) {
+  const navigate = useNavigate();
+  const [active, setActive] = useState(0);
 
-  const handleNext = () => setActive(p => Math.min(p + 1, TOURS.length - 1));
-  const handlePrev = () => setActive(p => Math.max(p - 1, 0));
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActive(p => (p + 1) % TOURS.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [active]);
+
+  const handleNext = () => setActive(p => (p + 1) % TOURS.length);
+  const handlePrev = () => setActive(p => (p - 1 + TOURS.length) % TOURS.length);
 
   const cardWidth = isMobile ? 250 : (isTablet ? 290 : 320);
   const cardHeight = isMobile ? 340 : (isTablet ? 400 : 440);
@@ -686,7 +689,13 @@ function TourSelection() {
 
         <div style={{ position: 'relative', height: isMobile ? 360 : 460, display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', maxWidth: '100vw', margin: '0 auto' }}>
           {TOURS.map((tour, i) => {
-            const diff = i - active;
+            let diff = i - active;
+            const half = TOURS.length / 2;
+            if (diff > half) {
+              diff -= TOURS.length;
+            } else if (diff < -half) {
+              diff += TOURS.length;
+            }
             const absDiff = Math.abs(diff);
             const isActive = diff === 0;
             
@@ -712,7 +721,8 @@ function TourSelection() {
                   position: 'absolute', width: cardWidth, height: cardHeight, borderRadius: 'var(--radius-lg)', overflow: 'hidden',
                   cursor: isActive ? 'default' : 'pointer',
                   boxShadow: isActive ? 'var(--shadow-xl)' : 'var(--shadow-md)',
-                  border: '1px solid var(--border)'
+                  border: '1px solid var(--border)',
+                  visibility: absDiff > (isMobile ? 1 : 2) ? 'hidden' : 'visible'
                 }}
               >
                 <CarouselImage src={tour.img} alt={tour.title} />
@@ -733,14 +743,13 @@ function TourSelection() {
 
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: isMobile ? 32 : 60, marginTop: 40 }}>
           <button 
-            onClick={handlePrev} disabled={active === 0}
+            onClick={handlePrev} 
+            className={styles.carouselNavBtn}
             style={{ 
-              all: 'unset', cursor: active === 0 ? 'not-allowed' : 'pointer', width: isMobile ? 44 : 56, height: isMobile ? 44 : 56, 
-              borderRadius: '50%', border: '1px solid var(--border)', display: 'grid', placeItems: 'center', 
-              color: 'var(--fg)', opacity: active === 0 ? 0.3 : 1, transition: 'all 0.2s ease', background: 'var(--glass-bg)', boxShadow: 'var(--shadow-sm)'
+              width: isMobile ? 44 : 56, 
+              height: isMobile ? 44 : 56 
             }}
-            onMouseEnter={(e) => { if(active !== 0) e.currentTarget.style.background = 'var(--surface)'; }}
-            onMouseLeave={(e) => { if(active !== 0) e.currentTarget.style.background = 'var(--glass-bg)'; }}
+            aria-label="Previous destination"
           >
             <I.arrow style={{ transform: 'rotate(180deg)', width: isMobile ? 14 : 18, height: isMobile ? 14 : 18 }} />
           </button>
@@ -750,14 +759,13 @@ function TourSelection() {
           </Button>
 
           <button 
-            onClick={handleNext} disabled={active === TOURS.length - 1}
+            onClick={handleNext} 
+            className={styles.carouselNavBtn}
             style={{ 
-              all: 'unset', cursor: active === TOURS.length - 1 ? 'not-allowed' : 'pointer', width: isMobile ? 44 : 56, height: isMobile ? 44 : 56, 
-              borderRadius: '50%', border: '1px solid var(--border)', display: 'grid', placeItems: 'center', 
-              color: 'var(--fg)', opacity: active === TOURS.length - 1 ? 0.3 : 1, transition: 'all 0.2s ease', background: 'var(--glass-bg)', boxShadow: 'var(--shadow-sm)'
+              width: isMobile ? 44 : 56, 
+              height: isMobile ? 44 : 56 
             }}
-            onMouseEnter={(e) => { if(active !== TOURS.length - 1) e.currentTarget.style.background = 'var(--surface)'; }}
-            onMouseLeave={(e) => { if(active !== TOURS.length - 1) e.currentTarget.style.background = 'var(--glass-bg)'; }}
+            aria-label="Next destination"
           >
             <I.arrow style={{ width: isMobile ? 14 : 18, height: isMobile ? 14 : 18 }} />
           </button>
@@ -773,14 +781,17 @@ export default function Home() {
   const handlePlan = () => {
     navigate('/planner');
   };
+  const { width } = useWindowSize();
+  const isMobile = width < 768;
+  const isTablet = width < 1024;
 
   return (
     <div className={styles.homeWrapper}>
       <Hero onPlan={handlePlan} />
-      <WhyAltairgo />
-      <TourSelection />
-      <FAQ />
-      <TravelInspiration />
+      <WhyAltairgo isMobile={isMobile} isTablet={isTablet} />
+      <TourSelection isMobile={isMobile} isTablet={isTablet} />
+      <FAQ isMobile={isMobile} isTablet={isTablet} />
+      <TravelInspiration isMobile={isMobile} isTablet={isTablet} />
     </div>
   );
 }

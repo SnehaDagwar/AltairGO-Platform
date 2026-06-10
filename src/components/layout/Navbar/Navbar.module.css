@@ -148,13 +148,12 @@
 }
 
 .hamburger {
-  display: none !important;
   all: unset;
+  display: none;
   cursor: pointer;
   width: 44px;
   height: 44px;
   border-radius: var(--radius-sm);
-  display: flex;
   align-items: center;
   justify-content: center;
   transition: background var(--t-hover);
@@ -185,9 +184,6 @@
     display: none !important;
   }
 
-  .planDesktop {
-    display: none !important;
-  }
 
   .hamburger {
     display: flex !important;
