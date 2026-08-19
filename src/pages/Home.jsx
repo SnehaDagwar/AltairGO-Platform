@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
-import { Sparkle, MapTrifold, Signpost, CloudSun, Compass } from '@phosphor-icons/react';
+import { Sparkle, MapTrifold, Signpost, CloudSun, Compass as CompassPhosphor } from '@phosphor-icons/react';
 import styles from './Home.module.css';
-import heroBg from '../assets/hero-page-image.webp';
+import heroLightBg from '../assets/hero-light-bg.jpg';
 import luxuryResortImg from '../assets/luxury-resort.jpg';
 import destGoa from '../assets/dest-goa.png';
 import destKashmir from '../assets/dest-kashmir.png';
@@ -44,24 +44,22 @@ const I = {
   spark: (p) => <svg width="14" height="14" viewBox="0 0 14 14" {...p}><path d="M7 1.5L8.2 5.3L12 6.5L8.2 7.7L7 11.5L5.8 7.7L2 6.5L5.8 5.3Z" fill="currentColor" /></svg>,
 };
 
-/* ---------- Hero (v5.0 Cinematic Bright Minimal) ---------- */
+/* ---------- Hero (Bright Minimal Light Theme) ---------- */
 function Hero({ onPlan }) {
   return (
     <div style={{ position: 'relative', minHeight: '100dvh', display: 'flex', flexDirection: 'column', boxSizing: 'border-box', background: 'var(--color-cream)', width: '100%', overflow: 'hidden' }}>
       {/* Background Image & Scrim Overlay */}
       <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
         <img 
-          src={heroBg} 
-          alt="Pristine Lakeside Palace Sunrise" 
-          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }} 
+          src={heroLightBg} 
+          alt="Pristine Udaipur Lake Palace at Golden Morning" 
+          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 45%' }} 
         />
-        {/* Layer 1: Left-to-right soft cream gradient overlay for bright/minimal theme legibility */}
+        {/* Layer 1: Radial soft cream overlay for bright/minimal light theme legibility */}
         <div className={styles.heroOverlayHorizontal} />
         {/* Layer 2: Top-to-bottom soft cream gradient for navbar and section transition */}
         <div className={styles.heroOverlayVertical} />
       </div>
-
-
 
       {/* Hero Content Area */}
       <div className={styles.heroContentContainer}>
@@ -96,7 +94,7 @@ function Hero({ onPlan }) {
           >
             <button className={styles.heroCtaBtn} onClick={onPlan}>
               <div className={styles.heroCtaIcon}>
-                <Compass size={16} weight="regular" />
+                <CompassPhosphor size={16} weight="regular" />
               </div>
               <span>Start Your Journey</span>
               <I.arrow />
