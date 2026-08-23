@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { MapPin, Clock, DollarSign, Star, Share2, Plus, Sparkles, ArrowRight } from 'lucide-react';
 import { getUserTrips, shareTrip } from '../../services/api.js';
 import { DashboardSkeleton } from '../../components/skeletons/Skeleton.jsx';
 import toast from 'react-hot-toast';
+
+const PAGE_SIZE = 12;
 
 const TripCard = ({ trip, onShare }) => {
   const navigate = useNavigate();
@@ -16,74 +18,109 @@ const TripCard = ({ trip, onShare }) => {
     } catch { return null; }
   })();
   const title = trip.trip_title || itinerary?.trip_title || 'My Trip';
-  const totalCost = trip.total_cost || trip.budget || itinerary?.total_cost || 0;
+  const dests = itinerary?.destinations || [];
+  const days = itinerary?.days?.length || 0;
+  const budget = itinerary?.budget?.total || trip.budget || null;
+  const destinationStr = Array.isArray(dests)
+    ? dests.map(d => typeof d === 'string' ? d : d?.name).filter(Boolean).join(' · ')
+    : dests;
 
   return (
-    <div style={{
-      background: 'white',
-      borderRadius: '20px',
-      overflow: 'hidden',
-      boxShadow: '0 4px 16px rgba(0,0,0,0.06)',
-      border: '1px solid #faf9f5',
-      transition: 'transform 0.2s, box-shadow 0.2s',
-      display: 'flex',
-      flexDirection: 'column',
-    }}
-      onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 12px 30px rgba(0,0,0,0.1)'; }}
-      onMouseLeave={(e) => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.06)'; }}
+    <div
+      onClick={() => navigate(`/trip/${trip.id}`)}
+      style={{
+        background: 'var(--surface)',
+        border: '1px solid var(--border)',
+        borderRadius: '16px',
+        padding: '24px',
+        cursor: 'pointer',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '16px',
+        position: 'relative',
+        transition: 'box-shadow 0.2s, border-color 0.2s',
+      }}
+      onMouseEnter={e => {
+        e.currentTarget.style.borderColor = 'var(--accent)';
+        e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.08)';
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.borderColor = 'var(--border)';
+        e.currentTarget.style.boxShadow = 'none';
+      }}
     >
-      {/* Color Banner */}
-      <div style={{
-        height: '8px',
-        background: 'linear-gradient(90deg, #141413, #30302e)',
-      }} />
-
-      <div style={{ padding: '1.5rem', flex: 1 }}>
-        <h3 style={{ fontWeight: 700, color: '#141413', fontSize: '1.05rem', marginBottom: '0.75rem', lineHeight: 1.3 }}>{title}</h3>
-
-        <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
-          {trip.duration && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem', color: '#5e5d59' }}>
-              <Clock size={14} /> {trip.duration} days
-            </div>
-          )}
-          {totalCost > 0 && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem', color: '#5e5d59' }}>
-              <DollarSign size={14} /> ₹{Number(totalCost).toLocaleString('en-IN')}
-            </div>
-          )}
-          {trip.travelers && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem', color: '#5e5d59' }}>
-              <MapPin size={14} /> {trip.travelers} pax
-            </div>
+      <div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginBottom: '6px' }}>
+          <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 600, color: 'var(--fg)' }}>{title}</h3>
+          {trip.is_featured && (
+            <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', color: '#eab308', background: '#fefce8', padding: '2px 8px', borderRadius: '999px', fontWeight: 600 }}>
+              <Star size={12} fill="#eab308" /> Featured
+            </span>
           )}
         </div>
-
-        {trip.quality_score && (
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', background: '#f0fdf4', color: '#065f46', padding: '4px 10px', borderRadius: '999px', fontSize: '0.78rem', fontWeight: 700, marginBottom: '1rem' }}>
-            <Star size={12} fill="#065f46" stroke="none" /> {trip.quality_score}/100
-          </div>
-        )}
-
-        {trip.created_at && (
-          <div style={{ fontSize: '0.78rem', color: '#87867f', marginBottom: '1rem' }}>
-            {new Date(trip.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
-          </div>
+        {destinationStr && (
+          <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <MapPin size={13} /> {destinationStr}
+          </p>
         )}
       </div>
 
-      <div style={{ padding: '1rem 1.5rem', borderTop: '1px solid #f5f4ed', display: 'flex', gap: '0.5rem' }}>
+      <div style={{ display: 'flex', gap: '16px', fontSize: '0.82rem', color: 'var(--muted)', marginTop: 'auto', paddingTop: '12px', borderTop: '1px solid var(--border)' }}>
+        {days > 0 && (
+          <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <Clock size={13} /> {days} {days === 1 ? 'day' : 'days'}
+          </span>
+        )}
+        {budget && (
+          <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <DollarSign size={13} /> ₹{Number(budget).toLocaleString('en-IN')}
+          </span>
+        )}
+        <span style={{ marginLeft: 'auto', fontSize: '0.75rem', opacity: 0.7 }}>
+          {new Date(trip.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+        </span>
+      </div>
+
+      <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }} onClick={e => e.stopPropagation()}>
         <button
-          onClick={() => navigate(`/trip/${trip.id}`)}
-          style={{ flex: 1, padding: '0.6rem', background: '#141413', color: 'white', border: 'none', borderRadius: '10px', fontFamily: 'inherit', fontWeight: 600, cursor: 'pointer', fontSize: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
+          onClick={() => onShare(trip)}
+          style={{
+            flex: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '6px',
+            padding: '7px 12px',
+            borderRadius: '8px',
+            border: '1px solid var(--border)',
+            background: 'var(--bg)',
+            color: 'var(--fg)',
+            fontSize: '0.8rem',
+            cursor: 'pointer',
+            fontWeight: 500,
+          }}
         >
-          View <ArrowRight size={14} />
+          <Share2 size={13} /> Share
         </button>
         <button
-          onClick={() => onShare(trip.id)}
-          style={{ width: '38px', height: '38px', border: '1px solid #f0eee6', borderRadius: '10px', background: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#5e5d59' }}
+          onClick={() => navigate(`/trip/${trip.id}`)}
+          style={{
+            flex: 2,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '6px',
+            padding: '7px 12px',
+            borderRadius: '8px',
+            border: 'none',
+            background: 'var(--fg)',
+            color: 'var(--bg)',
+            fontSize: '0.8rem',
+            cursor: 'pointer',
+            fontWeight: 600,
+          }}
         >
-          <Share2 size={14} />
+          View Plan <ArrowRight size={13} />
         </button>
       </div>
     </div>
@@ -98,29 +135,33 @@ const DashboardPage = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
-  useEffect(() => {
-    if (authLoading) return;
-    if (!user) { navigate('/login?redirect=/trips'); return; }
-    fetchTrips();
-  }, [user, authLoading]);
-
-  const fetchTrips = async () => {
+  const fetchTrips = useCallback(async () => {
     setLoading(true);
     try {
       const data = await getUserTrips(page);
       const items = Array.isArray(data) ? data : (data.items || data.trips || []);
       setTrips(prev => page === 1 ? items : [...prev, ...items]);
-      setHasMore(items.length >= 12);
+      setHasMore(items.length >= PAGE_SIZE);
     } catch {
       toast.error('Failed to load trips');
     } finally {
       setLoading(false);
     }
-  };
+  }, [page]);
 
-  const handleShare = async (tripId) => {
+  useEffect(() => {
+    if (authLoading) return;
+    if (!user) { navigate('/login?redirect=/trips'); }
+  }, [user, authLoading, navigate]);
+
+  useEffect(() => {
+    if (!user) return;
+    fetchTrips();
+  }, [user, fetchTrips]);
+
+  const handleShare = async (trip) => {
     try {
-      const data = await shareTrip(tripId);
+      const data = await shareTrip(trip.id);
       const url = data.share_url || `${window.location.origin}/trip/shared/${data.share_token}`;
       await navigator.clipboard.writeText(url);
       toast.success('Share link copied!');
@@ -201,7 +242,7 @@ const DashboardPage = () => {
             {hasMore && (
               <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
                 <button
-                  onClick={() => { setPage(p => p + 1); fetchTrips(); }}
+                  onClick={() => setPage(p => p + 1)}
                   disabled={loading}
                   style={{ padding: '0.85rem 2.5rem', background: '#faf9f5', color: '#141413', border: '1px solid #f0eee6', borderRadius: '50px', fontFamily: 'inherit', fontWeight: 600, cursor: 'pointer', fontSize: '0.95rem' }}
                 >

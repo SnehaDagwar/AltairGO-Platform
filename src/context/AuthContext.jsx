@@ -114,7 +114,7 @@ export const AuthProvider = ({ children }) => {
       body: JSON.stringify({ email, password }),
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Login failed');
+    if (!res.ok || !data.token) throw new Error(data.error || 'Login failed');
     setToken(data.token);
     setUser(data.user);
     safeLS.set('ag_token', data.token);

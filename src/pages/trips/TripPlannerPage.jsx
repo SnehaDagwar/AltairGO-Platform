@@ -5,8 +5,6 @@ import { ChevronRight, ChevronLeft, MapPin, Search, X, Plus, Minus, Sparkles, Ch
 import { getCountries, search as searchDestinations, recommend, generateItinerary } from '../../services/api.js';
 import toast from 'react-hot-toast';
 import Button from '../../components/common/Button.jsx';
-import Card from '../../components/common/Card.jsx';
-import Input from '../../components/common/Input.jsx';
 import Badge from '../../components/common/Badge.jsx';
 import styles from './TripPlannerPage.module.css';
 import heroBg from '../../assets/hero-page-image.webp';
@@ -41,7 +39,7 @@ const getBudgetLabel = (budget, days, travelers) => {
 
 const TripPlannerPage = () => {
   const navigate = useNavigate();
-  const { user, token } = useAuth();
+  const { token } = useAuth();
   const [searchParams] = useSearchParams();
   const [step, setStep] = useState(1);
 
@@ -92,16 +90,20 @@ const TripPlannerPage = () => {
   // Debounced search
   useEffect(() => {
     if (searchQuery.length < 2) { setSearchResults([]); return; }
+    let stale = false;
     const t = setTimeout(async () => {
       setSearchLoading(true);
       try {
         const data = await searchDestinations(searchQuery, 'destination', 8);
+        if (stale) return;
         const items = Array.isArray(data) ? data : (data.results || data.destinations || []);
         setSearchResults(items.slice(0, 6));
-      } catch { setSearchResults([]); }
-      finally { setSearchLoading(false); }
+      } catch {
+        if (!stale) setSearchResults([]);
+      }
+      finally { if (!stale) setSearchLoading(false); }
     }, 300);
-    return () => clearTimeout(t);
+    return () => { clearTimeout(t); stale = true; };
   }, [searchQuery]);
 
   const handleRecommend = async () => {

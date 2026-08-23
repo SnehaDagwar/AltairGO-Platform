@@ -18,12 +18,14 @@ export default function Modal({
   footer,
 }) {
   const closeButtonRef = useRef(null);
+  const dialogRef = useRef(null);
+  const previouslyFocusedRef = useRef(null);
 
   // Focus trap implementation
   useEffect(() => {
     if (isOpen) {
+      previouslyFocusedRef.current = document.activeElement;
       document.body.style.overflow = 'hidden';
-      // Shift focus to the close button or modal container
       if (closeButtonRef.current) {
         closeButtonRef.current.focus();
       }
@@ -35,10 +37,34 @@ export default function Modal({
     };
   }, [isOpen]);
 
-  // Handle escape key
+  // Restore focus to the triggering element on close
+  useEffect(() => {
+    if (!isOpen && previouslyFocusedRef.current instanceof HTMLElement) {
+      previouslyFocusedRef.current.focus();
+      previouslyFocusedRef.current = null;
+    }
+  }, [isOpen]);
+
+  // Handle escape key + cycle Tab within the dialog
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') onClose();
+      if (e.key === 'Tab' && dialogRef.current) {
+        const focusables = dialogRef.current.querySelectorAll(
+          'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusables.length === 0) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        const active = document.activeElement;
+        if (e.shiftKey && active === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && active === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
     if (isOpen) {
       window.addEventListener('keydown', handleKeyDown);
@@ -71,6 +97,7 @@ export default function Modal({
         >
           <motion.div
             key="dialog"
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-labelledby={title ? 'modal-title' : undefined}

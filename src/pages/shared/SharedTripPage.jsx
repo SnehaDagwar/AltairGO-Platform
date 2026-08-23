@@ -83,8 +83,8 @@ const SharedTripPage = () => {
 
         {/* Days */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {days.map((day) => {
-            const dayNum = day.day || day.day_number;
+          {days.map((day, idx) => {
+            const dayNum = day.day ?? day.day_number ?? idx + 1;
             const isExpanded = expandedDays.has(dayNum);
             const activities = day.activities || [];
 

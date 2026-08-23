@@ -78,7 +78,29 @@ const TripViewerPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    fetchTrip();
+    setLoading(true);
+    setError(null);
+    setTrip(null);
+    let cancelled = false;
+    (async () => {
+      try {
+        const data = await getTrip(id);
+        if (cancelled) return;
+        setTrip(data);
+        setNotes(data.user_notes?.trip || '');
+        // Silently pre-load bookings so pending-bookings banner shows on itinerary tab
+        getTripBookings(id).then(d => {
+          if (cancelled) return;
+          const flat = d?.bookings || (Array.isArray(d) ? d : Object.values(d?.by_type || {}).flat());
+          setBookings(flat);
+        }).catch(() => {});
+      } catch (err) {
+        if (!cancelled) setError(err.message);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
   }, [id]);
 
   useEffect(() => {
@@ -90,27 +112,10 @@ const TripViewerPage = () => {
 
   // ─── Data loaders ────────────────────────────────────────────────────────────
 
-  const fetchTrip = async () => {
-    try {
-      const data = await getTrip(id);
-      setTrip(data);
-      setNotes(data.user_notes?.trip || '');
-      // Silently pre-load bookings so pending-bookings banner shows on itinerary tab
-      getTripBookings(id).then(d => {
-        const flat = d.bookings || (Array.isArray(d) ? d : Object.values(d.by_type || {}).flat());
-        setBookings(flat);
-      }).catch(() => {});
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const loadBookings = async () => {
     try {
       const data = await getTripBookings(id);
-      const flat = data.bookings || (Array.isArray(data) ? data : Object.values(data.by_type || {}).flat());
+      const flat = data?.bookings || (Array.isArray(data) ? data : Object.values(data?.by_type || {}).flat());
       setBookings(flat);
     } catch { toast.error('Could not load bookings'); }
   };
@@ -454,7 +459,7 @@ const TripViewerPage = () => {
                 )}
               </div>
             </div>
-            {qualityScore && (
+            {qualityScore != null && (
               <div
                 title="Quality score (0–100) measures itinerary diversity, budget fit, activity spread, and pacing balance."
                 style={{ background: qualityScore >= 80 ? '#f0fdf4' : '#E8F8F2', border: `1px solid ${qualityScore >= 80 ? '#bbf7d0' : '#9FDFC3'}`, borderRadius: '12px', padding: '0.75rem 1.25rem', textAlign: 'center', cursor: 'help' }}

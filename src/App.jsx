@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, Link } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext.jsx';
 import Navbar from './components/layout/Navbar/Navbar.jsx';
@@ -56,7 +56,7 @@ const NotFoundPage = () => (
   <div style={{ minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem', padding: '2rem', textAlign: 'center' }}>
     <h1 style={{ fontSize: '4rem', fontWeight: 800, color: '#141413', margin: 0 }}>404</h1>
     <p style={{ fontSize: '1.2rem', color: '#5e5d59', margin: 0 }}>Page not found</p>
-    <a href="/" style={{ marginTop: '1rem', background: '#141413', color: 'white', padding: '0.75rem 2rem', borderRadius: '999px', textDecoration: 'none', fontWeight: 600 }}>Go Home</a>
+    <Link to="/" style={{ marginTop: '1rem', background: '#141413', color: 'white', padding: '0.75rem 2rem', borderRadius: '999px', textDecoration: 'none', fontWeight: 600 }}>Go Home</Link>
   </div>
 );
 

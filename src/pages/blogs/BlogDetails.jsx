@@ -70,17 +70,26 @@ const BlogDetails = () => {
   });
 
   useEffect(() => {
-    setFetchError(false);
-    setLoading(true);
+    let ignore = false;
     getBlog(id)
       .then(data => {
-        setBlog(data);
+        if (!ignore) {
+          setBlog(data);
+          setFetchError(false);
+          setLoading(false);
+        }
       })
       .catch((err) => {
         console.error("Error fetching blog details:", err);
-        setFetchError(true);
-      })
-      .finally(() => setLoading(false));
+        if (!ignore) {
+          setFetchError(true);
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      ignore = true;
+    };
   }, [id]);
 
   useEffect(() => {
@@ -205,7 +214,7 @@ const BlogDetails = () => {
                 if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
                   try {
                     parsedContent = JSON.parse(trimmed);
-                  } catch (e) {
+                  } catch {
                     // Fail gracefully
                   }
                 }

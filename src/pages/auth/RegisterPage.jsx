@@ -16,7 +16,7 @@ const getPasswordStrength = (pw) => {
   if (/[^A-Za-z0-9]/.test(pw)) score++;
   if (score <= 1) return { score, label: 'Weak', color: '#ef4444', pct: '20%' };
   if (score <= 2) return { score, label: 'Fair', color: '#0BA060', pct: '45%' };
-  if (score <= 3) return { score, label: 'Good', color: '#3b82f6', pct: '70%' };
+  if (pw.length < 12) return { score, label: 'Good', color: '#3b82f6', pct: '70%' };
   return { score, label: 'Strong', color: '#10b981', pct: '100%' };
 };
 

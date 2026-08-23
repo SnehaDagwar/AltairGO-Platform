@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { EnvelopeSimple, ArrowRight } from '@phosphor-icons/react';
+import { EnvelopeSimple, ArrowRight, ArrowClockwise } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import styles from '../../components/blogs/Blogs.module.css';
 import { getBlogs } from '../../services/api';
@@ -10,19 +10,33 @@ const BlogsPage = () => {
   const navigate = useNavigate();
   const [blogsData, setBlogsData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [fetchFailed, setFetchFailed] = useState(false);
   const [email, setEmail] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [visibleShortReadsCount, setVisibleShortReadsCount] = useState(4);
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    getBlogs()
-      .then(data => setBlogsData(Array.isArray(data) ? data : (data.blogs || [])))
+  const fetchBlogs = useCallback(() => {
+    return getBlogs()
+      .then(data => {
+        setBlogsData(Array.isArray(data) ? data : (data.blogs || []));
+        window.scrollTo(0, 0);
+      })
       .catch((err) => {
-        console.error("Failed to fetch blogs:", err);
+        console.error('Failed to fetch blogs:', err);
+        setFetchFailed(true);
       })
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    fetchBlogs();
+  }, [fetchBlogs]);
+
+  const handleRetry = () => {
+    setLoading(true);
+    setFetchFailed(false);
+    fetchBlogs();
+  };
 
   const handleSubscribe = (e) => {
     e.preventDefault();
@@ -36,17 +50,6 @@ const BlogsPage = () => {
       setEmail('');
       setSubmitting(false);
     }, 800);
-  };
-
-  // Helper to assign colors to badges based on category
-  const getBadgeClass = (category) => {
-    if (!category) return styles.badgeTeal;
-    const cat = category.toLowerCase();
-    if (cat.includes('drive')) return styles.badgePeach;
-    if (cat.includes('beach')) return styles.badgeSky;
-    if (cat.includes('culture')) return styles.badgeLavender;
-    if (cat.includes('luxury')) return styles.badgeCream;
-    return styles.badgeTeal;
   };
 
   // Separate the blogs into our specialized layout buckets dynamically
@@ -107,6 +110,30 @@ const BlogsPage = () => {
               <div className={styles.skeleton} style={{ width: '85%', height: '24px', marginTop: 'auto' }} />
               <div className={styles.skeleton} style={{ width: '50%', height: '14px' }} />
             </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (fetchFailed) {
+    return (
+      <section className={styles.section}>
+        <div className={styles.container}>
+          <div style={{ minHeight: '50vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem', textAlign: 'center', padding: '2rem' }}>
+            <span className={styles.heroSub}>TRAVEL STORIES</span>
+            <h1 className={styles.heroHeading} style={{ fontSize: 'clamp(1.75rem, 4vw, 2.5rem)' }}>
+              Stories are taking a detour
+            </h1>
+            <p style={{ color: '#5e5d59', maxWidth: '420px', lineHeight: 1.6 }}>
+              We couldn't load the latest travel stories right now. Please check your connection and try again.
+            </p>
+            <button
+              className={styles.exploreBtn}
+              onClick={handleRetry}
+            >
+              Try Again <ArrowClockwise size={16} />
+            </button>
           </div>
         </div>
       </section>

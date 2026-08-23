@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useRef, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
 
@@ -14,6 +14,12 @@ const ToastContext = createContext(null);
 export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);
   const idRef = useRef(0);
+  const timersRef = useRef(new Set());
+
+  useEffect(() => {
+    const timers = timersRef.current;
+    return () => { timers.forEach(clearTimeout); timers.clear(); };
+  }, []);
 
   const dismiss = useCallback((id) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
@@ -22,7 +28,11 @@ export function ToastProvider({ children }) {
   const add = useCallback((variant, message) => {
     const id = ++idRef.current;
     setToasts((prev) => [...prev, { id, variant, message }]);
-    setTimeout(() => dismiss(id), 4000);
+    const timer = setTimeout(() => {
+      timersRef.current.delete(timer);
+      dismiss(id);
+    }, 4000);
+    timersRef.current.add(timer);
   }, [dismiss]);
 
   const toast = {

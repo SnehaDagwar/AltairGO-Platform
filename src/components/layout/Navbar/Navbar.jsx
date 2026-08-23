@@ -8,7 +8,6 @@ import styles from './Navbar.module.css';
 
 const NAV_LINKS = [
   { label: 'Home', to: '/' },
-  { label: 'Explore', to: '/explore' },
   { label: 'AI Planner', to: '/planner' },
   { label: 'Destinations', to: '/discover' },
   { label: 'Blogs', to: '/blogs' }
@@ -49,16 +48,25 @@ const MOBILE_ACTIONS_STYLE = { marginTop: '16px', display: 'flex', flexDirection
 const FULL_WIDTH_STYLE = { width: '100%' };
 
 const Navbar = () => {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [prevPath, setPrevPath] = useState(location.pathname);
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  // Close mobile menu on route change (handles browser back/forward)
-  useEffect(() => {
+  // Close mobile menu on route change without cascading effect render
+  if (location.pathname !== prevPath) {
+    setPrevPath(location.pathname);
     setMobileOpen(false);
-  }, [location.pathname]);
+  }
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const handleEscape = (e) => { if (e.key === 'Escape') setMobileOpen(false); };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [mobileOpen]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -124,6 +132,7 @@ const Navbar = () => {
             className={styles.hamburger}
             onClick={() => setMobileOpen((o) => !o)}
             aria-label="Toggle menu"
+            aria-expanded={mobileOpen}
           >
             {mobileOpen ? <CloseIcon /> : <HamburgerIcon />}
           </button>
