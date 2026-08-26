@@ -187,11 +187,15 @@ const BlogDetails = () => {
                 src={blog.image}
                 alt={blog.title}
                 className={styles.heroImage}
-                onError={(e) => { e.target.style.display = 'none'; }}
+                loading="lazy"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  const fallback = e.target.nextElementSibling;
+                  if (fallback) fallback.style.display = 'block';
+                }}
               />
-            ) : (
-              <div style={{ height: '100%', background: 'linear-gradient(135deg, #141413 0%, #30302e 100%)' }} />
-            )}
+            ) : null}
+            <div style={{ display: blog.image ? 'none' : 'block', height: '100%', background: 'linear-gradient(135deg, #141413 0%, #30302e 100%)', borderRadius: '24px' }} aria-hidden="true" />
             <div className={styles.heroOverlay} />
           </motion.div>
 
@@ -242,7 +246,8 @@ const BlogDetails = () => {
                               src={section.image}
                               alt={section.heading || ''}
                               className={styles.sectionImage}
-                              onError={(e) => { e.target.style.display = 'none'; }}
+                              loading="lazy"
+                              onError={(e) => { e.target.closest(`.${styles.sectionImageWrapper}`)?.style.setProperty('display','none'); }}
                             />
                           </div>
                         )}

@@ -4,6 +4,7 @@ import Card from '../common/Card.jsx';
 import AnimatedCounter from './AnimatedCounter.jsx';
 import { WHY_ALTAIRGO_CARDS, COLLAGE_IMAGES } from '../../constants/homeData.jsx';
 import styles from '../../pages/Home.module.css';
+import { RevealWords, FadeUp, Stagger, staggerItem } from '../common/TextReveal.jsx';
 
 /**
  * WhyAltairgo Section
@@ -16,39 +17,28 @@ export default function WhyAltairgo() {
         <div className={styles.whyGrid}>
           
           {/* Left Side: Content & Feature Cards */}
-          <motion.div 
-            initial={{ opacity: 0, x: -24 }} 
-            whileInView={{ opacity: 1, x: 0 }} 
-            viewport={{ once: true, amount: 0.2 }} 
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className={styles.whyContentCol}
-          >
-            <h2 id="why-altairgo-heading" className={styles.whyHeading}>
-              Unlock Smarter Indian Journeys
-            </h2>
-            <p className={styles.whyDescription}>
+          <div className={styles.whyContentCol}>
+            <RevealWords text="Unlock Smarter Indian Journeys" as="h2" id="why-altairgo-heading" className={styles.whyHeading} stagger={0.06} />
+            <FadeUp delay={0.15} className={styles.whyDescription} as="p">
               AltairGO helps you explore India smarter — from scenic road trips and train journeys to hidden escapes and cultural adventures. Personalized AI-powered itineraries designed for the way India actually travels.
-            </p>
+            </FadeUp>
 
-            <div className={styles.whyCardsGrid}>
+            <Stagger className={styles.whyCardsGrid} stagger={0.09} delay={0.2}>
               {WHY_ALTAIRGO_CARDS.map((card) => {
                 const IconComponent = card.icon;
                 return (
+                  <motion.div key={card.id} variants={staggerItem}>
                   <Card 
-                    key={card.id} 
-                    variant="default"
-                    hover={true} 
+                    hover={false} 
                     className={styles.whyFeatureCard}
                   >
                     <div className={styles.whyCardHeader}>
-                      <motion.div 
-                        whileHover={{ scale: 1.1, rotate: 4 }}
-                        transition={{ type: 'spring', stiffness: 300, damping: 15 }}
+                      <div 
                         className={styles.whyCardIconWrapper}
                         aria-hidden="true"
                       >
                         <IconComponent size={22} weight="duotone" />
-                      </motion.div>
+                      </div>
                       <span className={styles.whyCardValue}>
                         <AnimatedCounter value={card.value} />
                       </span>
@@ -60,10 +50,11 @@ export default function WhyAltairgo() {
                       {card.desc}
                     </p>
                   </Card>
+                  </motion.div>
                 );
               })}
-            </div>
-          </motion.div>
+            </Stagger>
+          </div>
 
           {/* Right Side: Image Collage */}
           <motion.div 
@@ -101,18 +92,14 @@ export default function WhyAltairgo() {
 
             {/* Left Column (Two Stacked Images) */}
             <div className={styles.whyCollageLeftCol}>
-              <motion.img 
-                whileHover={{ scale: 1.02, y: -4 }}
-                transition={{ duration: 0.3 }}
+              <img 
                 src={COLLAGE_IMAGES.kerala} 
                 alt="Kerala Backwaters Serene View" 
                 className={styles.whyCollageImgTop}
                 loading="lazy"
                 decoding="async"
               />
-              <motion.img 
-                whileHover={{ scale: 1.02, y: -4 }}
-                transition={{ duration: 0.3 }}
+              <img 
                 src={COLLAGE_IMAGES.desert} 
                 alt="Golden Desert Dunes Sunset in Rajasthan" 
                 className={styles.whyCollageImgBottom}
@@ -123,9 +110,7 @@ export default function WhyAltairgo() {
 
             {/* Right Column (Single Tall Image) */}
             <div className={styles.whyCollageRightCol}>
-              <motion.img 
-                whileHover={{ scale: 1.02, y: -4 }}
-                transition={{ duration: 0.3 }}
+              <img 
                 src={COLLAGE_IMAGES.mountains} 
                 alt="Cinematic Himalayan Peaks in Himachal" 
                 className={styles.whyCollageImgTall}

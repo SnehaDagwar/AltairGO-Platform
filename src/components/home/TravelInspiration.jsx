@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import Button from '../common/Button.jsx';
 import { INSPIRATION_CARDS, Icons } from '../../constants/homeData.jsx';
 import styles from '../../pages/Home.module.css';
+import { RevealWords, FadeUp, Stagger, staggerItem } from '../common/TextReveal.jsx';
 
 /**
  * TravelInspiration Section
@@ -22,34 +23,23 @@ export default function TravelInspiration() {
         <div className={styles.inspirationGridContainer}>
           
           {/* Left Side Content */}
-          <motion.div 
-            initial={{ opacity: 0, x: -24 }} 
-            whileInView={{ opacity: 1, x: 0 }} 
-            viewport={{ once: true, amount: 0.3 }} 
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className={styles.inspirationIntroCol}
-          >
-            <div className={styles.inspirationEyebrow}>
+          <div className={styles.inspirationIntroCol}>
+            <FadeUp as="div" className={styles.inspirationEyebrow} delay={0}>
               Explore with AltairGO
-            </div>
-            <h2 id="inspiration-heading" className={styles.inspirationHeading}>
-              Travel India <br/>
-              <span className={styles.inspirationHeadingAccent}>Your Way</span>
-            </h2>
-            <p className={styles.inspirationDescription}>
+            </FadeUp>
+            <RevealWords text="Travel India Your Way" as="h2" id="inspiration-heading" className={styles.inspirationHeading} stagger={0.07} />
+            <FadeUp delay={0.18} className={styles.inspirationDescription} as="p">
               From Himalayan adventures and spiritual trails to luxury escapes and coastal getaways, AltairGO helps you discover journeys tailored to your vibe, budget, season, and travel style.
-            </p>
-            <Button variant="secondary" onClick={() => navigate('/discover')}>
-              Explore All Journeys <Icons.Arrow />
-            </Button>
-          </motion.div>
+            </FadeUp>
+            <FadeUp delay={0.28}>
+              <Button variant="secondary" onClick={() => navigate('/discover')}>
+                Explore All Journeys <Icons.Arrow />
+              </Button>
+            </FadeUp>
+          </div>
 
           {/* Right Side Card Grid */}
-          <motion.div 
-            initial={{ opacity: 0, x: 24 }} 
-            whileInView={{ opacity: 1, x: 0 }} 
-            viewport={{ once: true, amount: 0.3 }} 
-            transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          <Stagger 
             className={styles.inspirationGrid}
             role="region"
             aria-label="Travel themes gallery"
@@ -64,6 +54,7 @@ export default function TravelInspiration() {
               return (
                 <motion.article 
                   key={card.id}
+                  variants={staggerItem}
                   role="button"
                   tabIndex={0}
                   aria-label={`Explore ${card.title}: ${card.subtitle}`}
@@ -74,17 +65,13 @@ export default function TravelInspiration() {
                       handleCardClick(card.queryParam);
                     }
                   }}
-                  whileHover={{ y: -4, boxShadow: 'var(--shadow-lg)' }}
-                  transition={{ duration: 0.25, ease: 'easeOut' }}
                   className={`${styles.inspirationCard} ${cardClass}`}
                 >
-                  <motion.img 
+                  <img 
                     src={card.img} 
                     alt={card.title} 
                     loading="lazy"
                     decoding="async"
-                    whileHover={{ scale: 1.04 }}
-                    transition={{ duration: 0.4, ease: 'easeOut' }}
                     className={styles.inspirationImg}
                   />
                   <div className={styles.inspirationCardOverlay}>
@@ -98,7 +85,7 @@ export default function TravelInspiration() {
                 </motion.article>
               );
             })}
-          </motion.div>
+          </Stagger>
 
         </div>
       </div>

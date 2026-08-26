@@ -14,7 +14,13 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const rawRedirect = searchParams.get('redirect') || '/trips';
-  const redirectTo = rawRedirect.startsWith('/') && !rawRedirect.startsWith('//') ? rawRedirect : '/trips';
+  const redirectTo = (() => {
+    try {
+      const u = new URL(rawRedirect, window.location.origin);
+      if (u.origin === window.location.origin && u.pathname.startsWith('/') && !rawRedirect.startsWith('//')) return u.pathname + u.search + u.hash;
+      return '/trips';
+    } catch { return '/trips'; }
+  })();
 
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
@@ -72,7 +78,7 @@ const LoginPage = () => {
           </div>
 
           {error && (
-            <div className={styles.error}>
+            <div className={styles.error} role="alert" aria-live="assertive">
               <AlertCircle size={16} />
               {error}
             </div>
@@ -92,6 +98,8 @@ const LoginPage = () => {
                   className={styles.input}
                   required
                   autoComplete="email"
+                  aria-invalid={!!error}
+                  aria-describedby={error ? 'login-error' : undefined}
                 />
               </div>
             </div>

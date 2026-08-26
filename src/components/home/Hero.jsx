@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   MapPin,
   CalendarBlank, 
   ArrowRight, 
-  Compass, 
-  Star, 
-  ShieldCheck,
-  AirplaneTilt
+  Mountains,
+  Boat,
+  CastleTurret,
+  Waves,
+  Leaf
 } from '@phosphor-icons/react';
+import { RevealWords, RevealChars, FadeUp } from '../common/TextReveal.jsx';
 
 import udaipurImg from '../../assets/udaipur-palace.jpg';
 import kashmirImg from '../../assets/kashmir.jpg';
 import keralaImg from '../../assets/journal_kerala.png';
 import jaipurImg from '../../assets/jaipur-hawa.jpg';
-import heroBgImage from '../../assets/hero-light-bg.jpg';
-
 import styles from '../../pages/Home.module.css';
 
 const HERO_DESTINATIONS = [
@@ -55,18 +55,45 @@ const HERO_DESTINATIONS = [
 ];
 
 const QUICK_PROMPTS = [
-  { label: '🏔️ Ladakh & Spiti', query: 'Ladakh' },
-  { label: '🛶 Kerala Backwaters', query: 'Kerala' },
-  { label: '🏰 Royal Rajasthan', query: 'Rajasthan' },
-  { label: '🌊 Gokarna Beaches', query: 'Gokarna' },
-  { label: '☕ Darjeeling Estates', query: 'Darjeeling' }
+  { label: 'Ladakh & Spiti', query: 'Ladakh', Icon: Mountains },
+  { label: 'Kerala Backwaters', query: 'Kerala', Icon: Boat },
+  { label: 'Royal Rajasthan', query: 'Rajasthan', Icon: CastleTurret },
+  { label: 'Gokarna Beaches', query: 'Gokarna', Icon: Waves },
+  { label: 'Darjeeling Estates', query: 'Darjeeling', Icon: Leaf }
 ];
 
 export default function Hero({ onPlan }) {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(0);
   const [destinationQuery, setDestinationQuery] = useState('');
-  const [tripDuration, setTripDuration] = useState('5');
+  const [tripDuration, setTripDuration] = useState(5);
+  const [isPaused, setIsPaused] = useState(false);
+  const containerRef = useRef(null);
+
+  // Auto-rotate 1-4 every 4.5s, pause on hover/focus/off-screen
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (isPaused) return;
+    const observerActive = { current: true };
+    let observer;
+    if (containerRef.current) {
+      observer = new IntersectionObserver(([entry]) => { observerActive.current = entry.isIntersecting; }, { threshold: 0.2 });
+      observer.observe(containerRef.current);
+    }
+    const handleVisibility = () => {
+      if (document.hidden) observerActive.current = false;
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    const id = setInterval(() => {
+      if (!observerActive.current || document.hidden || isPaused) return;
+      setActiveTab((prev) => (prev + 1) % HERO_DESTINATIONS.length);
+    }, 4500);
+    return () => {
+      clearInterval(id);
+      document.removeEventListener('visibilitychange', handleVisibility);
+      if (observer) observer.disconnect();
+    };
+  }, [isPaused]);
 
   const handleQuickPlan = (e) => {
     e.preventDefault();
@@ -79,7 +106,6 @@ export default function Hero({ onPlan }) {
   };
 
   const handleChipClick = (query) => {
-    setDestinationQuery(query);
     navigate(`/planner?destination=${encodeURIComponent(query)}&duration=${tripDuration}`);
   };
 
@@ -99,22 +125,15 @@ export default function Hero({ onPlan }) {
 
       <div className={styles.heroMainContainer}>
         {/* Main Headline Group */}
-        <motion.div
-          initial={{ opacity: 0, y: 22 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.75, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className={styles.heroHeadlineArea}
-        >
-          <h1 className={styles.heroMainTitle}>
-            Discover More
-          </h1>
-          <div className={styles.heroCursiveAccent}>
-            Than Destinations
-          </div>
-          <p className={styles.heroSubtitle}>
-            Tailor-made itineraries, smart train and roadtrip routing, real-time seasonal awareness, and curated stays across India — designed by AI for the way you explore.
-          </p>
-        </motion.div>
+        <div className={styles.heroHeadlineArea}>
+          <RevealChars text="Discover More" as="h1" className={styles.heroMainTitle} stagger={0.04} duration={0.7} />
+          <RevealWords text="Than Destinations" as="div" className={styles.heroCursiveAccent} stagger={0.09} delay={0.3} duration={0.8} />
+          <FadeUp delay={0.55} y={16} duration={0.7}>
+            <p className={styles.heroSubtitle}>
+              Tailor-made itineraries, smart train and roadtrip routing, real-time seasonal awareness, and curated stays across India — designed by AI for the way you explore.
+            </p>
+          </FadeUp>
+        </div>
 
         {/* Interactive AI Search & Quick-Planner Card */}
         <motion.div
@@ -159,14 +178,15 @@ export default function Hero({ onPlan }) {
                 <select
                   id="hero-duration-select"
                   value={tripDuration}
-                  onChange={(e) => setTripDuration(e.target.value)}
+                  onChange={(e) => setTripDuration(Number(e.target.value))}
                   className={styles.heroSelect}
+                  aria-label="Trip duration"
                 >
-                  <option value="3">3 Days (Weekend)</option>
-                  <option value="5">5 Days (Standard)</option>
-                  <option value="7">7 Days (1 Week)</option>
-                  <option value="10">10 Days (Extended)</option>
-                  <option value="14">14 Days (Grand Tour)</option>
+                  <option value={3}>3 Days (Weekend)</option>
+                  <option value={5}>5 Days (Standard)</option>
+                  <option value={7}>7 Days (1 Week)</option>
+                  <option value={10}>10 Days (Extended)</option>
+                  <option value={14}>14 Days (Grand Tour)</option>
                 </select>
               </div>
             </div>
@@ -188,33 +208,43 @@ export default function Hero({ onPlan }) {
           <div className={styles.heroPromptChipsRow}>
             <span className={styles.heroTrendingLabel}>Trending:</span>
             <div className={styles.heroChipsList}>
-              {QUICK_PROMPTS.map((chip) => (
-                <button
-                  key={chip.query}
-                  type="button"
-                  onClick={() => handleChipClick(chip.query)}
-                  className={styles.heroPromptChip}
-                >
-                  {chip.label}
-                </button>
-              ))}
+              {QUICK_PROMPTS.map((chip) => {
+                const Icon = chip.Icon;
+                return (
+                  <button
+                    key={chip.query}
+                    type="button"
+                    onClick={() => handleChipClick(chip.query)}
+                    className={styles.heroPromptChip}
+                    aria-label={`Search ${chip.label}`}
+                  >
+                    <Icon size={14} weight="duotone" aria-hidden="true" style={{ flexShrink: 0 }} />
+                    {chip.label}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </motion.div>
 
-        {/* Featured Cinematic Visual Frame with Destination Switcher */}
+        {/* Featured Cinematic Visual Frame with Destination Switcher — auto-rotates 1-4 */}
         <motion.div
+          ref={containerRef}
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.85, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
           className={styles.heroVisualShowcase}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          onFocusCapture={() => setIsPaused(true)}
+          onBlurCapture={() => setIsPaused(false)}
         >
           {/* Main Visual Image Window */}
           <div className={styles.heroVisualWindow}>
             <AnimatePresence mode="wait">
               <motion.img
                 key={activeDest.id}
-                src={activeDest.img || heroBgImage}
+                src={activeDest.img}
                 alt={activeDest.title}
                 initial={{ opacity: 0, scale: 1.04 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -223,13 +253,14 @@ export default function Hero({ onPlan }) {
                 className={styles.heroVisualImage}
                 fetchPriority="high"
                 decoding="async"
+                style={{ willChange: 'transform, opacity' }}
               />
             </AnimatePresence>
 
             {/* Visual Glass Overlay & Content */}
             <div className={styles.heroVisualScrim}>
               <div className={styles.heroVisualInfo}>
-                <span className={styles.heroVisualBadge}>
+                <span className={styles.heroVisualBadge} aria-hidden="true">
                   {activeDest.tag}
                 </span>
                 <h2 className={styles.heroVisualTitle}>
@@ -248,27 +279,6 @@ export default function Hero({ onPlan }) {
                 <span>Plan this Journey</span>
                 <ArrowRight size={14} weight="bold" />
               </button>
-            </div>
-
-            {/* Floating Trust Pills on Visual Frame */}
-            <div className={styles.heroFloatingBadgeLeft}>
-              <div className={styles.heroBadgeIconGold}>
-                <Star size={16} weight="fill" />
-              </div>
-              <div>
-                <strong className={styles.heroBadgeStrong}>4.9/5 Rating</strong>
-                <span className={styles.heroBadgeSpan}>Over 12,000+ Journeys</span>
-              </div>
-            </div>
-
-            <div className={styles.heroFloatingBadgeRight}>
-              <div className={styles.heroBadgeIconTeal}>
-                <ShieldCheck size={16} weight="fill" />
-              </div>
-              <div>
-                <strong className={styles.heroBadgeStrong}>28 States Covered</strong>
-                <span className={styles.heroBadgeSpan}>Train & Roadtrip Smart</span>
-              </div>
             </div>
           </div>
 

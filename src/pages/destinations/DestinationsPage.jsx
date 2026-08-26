@@ -1,10 +1,12 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { Search, SearchX, Sparkles, X } from 'lucide-react';
+import { motion } from 'framer-motion';
 import styles from './DestinationsPage.module.css';
 import DestinationCard from '../../components/destinations/DestinationCard/DestinationCard.jsx';
 import { getDestinations, recommend } from '../../services/api.js';
 import toast from 'react-hot-toast';
 import heroBg from '../../assets/hero-page-image.webp';
+import { RevealWords, FadeUp, Stagger, staggerItem } from '../../components/common/TextReveal.jsx';
 
 const getCardVariant = (index) => {
   const i = index % 10;
@@ -27,6 +29,7 @@ const DestinationsPage = () => {
   const [hasMore, setHasMore] = useState(true);
   const [aiQuery, setAiQuery] = useState('');
   const [aiSearchLoading, setAiSearchLoading] = useState(false);
+  const [isAiMode, setIsAiMode] = useState(false);
 
   const fetchDestinations = useCallback(async (pageNum, signal = null) => {
     setLoading(true);
@@ -51,13 +54,18 @@ const DestinationsPage = () => {
     }
   }, [budgetFilter, travelerFilter]);
 
-  // Reset to page 1 whenever filters change
+  // Reset to page 1 whenever filters change (exit AI mode)
   useEffect(() => {
+    if (isAiMode) {
+      setIsAiMode(false);
+      setAiQuery('');
+    }
     window.scrollTo(0, 0);
     setPage(1);
     const controller = new AbortController();
     fetchDestinations(1, controller.signal);
     return () => controller.abort();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [budgetFilter, travelerFilter, fetchDestinations]);
 
   // Append subsequent pages when "Load More" increments the page
@@ -81,6 +89,9 @@ const DestinationsPage = () => {
       const items = Array.isArray(data) ? data : (data.destinations || []);
       if (items.length > 0) {
         setDestinations(items);
+        setIsAiMode(true);
+        setHasMore(false);
+        setPage(1);
         toast.success(`AI found ${items.length} matches for "${aiQuery}"`);
       } else {
         toast.error('No matches found. Try a different query.');
@@ -92,19 +103,28 @@ const DestinationsPage = () => {
     }
   };
 
-  const filtered = destinations.filter((d) =>
-    d.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    d.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    d.state_name?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filtered = useMemo(() => {
+    if (!searchTerm.trim()) return destinations;
+    const term = searchTerm.toLowerCase();
+    return destinations.filter((d) =>
+      d.name?.toLowerCase().includes(term) ||
+      d.description?.toLowerCase().includes(term) ||
+      d.state_name?.toLowerCase().includes(term)
+    );
+  }, [destinations, searchTerm]);
 
   const filtersActive =
-    budgetFilter !== 'All' || travelerFilter !== 'All' || searchTerm.trim() !== '';
+    budgetFilter !== 'All' || travelerFilter !== 'All' || searchTerm.trim() !== '' || isAiMode;
 
   const clearAllFilters = () => {
     setBudgetFilter('All');
     setTravelerFilter('All');
     setSearchTerm('');
+    setAiQuery('');
+    if (isAiMode) {
+      setIsAiMode(false);
+      setPage(1);
+    }
   };
 
   return (
@@ -117,12 +137,10 @@ const DestinationsPage = () => {
         />
         <div className={styles.headerOverlay} />
         <div className={styles.pageHeader}>
-          <h1 className={styles.pageTitle}>
-            Explore <span className={styles.accentTitleText}>the World</span>
-          </h1>
-          <p className={styles.pageSubtitle}>
+          <RevealWords text="Explore the World" as="h1" className={styles.pageTitle} stagger={0.07} />
+          <FadeUp delay={0.12} className={styles.pageSubtitle} as="p">
             Discover breathtaking locations handcrafted for your perfect getaway.
-          </p>
+          </FadeUp>
 
           <div className={styles.searchWrapper}>
             <Search size={20} className={styles.searchIcon} />
@@ -229,10 +247,12 @@ const DestinationsPage = () => {
           </div>
         ) : (
           <>
-            <div className={styles.grid}>
+            <Stagger className={styles.grid} stagger={0.06} delay={0.05}>
               {filtered.length > 0 ? (
                 filtered.map((dest, i) => (
-                  <DestinationCard key={dest.id} dest={dest} variant={getCardVariant(i)} />
+                  <motion.div key={dest.id} variants={staggerItem}>
+                    <DestinationCard dest={dest} variant={getCardVariant(i)} />
+                  </motion.div>
                 ))
               ) : (
                 <div className={styles.emptyState}>
@@ -250,9 +270,9 @@ const DestinationsPage = () => {
                   )}
                 </div>
               )}
-            </div>
+            </Stagger>
 
-            {hasMore && !searchTerm && (
+            {hasMore && !searchTerm && !isAiMode && (
               <div className={styles.loadMoreWrap}>
                 <button
                   type="button"

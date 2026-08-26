@@ -70,6 +70,7 @@
   border-radius: 50%;
   background: radial-gradient(circle, rgba(108, 176, 189, 0.22) 0%, transparent 70%);
   filter: blur(60px);
+  will-change: transform;
   animation: heroOrbFloat 16s ease-in-out infinite alternate;
 }
 
@@ -82,6 +83,7 @@
   border-radius: 50%;
   background: radial-gradient(circle, rgba(212, 163, 115, 0.2) 0%, transparent 70%);
   filter: blur(70px);
+  will-change: transform;
   animation: heroOrbFloat 20s ease-in-out infinite alternate-reverse;
 }
 
@@ -94,6 +96,13 @@
   border-radius: 50%;
   background: radial-gradient(circle, rgba(155, 198, 219, 0.16) 0%, transparent 70%);
   filter: blur(80px);
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroOrb1, .heroOrb2, .heroOrb3 {
+    animation: none !important;
+  }
 }
 
 @keyframes heroOrbFloat {
@@ -113,9 +122,16 @@
   inset: 0;
   background-image: radial-gradient(var(--border) 1px, transparent 1px);
   background-size: 32px 32px;
-  opacity: 0.4;
+  opacity: 0.35;
   pointer-events: none;
   z-index: 1;
+  will-change: opacity;
+}
+
+@media (max-width: 768px) {
+  .heroBackdropTexture {
+    opacity: 0.2;
+  }
 }
 
 .heroMainContainer {
@@ -409,6 +425,11 @@
   cursor: pointer;
   transition: all 0.2s ease;
   font-family: var(--font-body);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .heroPromptChip:hover {
@@ -416,6 +437,11 @@
   border-color: var(--color-teal);
   color: var(--color-teal);
   transform: translateY(-1px);
+}
+
+.heroPromptChip:focus-visible {
+  outline: 2px solid var(--color-teal);
+  outline-offset: 2px;
 }
 
 /* Featured Visual Showcase Frame */
@@ -550,99 +576,7 @@
   transform: translateY(-2px);
 }
 
-/* Floating Trust Pills */
-.heroFloatingBadgeLeft {
-  position: absolute;
-  top: 24px;
-  left: 24px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 18px;
-  border-radius: var(--radius-pill);
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  text-align: left;
-  color: var(--color-black);
-  z-index: 3;
-}
 
-[data-theme="dark"] .heroFloatingBadgeLeft {
-  background: rgba(20, 20, 20, 0.85);
-  color: var(--color-white);
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
-.heroFloatingBadgeRight {
-  position: absolute;
-  top: 24px;
-  right: 24px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 18px;
-  border-radius: var(--radius-pill);
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  text-align: left;
-  color: var(--color-black);
-  z-index: 3;
-}
-
-[data-theme="dark"] .heroFloatingBadgeRight {
-  background: rgba(20, 20, 20, 0.85);
-  color: var(--color-white);
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
-@media (max-width: 900px) {
-  .heroFloatingBadgeLeft,
-  .heroFloatingBadgeRight {
-    display: none;
-  }
-}
-
-.heroBadgeIconGold {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: rgba(245, 158, 11, 0.15);
-  color: #f59e0b;
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-}
-
-.heroBadgeIconTeal {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: rgba(108, 176, 189, 0.15);
-  color: var(--color-teal);
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-}
-
-.heroBadgeStrong {
-  display: block;
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1.2;
-}
-
-.heroBadgeSpan {
-  display: block;
-  font-size: 11px;
-  opacity: 0.75;
-  font-weight: 400;
-}
 
 /* Showcase Tabs */
 .heroTabsRow {
@@ -766,6 +700,14 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
+  transition: transform 280ms cubic-bezier(0.32, 0.72, 0, 1), box-shadow 280ms ease, border-color 280ms ease;
+  will-change: transform;
+}
+
+.whyFeatureCard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(108, 176, 189, 0.35);
 }
 
 .whyCardHeader {
@@ -785,6 +727,13 @@
   background: rgba(108, 176, 189, 0.12);
   border: 1px solid rgba(108, 176, 189, 0.25);
   color: var(--color-teal);
+  transition: transform 280ms cubic-bezier(0.32, 0.72, 0, 1), background 280ms ease;
+  will-change: transform;
+}
+
+.whyFeatureCard:hover .whyCardIconWrapper {
+  transform: scale(1.08) rotate(3deg);
+  background: rgba(108, 176, 189, 0.18);
 }
 
 .whyCardValue {
@@ -875,6 +824,14 @@
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
   border: 1px solid var(--border);
+  transition: transform 400ms cubic-bezier(0.32, 0.72, 0, 1), box-shadow 300ms ease;
+  will-change: transform;
+}
+
+.whyCollageImgTop:hover,
+.whyCollageImgBottom:hover {
+  transform: scale(1.02) translateY(-4px);
+  box-shadow: var(--shadow-lg);
 }
 
 .whyCollageImgTall {
@@ -884,6 +841,25 @@
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
   border: 1px solid var(--border);
+  transition: transform 400ms cubic-bezier(0.32, 0.72, 0, 1), box-shadow 300ms ease;
+  will-change: transform;
+}
+
+.whyCollageImgTall:hover {
+  transform: scale(1.02) translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .whyFeatureCard,
+  .whyFeatureCard:hover,
+  .whyCardIconWrapper,
+  .whyCollageImgTop,
+  .whyCollageImgBottom,
+  .whyCollageImgTall {
+    transition: none !important;
+    transform: none !important;
+  }
 }
 
 @media (max-width: 768px) {
@@ -981,10 +957,20 @@
   box-shadow: var(--shadow-md);
   border: 1px solid var(--border);
   transform: translateX(calc(var(--card-diff) * 160px)) scale(calc(1 - (var(--card-abs-diff) * 0.14)));
-  opacity: calc(1 - (var(--card-abs-diff) * 0.22));
-  filter: blur(calc(var(--card-abs-diff) * 1.5px));
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, filter 0.35s ease;
+  opacity: calc(1 - (var(--card-abs-diff) * 0.28));
+  will-change: transform, opacity;
+  transition: transform 520ms cubic-bezier(0.32, 0.72, 0, 1), opacity 520ms ease, box-shadow 320ms ease, border-color 320ms ease;
   user-select: none;
+  outline: none;
+}
+
+.carouselCard:hover {
+  transform: translateX(calc(var(--card-diff) * 160px)) scale(calc(1 - (var(--card-abs-diff) * 0.14) + 0.03));
+}
+
+.carouselCard:focus-visible {
+  outline: 2px solid var(--color-teal);
+  outline-offset: 3px;
 }
 
 @media (max-width: 1024px) {
@@ -992,6 +978,9 @@
     width: 280px;
     height: 400px;
     transform: translateX(calc(var(--card-diff) * 130px)) scale(calc(1 - (var(--card-abs-diff) * 0.14)));
+  }
+  .carouselCard:hover {
+    transform: translateX(calc(var(--card-diff) * 130px)) scale(calc(1 - (var(--card-abs-diff) * 0.14) + 0.03));
   }
 }
 
@@ -1001,12 +990,22 @@
     height: 340px;
     transform: translateX(calc(var(--card-diff) * 90px)) scale(calc(1 - (var(--card-abs-diff) * 0.16)));
   }
+  .carouselCard:hover {
+    transform: translateX(calc(var(--card-diff) * 90px)) scale(calc(1 - (var(--card-abs-diff) * 0.16) + 0.03));
+  }
 }
 
 .carouselCardActive {
   cursor: default;
   box-shadow: var(--shadow-xl, 0 20px 40px rgba(0,0,0,0.18));
   border-color: var(--color-teal);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carouselCard {
+    transition: none !important;
+    filter: none !important;
+  }
 }
 
 .carouselImgContainer {
@@ -1171,7 +1170,7 @@
 
 .faqSection {
   width: 100%;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--border);
   background: var(--page-bg);
   padding: 100px 0;
   overflow: hidden;
@@ -1310,8 +1309,13 @@
   border: 1px solid var(--border);
   background: var(--glass-bg);
   box-shadow: var(--shadow-sm);
-  transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition: background-color 280ms cubic-bezier(0.32, 0.72, 0, 1), box-shadow 280ms ease, border-color 280ms ease, transform 280ms ease;
+  will-change: border-color, box-shadow;
   overflow: hidden;
+}
+
+.faqItem:hover {
+  border-color: rgba(108, 176, 189, 0.35);
 }
 
 .faqItemActive {
@@ -1331,6 +1335,13 @@
   gap: 16px;
   cursor: pointer;
   text-align: left;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.faqTriggerBtn:focus-visible {
+  outline: 2px solid var(--color-teal);
+  outline-offset: -2px;
+  border-radius: var(--radius-md);
 }
 
 @media (max-width: 768px) {
@@ -1366,7 +1377,8 @@
   background: var(--surface);
   color: var(--fg);
   box-shadow: var(--shadow-sm);
-  transition: transform 0.25s ease, background-color 0.2s ease, color 0.2s ease;
+  transition: transform 320ms cubic-bezier(0.32, 0.72, 0, 1), background-color 280ms ease, color 280ms ease;
+  will-change: transform;
 }
 
 .faqChevronActive {
@@ -1383,6 +1395,7 @@
 .faqAnswerContainer {
   overflow: hidden;
   padding: 0 24px 18px 50px;
+  will-change: height, opacity;
 }
 
 @media (max-width: 768px) {
@@ -1405,7 +1418,7 @@
 
 .inspirationSection {
   width: 100%;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--border);
   background: var(--page-bg);
   padding: 100px 0;
   overflow: hidden;
@@ -1437,11 +1450,12 @@
 }
 
 .inspirationEyebrow {
-  font-family: var(--mono, monospace);
+  font-family: var(--font-body);
   font-size: 12px;
   color: var(--muted);
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  font-weight: 600;
   margin-bottom: 12px;
 }
 
@@ -1502,6 +1516,14 @@
   box-shadow: var(--shadow-sm);
   background: var(--glass-bg);
   outline: none;
+  transition: transform 320ms cubic-bezier(0.32, 0.72, 0, 1), box-shadow 320ms ease, border-color 320ms ease;
+  will-change: transform;
+}
+
+.inspirationCard:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(108, 176, 189, 0.35);
 }
 
 .inspirationCard:focus-visible {
@@ -1545,6 +1567,22 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  transition: transform 500ms cubic-bezier(0.32, 0.72, 0, 1);
+  will-change: transform;
+}
+
+.inspirationCard:hover .inspirationImg {
+  transform: scale(1.06);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inspirationCard,
+  .inspirationCard:hover,
+  .inspirationImg,
+  .inspirationCard:hover .inspirationImg {
+    transition: none !important;
+    transform: none !important;
+  }
 }
 
 .inspirationCardOverlay {

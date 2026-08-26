@@ -29,7 +29,9 @@ const Footer = () => {
 
   const handleWaitlistSubmit = (e) => {
     e.preventDefault();
-    if (!email || !email.trim() || !email.includes('@')) {
+    const trimmed = email.trim();
+    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed);
+    if (!trimmed || !emailValid) {
       toast.error('Please enter a valid email address.');
       return;
     }
@@ -73,9 +75,9 @@ const Footer = () => {
   const renderFooterLink = (it, idx) => {
     if (it.link === '#') {
       return (
-        <a key={idx} href="#" onClick={(e) => e.preventDefault()} className={styles.footerLink} aria-disabled="true">
+        <span key={idx} className={styles.footerLink} style={{ opacity: 0.5, cursor: 'default' }} aria-disabled="true">
           {it.label}
-        </a>
+        </span>
       );
     }
     if (it.link.startsWith('mailto')) {

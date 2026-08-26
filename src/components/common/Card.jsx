@@ -9,7 +9,6 @@ const paddingMap = {
 
 export default function Card({
   children,
-  variant = 'default',
   padding,
   hover = false,
   onClick,

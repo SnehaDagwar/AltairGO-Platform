@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import DOMPurify from 'dompurify';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
@@ -63,6 +63,7 @@ const AdminDashboard = () => {
     loadData();
     setupSSE();
     return () => { if (eventSourceRef.current) eventSourceRef.current.close(); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAdmin]);
 
   const loadData = async () => {
@@ -91,7 +92,7 @@ const AdminDashboard = () => {
       try {
         const data = JSON.parse(e.data);
         setLiveEvents(prev => [{ ...data, id: ++liveEventIdRef.current }, ...prev].slice(0, 50));
-      } catch {}
+      } catch (_e) { /* ignore parse errors */ }
     };
     // Let EventSource auto-reconnect on transient failures; only mark the badge
     es.onerror = () => setSseConnected(false);

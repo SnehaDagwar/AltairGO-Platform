@@ -54,16 +54,6 @@ export default function Skeleton({
       aria-busy="true"
     >
       {Array.from({ length: count }).map((_, i) => renderSkeleton(i))}
-      <style>{`
-        @keyframes altair-skeleton-shimmer {
-          0% {
-            transform: translateX(-100%);
-          }
-          100% {
-            transform: translateX(100%);
-          }
-        }
-      `}</style>
     </div>
   );
 }

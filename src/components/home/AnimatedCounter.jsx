@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 /**
  * AnimatedCounter
@@ -18,7 +18,6 @@ export default function AnimatedCounter({ value, duration = 1.2 }) {
 }
 
 function NumericCounter({ prefix, targetNum, suffix, rawValue, duration }) {
-  const [displayCount, setDisplayCount] = useState(() => `${prefix}0${suffix}`);
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -39,21 +38,17 @@ function NumericCounter({ prefix, targetNum, suffix, rawValue, duration }) {
           const animate = (currentTime) => {
             const elapsed = currentTime - startTime;
             const progress = Math.min(elapsed / durationMs, 1);
-            
-            // Standard cubic ease-out
             const easeOut = 1 - Math.pow(1 - progress, 3);
             const currentVal = easeOut * targetNum;
-            
             const formatted = isDecimal
               ? currentVal.toFixed(1) 
               : Math.round(currentVal).toString();
-
-            setDisplayCount(`${prefix}${formatted}${suffix}`);
+            const text = progress < 1 ? `${prefix}${formatted}${suffix}` : String(rawValue);
+            // Direct DOM update avoids React re-render per frame
+            if (el) el.textContent = text;
 
             if (progress < 1) {
               animationFrameId = requestAnimationFrame(animate);
-            } else {
-              setDisplayCount(rawValue);
             }
           };
 
@@ -73,5 +68,5 @@ function NumericCounter({ prefix, targetNum, suffix, rawValue, duration }) {
     };
   }, [prefix, targetNum, suffix, rawValue, duration]);
 
-  return <span ref={containerRef}>{displayCount}</span>;
+  return <span ref={containerRef}>{`${prefix}0${suffix}`}</span>;
 }

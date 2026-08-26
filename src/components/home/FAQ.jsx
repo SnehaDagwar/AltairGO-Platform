@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FAQS, COLLAGE_IMAGES, Icons } from '../../constants/homeData.jsx';
 import styles from '../../pages/Home.module.css';
+import { RevealWords, FadeUp, Stagger, staggerItem } from '../common/TextReveal.jsx';
 
 /**
  * FAQ Accordion Section
  * Fully accessible WAI-ARIA Accordion pattern with smooth expand/collapse.
  */
 export default function FAQ() {
-  const [activeFaq, setActiveFaq] = useState(0);
+  const [activeFaq, setActiveFaq] = useState(null);
 
   const toggleFaq = (index) => {
     setActiveFaq((prev) => (prev === index ? null : index));
@@ -56,24 +57,22 @@ export default function FAQ() {
           {/* Right Side: Accordion Questions */}
           <div className={styles.faqAccordionCol}>
             <div className={styles.faqHeader}>
-              <h2 id="faq-main-heading" className={styles.faqHeading}>
-                Still Have Questions? We've Got{' '}
-                <span className={styles.faqHeadingAccent}>Answers</span>
-              </h2>
-              <p className={styles.faqSubheading}>
+              <RevealWords text="Still Have Questions? We've Got Answers" as="h2" id="faq-main-heading" className={styles.faqHeading} stagger={0.06} />
+              <FadeUp delay={0.15} className={styles.faqSubheading} as="p">
                 Everything you need to know about AltairGO's AI travel engine, pricing, and live route optimization.
-              </p>
+              </FadeUp>
             </div>
 
-            <div className={styles.faqList} role="region" aria-label="Frequently asked questions list">
+            <Stagger className={styles.faqList} role="region" aria-label="Frequently asked questions list" stagger={0.06} delay={0.1}>
               {FAQS.map((faq, i) => {
                 const isActive = activeFaq === i;
                 const panelId = `faq-panel-${faq.id}`;
                 const triggerId = `faq-trigger-${faq.id}`;
 
                 return (
-                  <div
+                  <motion.div
                     key={faq.id}
+                    variants={staggerItem}
                     className={`${styles.faqItem} ${isActive ? styles.faqItemActive : ''}`}
                   >
                     <button
@@ -100,6 +99,7 @@ export default function FAQ() {
                           id={panelId}
                           role="region"
                           aria-labelledby={triggerId}
+                          aria-hidden={!isActive}
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: 'auto', opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
@@ -112,10 +112,10 @@ export default function FAQ() {
                         </motion.div>
                       )}
                     </AnimatePresence>
-                  </div>
+                  </motion.div>
                 );
               })}
-            </div>
+            </Stagger>
 
           </div>
         </div>

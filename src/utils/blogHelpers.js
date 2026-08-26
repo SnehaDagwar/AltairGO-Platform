@@ -22,7 +22,10 @@ const BLOG_IMAGES = {
 
 export const resolveBlogImage = (imageName) => {
   if (!imageName) return imageName;
-  if (imageName.startsWith('http://') || imageName.startsWith('https://')) return imageName;
+  if (imageName.startsWith('https://')) return imageName;
+  if (imageName.startsWith('http://')) return imageName;
+  // Block javascript:, data:, blob: and other non-http schemes to prevent XSS via img src
+  if (/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(imageName)) return '';
   const filename = imageName.split('/').pop();
   return BLOG_IMAGES[filename] || imageName;
 };
@@ -34,12 +37,13 @@ export const formatDate = (dateStr) => {
   try {
     const match = dateStr.trim().match(/^(\d{4})-(\d{2})-(\d{2})$/);
     if (match) {
-      const [_, year, month, day] = match;
-      const date = new Date(year, month - 1, day);
+      const [, year, month, day] = match;
+      const date = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day)));
       return date.toLocaleDateString('en-US', {
         month: 'short',
         day: 'numeric',
-        year: 'numeric'
+        year: 'numeric',
+        timeZone: 'UTC'
       });
     }
     const parsed = Date.parse(dateStr);
@@ -48,7 +52,8 @@ export const formatDate = (dateStr) => {
     return date.toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
-      year: 'numeric'
+      year: 'numeric',
+      timeZone: 'UTC'
     });
   } catch {
     return dateStr;

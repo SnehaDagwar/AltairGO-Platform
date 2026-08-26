@@ -2,9 +2,10 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Sparkles, AlertCircle } from 'lucide-react';
 import { getItineraryStatus, saveTrip } from '../../services/api.js';
+import { API_BASE_URL } from '../../config.js';
 import toast from 'react-hot-toast';
 
-const BASE = import.meta.env.VITE_API_URL || '';
+const BASE = API_BASE_URL;
 
 const MESSAGES = [
   'Analyzing your travel preferences...',
@@ -32,7 +33,8 @@ const GeneratingPage = () => {
   const [progress, setProgress] = useState(5);
   const [error, setError] = useState(null);
   const savedRef = useRef(false);
-  const pollRef = useRef(null);
+  const pollIntervalRef = useRef(null);
+  const esRef = useRef(null);
   const pollErrorCount = useRef(0);
 
   const handleCompleted = useCallback(async (result, msgInterval) => {
@@ -67,25 +69,29 @@ const GeneratingPage = () => {
     const poll = async () => {
       try {
         const data = await getItineraryStatus(jobId);
+        pollErrorCount.current = 0;
         if (data.status === 'completed') {
-          clearInterval(pollRef.current);
+          clearInterval(pollIntervalRef.current);
+          pollIntervalRef.current = null;
           await handleCompleted(data.result, msgInterval);
         } else if (data.status === 'failed') {
-          clearInterval(pollRef.current);
+          clearInterval(pollIntervalRef.current);
+          pollIntervalRef.current = null;
           clearInterval(msgInterval);
           setError(data.error_message || 'Generation failed. Please try again.');
         }
       } catch {
         pollErrorCount.current += 1;
         if (pollErrorCount.current >= 5) {
-          clearInterval(pollRef.current);
+          clearInterval(pollIntervalRef.current);
+          pollIntervalRef.current = null;
           clearInterval(msgInterval);
           setError('Lost connection to the server. Please check your network and try again.');
         }
       }
     };
     poll();
-    pollRef.current = setInterval(poll, 2000);
+    pollIntervalRef.current = setInterval(poll, 2000);
   }, [jobId, handleCompleted]);
 
   useEffect(() => {
@@ -101,7 +107,7 @@ const GeneratingPage = () => {
     // Try SSE stream first
     if (typeof EventSource !== 'undefined') {
       const es = new EventSource(`${BASE}/get-itinerary-status/${jobId}/stream`);
-      pollRef.current = es;
+      esRef.current = es;
 
       es.onmessage = async (e) => {
         try {
@@ -110,9 +116,11 @@ const GeneratingPage = () => {
           const s = data.status;
           if (s === 'completed') {
             es.close();
+            esRef.current = null;
             await handleCompleted(data.result, msgInterval);
           } else if (s === 'failed') {
             es.close();
+            esRef.current = null;
             clearInterval(msgInterval);
             setError(data.error_message || 'Generation failed. Please try again.');
           }
@@ -121,14 +129,18 @@ const GeneratingPage = () => {
 
       es.onerror = () => {
         es.close();
+        esRef.current = null;
         startPolling(msgInterval);
       };
 
       return () => {
         es.close();
+        esRef.current = null;
         clearInterval(msgInterval);
-        clearInterval(pollRef.current);
-        pollRef.current = null;
+        if (pollIntervalRef.current) {
+          clearInterval(pollIntervalRef.current);
+          pollIntervalRef.current = null;
+        }
       };
     }
 
@@ -136,7 +148,14 @@ const GeneratingPage = () => {
     startPolling(msgInterval);
     return () => {
       clearInterval(msgInterval);
-      if (pollRef.current) clearInterval(pollRef.current);
+      if (pollIntervalRef.current) {
+        clearInterval(pollIntervalRef.current);
+        pollIntervalRef.current = null;
+      }
+      if (esRef.current) {
+        esRef.current.close();
+        esRef.current = null;
+      }
     };
   }, [jobId, handleCompleted, startPolling]);
 

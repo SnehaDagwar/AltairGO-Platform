@@ -4,11 +4,12 @@ import { motion } from 'framer-motion';
 import Button from '../common/Button.jsx';
 import { TOURS, Icons } from '../../constants/homeData.jsx';
 import styles from '../../pages/Home.module.css';
+import { RevealWords, FadeUp } from '../common/TextReveal.jsx';
 
 /**
  * Graceful Image Loader with Fallback & Skeleton
  */
-function CarouselImage({ src, alt }) {
+function CarouselImage({ src, alt, priority = false }) {
   const [error, setError] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
@@ -33,8 +34,9 @@ function CarouselImage({ src, alt }) {
       <img 
         src={src} 
         alt={alt} 
-        loading="lazy" 
+        loading={priority ? 'eager' : 'lazy'}
         decoding="async"
+        fetchPriority={priority ? 'high' : 'auto'}
         onLoad={() => setLoaded(true)}
         onError={() => setError(true)} 
         className={`${styles.carouselImg} ${loaded ? styles.carouselImgLoaded : ''}`}
@@ -51,8 +53,13 @@ export default function TourSelection() {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const total = TOURS.length;
   const carouselContainerRef = useRef(null);
+
+  const prefersReducedMotion = typeof window !== 'undefined'
+    ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    : false;
 
   const handleNext = useCallback(() => {
     setActive((prev) => (prev + 1) % total);
@@ -62,14 +69,38 @@ export default function TourSelection() {
     setActive((prev) => (prev - 1 + total) % total);
   }, [total]);
 
-  // Autoplay ticker with pause on interaction
+  // Pause autoplay when carousel is off-screen or tab hidden
   useEffect(() => {
-    if (isPaused) return;
+    const el = carouselContainerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { threshold: 0.15 }
+    );
+    observer.observe(el);
+    const handleVisibility = () => {
+      if (document.hidden) setIsVisible(false);
+      else if (el) {
+        const rect = el.getBoundingClientRect();
+        const inView = rect.top < window.innerHeight && rect.bottom > 0;
+        setIsVisible(inView);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => {
+      observer.disconnect();
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
+  }, []);
+
+  // Autoplay ticker with pause on interaction / off-screen / reduced-motion
+  useEffect(() => {
+    if (isPaused || !isVisible || prefersReducedMotion) return;
     const timer = setInterval(() => {
       handleNext();
-    }, 3500);
+    }, 4200);
     return () => clearInterval(timer);
-  }, [isPaused, handleNext]);
+  }, [isPaused, isVisible, prefersReducedMotion, handleNext]);
 
   // Keyboard navigation when focused inside carousel
   const handleKeyDown = (e) => {
@@ -90,6 +121,13 @@ export default function TourSelection() {
     }
   };
 
+  const handleCardKeyDown = (e, index, tour) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleCardClick(index, tour);
+    }
+  };
+
   return (
     <section 
       id="tour-selection" 
@@ -98,20 +136,14 @@ export default function TourSelection() {
     >
       <div className={styles.sectionContainer}>
         {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className={styles.tourHeaderArea}
-        >
-          <h2 className={styles.tourSectionHeadline}>
-            Explore our <span className={styles.tourSectionAccent}>Indian</span> destinations
-          </h2>
-          <p className={styles.tourSectionSubtext}>
-            Hand-curated itineraries across high Himalayas, royal Rajasthan, lush backwaters, and pristine islands.
-          </p>
-        </motion.div>
+        <div className={styles.tourHeaderArea}>
+          <RevealWords text="Explore our Indian destinations" as="h2" className={styles.tourSectionHeadline} stagger={0.06} />
+          <FadeUp delay={0.2}>
+            <p className={styles.tourSectionSubtext}>
+              Hand-curated itineraries across high Himalayas, royal Rajasthan, lush backwaters, and pristine islands.
+            </p>
+          </FadeUp>
+        </div>
 
         {/* 3D Carousel Stage */}
         <div 
@@ -135,18 +167,18 @@ export default function TourSelection() {
 
             const absDiff = Math.abs(diff);
             const isActive = diff === 0;
-            const isVisible = absDiff <= 2; // Only animate visible adjacent cards for maximum performance
+            const isCardVisible = absDiff <= 2; // Only animate visible adjacent cards for maximum performance
 
-            if (!isVisible) {
+            if (!isCardVisible) {
               return null; // Skip mounting offscreen elements entirely to keep DOM and render pipeline light
             }
 
             return (
-              <motion.div
+              <div
                 key={tour.id}
-                role="group"
-                aria-roledescription="slide"
-                aria-label={`${tour.title}, destination ${i + 1} of ${total}`}
+                role="button"
+                tabIndex={0}
+                aria-label={`${tour.title}, destination ${i + 1} of ${total}${isActive ? ', active' : ''}`}
                 aria-current={isActive ? 'true' : undefined}
                 className={`${styles.carouselCard} ${isActive ? styles.carouselCardActive : ''}`}
                 style={{
@@ -155,10 +187,9 @@ export default function TourSelection() {
                   zIndex: 10 - absDiff,
                 }}
                 onClick={() => handleCardClick(i, tour)}
-                whileHover={isActive ? { scale: 1.02 } : { scale: 0.95 }}
-                transition={{ type: 'spring', stiffness: 280, damping: 26 }}
+                onKeyDown={(e) => handleCardKeyDown(e, i, tour)}
               >
-                <CarouselImage src={tour.img} alt={`${tour.title} landscape`} />
+                <CarouselImage src={tour.img} alt={`${tour.title} landscape`} priority={isActive} />
                 
                 {/* Gradient Header overlay */}
                 <div className={styles.carouselCardOverlay}>
@@ -172,7 +203,7 @@ export default function TourSelection() {
                     {tour.id}
                   </span>
                 </div>
-              </motion.div>
+              </div>
             );
           })}
         </div>

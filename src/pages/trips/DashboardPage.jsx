@@ -17,10 +17,10 @@ const TripCard = ({ trip, onShare }) => {
         : null;
     } catch { return null; }
   })();
-  const title = trip.trip_title || itinerary?.trip_title || 'My Trip';
-  const dests = itinerary?.destinations || [];
-  const days = itinerary?.days?.length || 0;
-  const budget = itinerary?.budget?.total || trip.budget || null;
+  const title = trip.trip_title || itinerary?.trip_title || trip.title || 'My Trip';
+  const dests = itinerary?.destinations || itinerary?.itinerary?.map(d => d.place || d.name) || trip.destinations || [];
+  const days = itinerary?.itinerary?.length || itinerary?.days?.length || trip.duration || trip.total_days || 0;
+  const budget = itinerary?.total_cost ?? itinerary?.budget?.total ?? trip.budget ?? trip.total_cost ?? null;
   const destinationStr = Array.isArray(dests)
     ? dests.map(d => typeof d === 'string' ? d : d?.name).filter(Boolean).join(' · ')
     : dests;
@@ -28,6 +28,10 @@ const TripCard = ({ trip, onShare }) => {
   return (
     <div
       onClick={() => navigate(`/trip/${trip.id}`)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigate(`/trip/${trip.id}`); }}}
+      aria-label={`View trip ${title}`}
       style={{
         background: 'var(--surface)',
         border: '1px solid var(--border)',

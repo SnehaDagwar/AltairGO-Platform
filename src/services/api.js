@@ -1,9 +1,10 @@
 import { resolveBlogImage, formatDate } from '../utils/blogHelpers.js';
+import { API_BASE_URL as BASE } from '../config.js';
 
-const BASE = import.meta.env.VITE_API_URL || '';
-
-function getToken() { return localStorage.getItem('ag_token'); }
-function getAdminToken() { return localStorage.getItem('ag_admin_token'); }
+const safeGet = (k) => { try { return localStorage.getItem(k); } catch { return null; } };
+const safeRemove = (k) => { try { localStorage.removeItem(k); } catch { /* ignore */ } };
+function getToken() { return safeGet('ag_token'); }
+function getAdminToken() { return safeGet('ag_admin_token'); }
 
 async function req(path, opts = {}) {
   const { admin = false, body, method, auth = true, signal } = opts;
@@ -22,10 +23,11 @@ async function req(path, opts = {}) {
   if (res.status === 401) {
     if (admin) {
       // Admin token expired — only clear admin token, never touch user session
-      localStorage.removeItem('ag_admin_token');
+      safeRemove('ag_admin_token');
     } else if (auth) {
       // Authenticated user request got 401 — session expired, log out
-      localStorage.removeItem('ag_token');
+      safeRemove('ag_token');
+      safeRemove('ag_refresh_token');
       window.dispatchEvent(new Event('ag:unauthorized'));
     }
     // auth:false calls (public endpoints, login attempts, admin verify-key) return
@@ -34,9 +36,14 @@ async function req(path, opts = {}) {
 
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw Object.assign(new Error(data.error || data.message || 'Request failed'), { status: res.status, data });
-  // Unwrap the {success, data:[...]} envelope the backend normalizer adds to list responses
+  // Unwrap the {success, data:[...], pagination:{}} envelope the backend normalizer adds — preserve pagination meta
   if (data !== null && typeof data === 'object' && !Array.isArray(data)
       && 'success' in data && 'data' in data && Array.isArray(data.data)) {
+    if (data.pagination) {
+      const wrapped = [...data.data];
+      wrapped.pagination = data.pagination;
+      return wrapped;
+    }
     return data.data;
   }
   return data;
@@ -138,7 +145,7 @@ export const getHotelOptions = (id, params = {}) => {
 };
 export const swapHotel = (id, data) => req(`/api/trip/${id}/hotel`, { method: 'PUT', body: data });
 export const addActivity = (id, day, data) => req(`/api/trip/${id}/day/${day}/activity/add`, { body: data });
-export const removeActivity = (id, day, data) => req(`/api/trip/${id}/day/${day}/activity/remove`, { method: 'DELETE', body: data });
+export const removeActivity = (id, day, data) => req(`/api/trip/${id}/day/${day}/activity/remove`, { method: 'POST', body: data });
 export const editActivity = (id, day, data) => req(`/api/trip/${id}/day/${day}/activity/edit`, { method: 'PUT', body: data });
 export const reorderActivities = (id, day, data) => req(`/api/trip/${id}/day/${day}/reorder`, { method: 'PUT', body: data });
 export const updateTripNotes = (id, data) => req(`/api/trip/${id}/notes`, { method: 'PUT', body: data });
