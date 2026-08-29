@@ -76,7 +76,7 @@ export default function BookingsTab({
             const itemName = b.item_name || b.provider_name || b.booking_type?.replace(/_/g, ' ');
             const cost = b.cost_inr || b.estimated_cost;
             return (
-              <div key={b.id} style={{ background: 'white', borderRadius: '16px', padding: '1.5rem', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', border: `1px solid ${(BOOKING_STATUS_COLORS[b.status] || '#f0eee6')}35`, background: `linear-gradient(to right, ${(BOOKING_STATUS_COLORS[b.status] || '#f0eee6')}08, white)` }}>
+              <div key={b.id} style={{ background: `linear-gradient(to right, ${(BOOKING_STATUS_COLORS[b.status] || '#f0eee6')}08, white)`, borderRadius: '16px', padding: '1.5rem', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', border: `1px solid ${(BOOKING_STATUS_COLORS[b.status] || '#f0eee6')}35` }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.75rem' }}>
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>

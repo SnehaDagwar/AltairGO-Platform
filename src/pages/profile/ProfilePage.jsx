@@ -19,11 +19,14 @@ const ProfilePage = () => {
   const [saving, setSaving] = useState(false);
   const [savingPrefs, setSavingPrefs] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) { navigate('/login'); return; }
     if (user) setForm({ name: user.name || '', email: user.email || '' });
+    let cancelled = false;
     getProfile().then(data => {
+      if (cancelled) return;
       setProfile(data);
       const p = data?.preferences || {};
       setPrefs({
@@ -32,8 +35,11 @@ const ProfilePage = () => {
         dietary_restrictions: p.dietary_restrictions || 'none',
         interests: Array.isArray(p.interests) ? p.interests : [],
       });
-    }).catch(() => {});
-  }, [user, authLoading]);
+    }).catch(() => {
+      if (!cancelled) toast.error('Could not load your profile');
+    });
+    return () => { cancelled = true; };
+  }, [user, authLoading, navigate]);
 
   const handleSave = async (e) => {
     e.preventDefault();
@@ -70,6 +76,8 @@ const ProfilePage = () => {
   };
 
   const handleDelete = async () => {
+    if (deleting) return;
+    setDeleting(true);
     try {
       await deleteAccount();
       logout();
@@ -77,6 +85,8 @@ const ProfilePage = () => {
       toast.success('Account deleted');
     } catch {
       toast.error('Could not delete account');
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -217,8 +227,8 @@ const ProfilePage = () => {
           </p>
           {showDelete ? (
             <div style={{ display: 'flex', gap: '0.75rem' }}>
-              <button onClick={handleDelete} style={{ padding: '0.75rem 1.5rem', background: '#dc2626', color: 'white', border: 'none', borderRadius: '10px', fontFamily: 'inherit', fontWeight: 700, cursor: 'pointer' }}>
-                Yes, Delete Account
+              <button onClick={handleDelete} disabled={deleting} style={{ padding: '0.75rem 1.5rem', background: '#dc2626', color: 'white', border: 'none', borderRadius: '10px', fontFamily: 'inherit', fontWeight: 700, cursor: deleting ? 'wait' : 'pointer', opacity: deleting ? 0.7 : 1 }}>
+                {deleting ? 'Deleting...' : 'Yes, Delete Account'}
               </button>
               <button onClick={() => setShowDelete(false)} style={{ padding: '0.75rem 1.5rem', background: '#faf9f5', color: '#5e5d59', border: 'none', borderRadius: '10px', fontFamily: 'inherit', fontWeight: 600, cursor: 'pointer' }}>
                 Cancel

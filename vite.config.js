@@ -9,6 +9,7 @@ const bypassForHtml = (req) => {
 export default defineConfig({
   plugins: [react()],
   server: {
+    host: true,
     proxy: {
       '/api': 'http://127.0.0.1:5000',
       '/auth': 'http://127.0.0.1:5000',
@@ -27,9 +28,8 @@ export default defineConfig({
         manualChunks(id) {
           if (id.includes('node_modules')) {
             if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) return 'react-vendor';
-            if (id.includes('framer-motion') || id.includes('lucide-react') || id.includes('react-hot-toast')) return 'ui-vendor';
+            if (id.includes('framer-motion') || id.includes('lucide-react') || id.includes('react-hot-toast') || id.includes('@phosphor-icons') || id.includes('dompurify')) return 'ui-vendor';
             if (id.includes('recharts') || id.includes('d3')) return 'chart-vendor';
-            if (id.includes('@dnd-kit')) return 'dnd-vendor';
           }
         }
       }

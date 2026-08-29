@@ -11,17 +11,18 @@ export default function ReadinessTab({ readiness }) {
     );
   }
 
-  const scoreColor = readiness.score >= 80 ? '#10b981' : readiness.score >= 50 ? '#0BA060' : '#ef4444';
+  const score = Number(readiness.score) || 0;
+  const scoreColor = score >= 80 ? '#10b981' : score >= 50 ? '#0BA060' : '#ef4444';
 
   return (
     <div>
       <div style={{ background: 'white', borderRadius: '16px', padding: '2rem', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', marginBottom: '1.5rem', textAlign: 'center' }}>
         <div style={{ fontSize: '4rem', fontWeight: 800, color: scoreColor }}>
-          {readiness.score}%
+          {score}%
         </div>
         <div style={{ color: '#5e5d59', fontSize: '1.05rem', marginBottom: '1.5rem' }}>Trip Readiness</div>
         <div style={{ background: '#faf9f5', borderRadius: '999px', height: '8px', overflow: 'hidden' }}>
-          <div style={{ height: '100%', borderRadius: '999px', background: scoreColor, width: '100%', transform: `scaleX(${readiness.score / 100})`, transformOrigin: 'left', transition: 'transform 0.8s ease' }} />
+          <div style={{ height: '100%', borderRadius: '999px', background: scoreColor, width: '100%', transform: `scaleX(${score / 100})`, transformOrigin: 'left', transition: 'transform 0.8s ease' }} />
         </div>
       </div>
 

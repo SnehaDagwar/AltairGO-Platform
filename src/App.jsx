@@ -1,12 +1,15 @@
 import React, { lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, Link } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext.jsx';
 import Navbar from './components/layout/Navbar/Navbar.jsx';
 import Footer from './components/layout/Footer/Footer.jsx';
 import ErrorBoundary from './components/common/ErrorBoundary.jsx';
 import LoadingOverlay from './components/common/LoadingOverlay.jsx';
-import './App.css';
+import SmoothScroll from './components/common/SmoothScroll.jsx';
+import PageTransition from './components/common/PageTransition.jsx';
+
 
 // Pages (eager load critical ones)
 import Home from './pages/Home.jsx';
@@ -28,11 +31,11 @@ const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard.jsx'));
 const BlogsPage = lazy(() => import('./pages/blogs/BlogsPage.jsx'));
 const BlogDetails = lazy(() => import('./pages/blogs/BlogDetails.jsx'));
 
-// Protected Route
+// Protected Route — admin session does NOT grant user access
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated, isAdmin, loading } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
   if (loading) return <LoadingOverlay message="Checking authentication..." />;
-  if (!isAuthenticated && !isAdmin) return <Navigate to="/login" replace />;
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
   return children;
 };
 
@@ -46,7 +49,7 @@ const AdminRoute = ({ children }) => {
 
 // Page Fallback
 const PageLoader = () => (
-  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }} aria-busy="true" aria-label="Loading page">
     <div className="global-spinner" />
   </div>
 );
@@ -56,7 +59,7 @@ const NotFoundPage = () => (
   <div style={{ minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem', padding: '2rem', textAlign: 'center' }}>
     <h1 style={{ fontSize: '4rem', fontWeight: 800, color: '#141413', margin: 0 }}>404</h1>
     <p style={{ fontSize: '1.2rem', color: '#5e5d59', margin: 0 }}>Page not found</p>
-    <a href="/" style={{ marginTop: '1rem', background: '#141413', color: 'white', padding: '0.75rem 2rem', borderRadius: '999px', textDecoration: 'none', fontWeight: 600 }}>Go Home</a>
+    <Link to="/" style={{ marginTop: '1rem', background: '#141413', color: 'white', padding: '0.75rem 2rem', borderRadius: '999px', textDecoration: 'none', fontWeight: 600 }}>Go Home</Link>
   </div>
 );
 
@@ -69,38 +72,41 @@ function AppLayout() {
 
   return (
     <>
+      <SmoothScroll />
       {!shouldHideLayout && <Navbar />}
+      <AnimatePresence mode="wait">
       <Suspense fallback={<PageLoader />}>
-        <Routes>
+        <Routes location={location} key={location.pathname}>
           {/* Public */}
-          <Route path="/" element={<Home />} />
-          <Route path="/discover" element={<DestinationsPage />} />
-          <Route path="/destination/:id" element={<DestinationDetails />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/trip/shared/:token" element={<SharedTripPage />} />
-          <Route path="/trip/preview" element={<Navigate to="/planner" replace />} />
-          <Route path="/planner/generating/:jobId" element={<GeneratingPage />} />
-          <Route path="/blogs" element={<BlogsPage />} />
-          <Route path="/blogs/:id" element={<BlogDetails />} />
+          <Route path="/" element={<PageTransition><Home /></PageTransition>} />
+          <Route path="/discover" element={<PageTransition><DestinationsPage /></PageTransition>} />
+          <Route path="/destination/:id" element={<PageTransition><DestinationDetails /></PageTransition>} />
+          <Route path="/login" element={<PageTransition><LoginPage /></PageTransition>} />
+          <Route path="/register" element={<PageTransition><RegisterPage /></PageTransition>} />
+          <Route path="/trip/shared/:token" element={<PageTransition><SharedTripPage /></PageTransition>} />
+          <Route path="/trip/preview" element={<PageTransition><SharedTripPage preview /></PageTransition>} />
+          <Route path="/planner/generating/:jobId" element={<PageTransition><GeneratingPage /></PageTransition>} />
+          <Route path="/blogs" element={<PageTransition><BlogsPage /></PageTransition>} />
+          <Route path="/blogs/:id" element={<PageTransition><BlogDetails /></PageTransition>} />
 
           {/* Semi-protected (shows planner to all, but save requires auth) */}
-          <Route path="/planner" element={<TripPlannerPage />} />
+          <Route path="/planner" element={<PageTransition><TripPlannerPage /></PageTransition>} />
 
           {/* Protected */}
-          <Route path="/trips" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
-          <Route path="/trip/:id" element={<ProtectedRoute><TripViewerPage /></ProtectedRoute>} />
-          <Route path="/trip/:id/briefing/:day" element={<ProtectedRoute><DailyBriefingPage /></ProtectedRoute>} />
-          <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+          <Route path="/trips" element={<ProtectedRoute><PageTransition><DashboardPage /></PageTransition></ProtectedRoute>} />
+          <Route path="/trip/:id" element={<ProtectedRoute><PageTransition><TripViewerPage /></PageTransition></ProtectedRoute>} />
+          <Route path="/trip/:id/briefing/:day" element={<ProtectedRoute><PageTransition><DailyBriefingPage /></PageTransition></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute><PageTransition><ProfilePage /></PageTransition></ProtectedRoute>} />
 
           {/* Admin */}
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+          <Route path="/admin/login" element={<PageTransition><AdminLogin /></PageTransition>} />
+          <Route path="/admin" element={<AdminRoute><PageTransition><AdminDashboard /></PageTransition></AdminRoute>} />
 
           {/* Fallback */}
-          <Route path="*" element={<NotFoundPage />} />
+          <Route path="*" element={<PageTransition><NotFoundPage /></PageTransition>} />
         </Routes>
       </Suspense>
+      </AnimatePresence>
       {!shouldHideLayout && <Footer />}
     </>
   );

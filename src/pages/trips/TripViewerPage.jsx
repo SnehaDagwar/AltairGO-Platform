@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import {
   MapPin, Calendar, DollarSign, Clock, Share2, ArrowLeft, Star,
   AlertCircle, Package, TrendingUp, FileText, X, Layers,
@@ -10,7 +10,6 @@ import {
   updateTripNotes, getTripSummary, getTripReview, submitTripReview,
   getHotelOptions, swapHotel, addActivity, removeActivity, editActivity, getTripVariants,
 } from '../../services/api.js';
-import { useAuth } from '../../context/AuthContext.jsx';
 import toast from 'react-hot-toast';
 
 import ItineraryTab from './tabs/ItineraryTab.jsx';
@@ -22,8 +21,6 @@ import SummaryTab from './tabs/SummaryTab.jsx';
 
 const TripViewerPage = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const { user } = useAuth();
 
   // Core trip data
   const [trip, setTrip] = useState(null);
@@ -78,7 +75,29 @@ const TripViewerPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    fetchTrip();
+    setLoading(true);
+    setError(null);
+    setTrip(null);
+    let cancelled = false;
+    (async () => {
+      try {
+        const data = await getTrip(id);
+        if (cancelled) return;
+        setTrip(data);
+        setNotes(data.user_notes?.trip || '');
+        // Silently pre-load bookings so pending-bookings banner shows on itinerary tab
+        getTripBookings(id).then(d => {
+          if (cancelled) return;
+          const flat = d?.bookings || (Array.isArray(d) ? d : Object.values(d?.by_type || {}).flat());
+          setBookings(flat);
+        }).catch(() => {});
+      } catch (err) {
+        if (!cancelled) setError(err.message);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
   }, [id]);
 
   useEffect(() => {
@@ -86,43 +105,36 @@ const TripViewerPage = () => {
     if (activeTab === 'expenses') loadExpenses();
     if (activeTab === 'readiness') loadReadiness();
     if (activeTab === 'summary') loadSummary();
-  }, [activeTab]);
+  }, [activeTab, loadBookings, loadExpenses, loadReadiness, loadSummary]);
 
   // ─── Data loaders ────────────────────────────────────────────────────────────
 
-  const fetchTrip = async () => {
+  const fetchTrip = useCallback(async () => {
     try {
       const data = await getTrip(id);
       setTrip(data);
       setNotes(data.user_notes?.trip || '');
-      // Silently pre-load bookings so pending-bookings banner shows on itinerary tab
-      getTripBookings(id).then(d => {
-        const flat = d.bookings || (Array.isArray(d) ? d : Object.values(d.by_type || {}).flat());
-        setBookings(flat);
-      }).catch(() => {});
     } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+      toast.error(err.message || 'Could not refresh trip');
     }
-  };
+  }, [id]);
 
-  const loadBookings = async () => {
+  const loadBookings = useCallback(async () => {
     try {
       const data = await getTripBookings(id);
-      const flat = data.bookings || (Array.isArray(data) ? data : Object.values(data.by_type || {}).flat());
+      const flat = data?.bookings || (Array.isArray(data) ? data : Object.values(data?.by_type || {}).flat());
       setBookings(flat);
     } catch { toast.error('Could not load bookings'); }
-  };
+  }, [id]);
 
-  const loadExpenses = async () => {
+  const loadExpenses = useCallback(async () => {
     try {
       const data = await getExpenses(id);
       setExpenses(data.expenses || data || []);
     } catch { toast.error('Could not load expenses'); }
-  };
+  }, [id]);
 
-  const loadReadiness = async () => {
+  const loadReadiness = useCallback(async () => {
     try {
       const data = await getTripReadiness(id);
       if (data && data.readiness_score !== undefined && data.score === undefined) {
@@ -130,9 +142,9 @@ const TripViewerPage = () => {
       }
       setReadiness(data);
     } catch { toast.error('Could not load readiness'); }
-  };
+  }, [id]);
 
-  const loadSummary = async () => {
+  const loadSummary = useCallback(async () => {
     try {
       const [sumData, reviewData] = await Promise.allSettled([
         getTripSummary(id),
@@ -145,7 +157,7 @@ const TripViewerPage = () => {
         setReviewForm({ rating: r.rating || 0, comment: r.comment || '', tags: r.tags || [] });
       }
     } catch { /* silent */ }
-  };
+  }, [id]);
 
   // ─── Handlers ────────────────────────────────────────────────────────────────
 
@@ -454,7 +466,7 @@ const TripViewerPage = () => {
                 )}
               </div>
             </div>
-            {qualityScore && (
+            {qualityScore != null && (
               <div
                 title="Quality score (0–100) measures itinerary diversity, budget fit, activity spread, and pacing balance."
                 style={{ background: qualityScore >= 80 ? '#f0fdf4' : '#E8F8F2', border: `1px solid ${qualityScore >= 80 ? '#bbf7d0' : '#9FDFC3'}`, borderRadius: '12px', padding: '0.75rem 1.25rem', textAlign: 'center', cursor: 'help' }}

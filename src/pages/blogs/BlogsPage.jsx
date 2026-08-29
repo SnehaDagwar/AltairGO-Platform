@@ -1,32 +1,49 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { EnvelopeSimple, ArrowRight } from '@phosphor-icons/react';
+import { EnvelopeSimple, ArrowRight, ArrowClockwise } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import styles from '../../components/blogs/Blogs.module.css';
 import { getBlogs } from '../../services/api';
+import { RevealWords, FadeUp, Stagger, staggerItem } from '../../components/common/TextReveal.jsx';
 
 const BlogsPage = () => {
   const navigate = useNavigate();
   const [blogsData, setBlogsData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [fetchFailed, setFetchFailed] = useState(false);
   const [email, setEmail] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [visibleShortReadsCount, setVisibleShortReadsCount] = useState(4);
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    getBlogs()
-      .then(data => setBlogsData(Array.isArray(data) ? data : (data.blogs || [])))
+  const fetchBlogs = useCallback(() => {
+    return getBlogs()
+      .then(data => {
+        setBlogsData(Array.isArray(data) ? data : (data.blogs || []));
+        window.scrollTo(0, 0);
+      })
       .catch((err) => {
-        console.error("Failed to fetch blogs:", err);
+        console.error('Failed to fetch blogs:', err);
+        setFetchFailed(true);
       })
       .finally(() => setLoading(false));
   }, []);
 
+  useEffect(() => {
+    fetchBlogs();
+  }, [fetchBlogs]);
+
+  const handleRetry = () => {
+    setLoading(true);
+    setFetchFailed(false);
+    fetchBlogs();
+  };
+
   const handleSubscribe = (e) => {
     e.preventDefault();
-    if (!email.trim()) {
+    const trimmed = email.trim();
+    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed);
+    if (!trimmed || !emailValid) {
       toast.error('Please enter a valid email address.');
       return;
     }
@@ -36,17 +53,6 @@ const BlogsPage = () => {
       setEmail('');
       setSubmitting(false);
     }, 800);
-  };
-
-  // Helper to assign colors to badges based on category
-  const getBadgeClass = (category) => {
-    if (!category) return styles.badgeTeal;
-    const cat = category.toLowerCase();
-    if (cat.includes('drive')) return styles.badgePeach;
-    if (cat.includes('beach')) return styles.badgeSky;
-    if (cat.includes('culture')) return styles.badgeLavender;
-    if (cat.includes('luxury')) return styles.badgeCream;
-    return styles.badgeTeal;
   };
 
   // Separate the blogs into our specialized layout buckets dynamically
@@ -113,6 +119,30 @@ const BlogsPage = () => {
     );
   }
 
+  if (fetchFailed) {
+    return (
+      <section className={styles.section}>
+        <div className={styles.container}>
+          <div style={{ minHeight: '50vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem', textAlign: 'center', padding: '2rem' }}>
+            <span className={styles.heroSub}>TRAVEL STORIES</span>
+            <h1 className={styles.heroHeading} style={{ fontSize: 'clamp(1.75rem, 4vw, 2.5rem)' }}>
+              Stories are taking a detour
+            </h1>
+            <p style={{ color: '#5e5d59', maxWidth: '420px', lineHeight: 1.6 }}>
+              We couldn't load the latest travel stories right now. Please check your connection and try again.
+            </p>
+            <button
+              className={styles.exploreBtn}
+              onClick={handleRetry}
+            >
+              Try Again <ArrowClockwise size={16} />
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className={styles.section}>
       <div className={styles.container}>
@@ -120,15 +150,12 @@ const BlogsPage = () => {
         {/* HERO AREA: Intro text on Left, Featured Card on Right */}
         <div className={styles.heroGrid}>
           <div className={styles.heroLeft}>
-            <span className={styles.heroSub}>TRAVEL STORIES</span>
-            <h1 className={styles.heroHeading}>
-              Stories that <br />
-              <span>inspire journeys</span>
-            </h1>
-            <span className={styles.heroCursive}>Wander. Discover. Remember.</span>
-            <p className={styles.heroDesc}>
+            <FadeUp as="span" className={styles.heroSub} delay={0}>TRAVEL STORIES</FadeUp>
+            <RevealWords text="Stories that inspire journeys" as="h1" className={styles.heroHeading} stagger={0.07} />
+            <FadeUp delay={0.18} as="span" className={styles.heroCursive}>Wander. Discover. Remember.</FadeUp>
+            <FadeUp delay={0.25} as="p" className={styles.heroDesc}>
               From hidden gems to iconic escapes, explore stories, guides, and tips to fuel your next adventure.
-            </p>
+            </FadeUp>
             <button 
               className={styles.exploreBtn} 
               onClick={() => {
@@ -149,10 +176,14 @@ const BlogsPage = () => {
           </div>
 
           <div className={styles.heroRight}>
-            {featuredBlog && (
+            {featuredBlog ? (
               <div 
                 className={styles.featuredCard} 
+                role="button"
+                tabIndex={0}
                 onClick={() => navigate(`/blogs/${featuredBlog.id}`)}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigate(`/blogs/${featuredBlog.id}`); }}}
+                aria-label={`Read ${featuredBlog.title}`}
               >
                 <img src={featuredBlog.image} alt={featuredBlog.title} className={featuredBlog.image ? styles.featuredImg : styles.featuredImgFallback} />
                 <div className={styles.featuredOverlay} />
@@ -168,13 +199,17 @@ const BlogsPage = () => {
                   </div>
                 </div>
               </div>
-            )}
+            ) : !loading && !fetchFailed ? (
+              <div style={{ textAlign: 'center', padding: '2rem', color: '#5e5d59' }}>
+                <p>No stories yet. Check back soon!</p>
+              </div>
+            ) : null}
           </div>
         </div>
 
         {/* MAIN STORIES GRID */}
         {mainGridBlogs.length > 0 && (
-          <div id="main-stories-grid" className={styles.mainGrid}>
+          <Stagger id="main-stories-grid" className={styles.mainGrid} stagger={0.07}>
             {mainGridBlogs.map((blog, index) => {
               // Custom CSS class names for different card shapes
               let cardClass = styles.gridCard;
@@ -184,10 +219,15 @@ const BlogsPage = () => {
               else if (index === 3) cardClass = `${styles.gridCard} ${styles.squareCardRight}`;
 
               return (
-                <article 
+                <motion.article 
                   key={blog.id} 
+                  variants={staggerItem}
                   className={cardClass} 
+                  role="button"
+                  tabIndex={0}
                   onClick={() => navigate(`/blogs/${blog.id}`)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigate(`/blogs/${blog.id}`); }}}
+                  aria-label={`Read ${blog.title}`}
                 >
                   <div className={styles.cardImgWrapper}>
                     <img src={blog.image} alt={blog.title} className={styles.cardImg} />
@@ -206,18 +246,18 @@ const BlogsPage = () => {
                       <ArrowRight size={14} className={styles.arrowIcon} />
                     </div>
                   </div>
-                </article>
+                </motion.article>
               );
             })}
-          </div>
+          </Stagger>
         )}
 
         {/* SHORT READS SECTION */}
         {shortReads.length > 0 && (
           <div id="short-reads-section" className={styles.shortReadsSection}>
             <div className={styles.shortReadsHeader}>
-              <span className={styles.shortReadsSub}>SHORT READS</span>
-              <h2 className={styles.shortReadsTitle}>Quick reads for your wanderlust</h2>
+              <FadeUp as="span" className={styles.shortReadsSub}>SHORT READS</FadeUp>
+              <RevealWords text="Quick reads for your wanderlust" as="h2" className={styles.shortReadsTitle} stagger={0.06} />
               <div className={styles.wavyLine}>
                 <svg viewBox="0 0 150 10" width="150" height="10" fill="none">
                   <path d="M 10,5 C 25,2 40,8 55,5 C 70,2 85,8 100,5 C 115,2 130,8 145,5" stroke="var(--color-teal)" strokeWidth="1.5" strokeLinecap="round" />
@@ -225,12 +265,17 @@ const BlogsPage = () => {
               </div>
             </div>
 
-            <div className={styles.shortReadsGrid}>
+            <Stagger className={styles.shortReadsGrid} stagger={0.06}>
               {shortReads.map((blog) => (
-                <div 
+                <motion.div 
                   key={blog.id} 
+                  variants={staggerItem}
                   className={styles.shortReadItem}
+                  role="button"
+                  tabIndex={0}
                   onClick={() => navigate(`/blogs/${blog.id}`)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigate(`/blogs/${blog.id}`); }}}
+                  aria-label={`Read ${blog.title}`}
                 >
                   <img src={blog.image} alt={blog.title} className={styles.shortReadThumb} />
                   <div className={styles.shortReadInfo}>
@@ -240,9 +285,9 @@ const BlogsPage = () => {
                       <ArrowRight size={12} className={styles.shortReadArrow} />
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </Stagger>
             {hasMore && (
               <div className={styles.loadMoreWrapper}>
                 <button 

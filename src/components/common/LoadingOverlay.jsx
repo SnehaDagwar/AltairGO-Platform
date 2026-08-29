@@ -11,7 +11,7 @@ const LoadingOverlay = ({ message = 'Loading...' }) => {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      zIndex: 9999,
+      zIndex: 100,
       gap: '1.5rem',
     }}>
       <div style={{

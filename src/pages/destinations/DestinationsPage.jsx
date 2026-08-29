@@ -1,10 +1,12 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { Search, SearchX, Sparkles } from 'lucide-react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import { Search, SearchX, Sparkles, X } from 'lucide-react';
+import { motion } from 'framer-motion';
 import styles from './DestinationsPage.module.css';
 import DestinationCard from '../../components/destinations/DestinationCard/DestinationCard.jsx';
 import { getDestinations, recommend } from '../../services/api.js';
 import toast from 'react-hot-toast';
 import heroBg from '../../assets/hero-page-image.webp';
+import { RevealWords, FadeUp, Stagger, staggerItem } from '../../components/common/TextReveal.jsx';
 
 const getCardVariant = (index) => {
   const i = index % 10;
@@ -25,61 +27,55 @@ const DestinationsPage = () => {
   const [travelerFilter, setTravelerFilter] = useState('All');
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const [recommendLoading, setRecommendLoading] = useState(false);
   const [aiQuery, setAiQuery] = useState('');
   const [aiSearchLoading, setAiSearchLoading] = useState(false);
+  const [isAiMode, setIsAiMode] = useState(false);
 
-  const fetchDestinations = useCallback(async (reset = false, signal = null) => {
+  const fetchDestinations = useCallback(async (pageNum, signal = null) => {
     setLoading(true);
     try {
-      const params = { limit: 20, page: reset ? 1 : page, signal };
+      const params = { limit: 20, page: pageNum, signal };
       if (budgetFilter !== 'All') params.budget_category = budgetFilter;
       if (travelerFilter !== 'All') params.traveler_type = travelerFilter;
       const data = await getDestinations(params);
       const items = Array.isArray(data) ? data : (data.items || data.destinations || []);
-      if (reset) {
+      if (pageNum === 1) {
         setDestinations(items);
-        setPage(1);
       } else {
         setDestinations(prev => [...prev, ...items]);
       }
       setHasMore(items.length === 20);
     } catch (err) {
       if (err.name === 'AbortError') return;
+      // Real failure: stop loading so the "No destinations found" state shows
       toast.error('Failed to load destinations', { id: 'fetch-destinations-error' });
     } finally {
-      setLoading(false);
+      if (!signal?.aborted) setLoading(false);
     }
-  }, [page, budgetFilter, travelerFilter]);
+  }, [budgetFilter, travelerFilter]);
 
+  // Reset to page 1 whenever filters change (exit AI mode)
   useEffect(() => {
+    if (isAiMode) {
+      setIsAiMode(false);
+      setAiQuery('');
+    }
     window.scrollTo(0, 0);
+    setPage(1);
     const controller = new AbortController();
-    fetchDestinations(true, controller.signal);
+    fetchDestinations(1, controller.signal);
     return () => controller.abort();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [budgetFilter, travelerFilter, fetchDestinations]);
 
-  const handleRecommend = async () => {
-    setRecommendLoading(true);
-    try {
-      const params = {};
-      if (budgetFilter !== 'All') params.budget_category = budgetFilter;
-      if (travelerFilter !== 'All') params.traveler_type = travelerFilter;
-      params.limit = 6;
-      const data = await recommend(params);
-      const items = Array.isArray(data) ? data : (data.destinations || []);
-      if (items.length > 0) {
-        setDestinations(items);
-        toast.success(`Found ${items.length} recommended destinations!`);
-      } else {
-        toast.error('No recommendations found. Try different filters.');
-      }
-    } catch {
-      toast.error('Could not load recommendations');
-    } finally {
-      setRecommendLoading(false);
+  // Append subsequent pages when "Load More" increments the page
+  useEffect(() => {
+    if (page > 1) {
+      const controller = new AbortController();
+      fetchDestinations(page, controller.signal);
+      return () => controller.abort();
     }
-  };
+  }, [page, fetchDestinations]);
 
   const handleAiSearch = async (e) => {
     e.preventDefault();
@@ -93,6 +89,9 @@ const DestinationsPage = () => {
       const items = Array.isArray(data) ? data : (data.destinations || []);
       if (items.length > 0) {
         setDestinations(items);
+        setIsAiMode(true);
+        setHasMore(false);
+        setPage(1);
         toast.success(`AI found ${items.length} matches for "${aiQuery}"`);
       } else {
         toast.error('No matches found. Try a different query.');
@@ -104,28 +103,44 @@ const DestinationsPage = () => {
     }
   };
 
-  const filtered = destinations.filter((d) =>
-    d.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    d.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    d.state_name?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filtered = useMemo(() => {
+    if (!searchTerm.trim()) return destinations;
+    const term = searchTerm.toLowerCase();
+    return destinations.filter((d) =>
+      d.name?.toLowerCase().includes(term) ||
+      d.description?.toLowerCase().includes(term) ||
+      d.state_name?.toLowerCase().includes(term)
+    );
+  }, [destinations, searchTerm]);
+
+  const filtersActive =
+    budgetFilter !== 'All' || travelerFilter !== 'All' || searchTerm.trim() !== '' || isAiMode;
+
+  const clearAllFilters = () => {
+    setBudgetFilter('All');
+    setTravelerFilter('All');
+    setSearchTerm('');
+    setAiQuery('');
+    if (isAiMode) {
+      setIsAiMode(false);
+      setPage(1);
+    }
+  };
 
   return (
     <main style={{ paddingBottom: '4rem', minHeight: '100vh', background: 'var(--bg)' }}>
       <div className={styles.pageHeaderWrapper}>
-        <img 
-          src={heroBg} 
-          alt="Atmospheric landscape" 
-          className={styles.headerBgImage} 
+        <img
+          src={heroBg}
+          alt="Atmospheric landscape"
+          className={styles.headerBgImage}
         />
         <div className={styles.headerOverlay} />
         <div className={styles.pageHeader}>
-          <h1 className={styles.pageTitle}>
-            Explore <span className={styles.accentTitleText}>the World</span>
-          </h1>
-          <p className={styles.pageSubtitle}>
+          <RevealWords text="Explore the World" as="h1" className={styles.pageTitle} stagger={0.07} />
+          <FadeUp delay={0.12} className={styles.pageSubtitle} as="p">
             Discover breathtaking locations handcrafted for your perfect getaway.
-          </p>
+          </FadeUp>
 
           <div className={styles.searchWrapper}>
             <Search size={20} className={styles.searchIcon} />
@@ -135,7 +150,18 @@ const DestinationsPage = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className={styles.searchInput}
+              style={{ paddingRight: searchTerm ? '48px' : undefined }}
             />
+            {searchTerm && (
+              <button
+                type="button"
+                aria-label="Clear search"
+                className={styles.searchClear}
+                onClick={() => setSearchTerm('')}
+              >
+                <X size={16} />
+              </button>
+            )}
           </div>
 
           <div className={styles.filterRow}>
@@ -162,8 +188,6 @@ const DestinationsPage = () => {
             ))}
           </div>
 
-
-
           {/* Semantic AI search */}
           <form onSubmit={handleAiSearch} className={styles.aiSearchPanel}>
             <span className={styles.aiSparkleIcon}>
@@ -181,7 +205,11 @@ const DestinationsPage = () => {
               className={styles.aiSearchButton}
               disabled={aiSearchLoading || !aiQuery.trim()}
             >
-              {aiSearchLoading ? '...' : 'Search'}
+              {aiSearchLoading ? (
+                <span className={styles.spinner} aria-label="Searching" />
+              ) : (
+                'Search'
+              )}
             </button>
           </form>
         </div>
@@ -189,64 +217,76 @@ const DestinationsPage = () => {
 
       <div className={styles.container} style={{ marginTop: '3rem' }}>
 
+        <div className={styles.resultsBar}>
+          <span className={styles.resultsCount}>
+            {loading && destinations.length === 0
+              ? 'Finding destinations for you…'
+              : `${filtered.length} destination${filtered.length !== 1 ? 's' : ''} found`}
+          </span>
+          {filtersActive && !loading && (
+            <button type="button" className={styles.clearFiltersBtn} onClick={clearAllFilters}>
+              Clear filters <X size={14} />
+            </button>
+          )}
+        </div>
+
         {loading && destinations.length === 0 ? (
           <div className={styles.grid}>
             {Array(8).fill(0).map((_, i) => {
               const v = getCardVariant(i);
               return (
-                <div key={i} className={`${styles.skeleton} ${styles[`card_${v}`] || ''}`} />
+                <div key={i} className={`${styles.skeletonCard} ${styles[`card_${v}`] || ''}`}>
+                  <div className={`${styles.skeletonImage} ${styles.skeletonShimmer}`} />
+                  <div className={styles.skeletonContent}>
+                    <span className={`${styles.skeletonLine} ${styles.skeletonShimmer}`} style={{ width: '40%' }} />
+                    <span className={`${styles.skeletonLine} ${styles.skeletonLineLg} ${styles.skeletonShimmer}`} style={{ width: '72%' }} />
+                  </div>
+                </div>
               );
             })}
           </div>
         ) : (
           <>
-            <div className={styles.grid}>
+            <Stagger className={styles.grid} stagger={0.06} delay={0.05}>
               {filtered.length > 0 ? (
                 filtered.map((dest, i) => (
-                  <DestinationCard key={dest.id} dest={dest} variant={getCardVariant(i)} />
+                  <motion.div key={dest.id} variants={staggerItem}>
+                    <DestinationCard dest={dest} variant={getCardVariant(i)} />
+                  </motion.div>
                 ))
               ) : (
-                <div style={{
-                  gridColumn: '1 / -1',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: '6rem 2rem',
-                  backgroundColor: '#f5f4ed',
-                  borderRadius: '1.5rem',
-                  border: '1px dashed #c8c5bc',
-                  textAlign: 'center',
-                }}>
-                  <SearchX size={48} style={{ color: '#87867f', marginBottom: '1.5rem' }} />
-                  <h3 style={{ fontSize: '1.5rem', fontWeight: 600, color: '#30302e', marginBottom: '0.5rem' }}>No destinations found</h3>
-                  <p style={{ fontSize: '1rem', color: '#5e5d59', maxWidth: '400px' }}>
+                <div className={styles.emptyState}>
+                  <SearchX size={48} className={styles.emptyIcon} />
+                  <h3>No destinations found</h3>
+                  <p>
                     {searchTerm
                       ? `No results for "${searchTerm}". Try a different search.`
                       : 'Try adjusting your filters.'}
                   </p>
+                  {filtersActive && (
+                    <button type="button" className={styles.emptyAction} onClick={clearAllFilters}>
+                      Reset all filters
+                    </button>
+                  )}
                 </div>
               )}
-            </div>
+            </Stagger>
 
-            {hasMore && !searchTerm && (
-              <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+            {hasMore && !searchTerm && !isAiMode && (
+              <div className={styles.loadMoreWrap}>
                 <button
-                  onClick={() => { setPage(p => p + 1); fetchDestinations(); }}
+                  type="button"
+                  className={styles.loadMoreBtn}
+                  onClick={() => setPage(p => p + 1)}
                   disabled={loading}
-                  style={{
-                    background: '#141413',
-                    color: 'white',
-                    padding: '0.85rem 2.5rem',
-                    borderRadius: '50px',
-                    border: 'none',
-                    fontFamily: 'inherit',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    fontSize: '0.95rem',
-                  }}
                 >
-                  {loading ? 'Loading...' : 'Load More'}
+                  {loading ? (
+                    <>
+                      <span className={styles.spinnerDark} aria-hidden="true" /> Loading…
+                    </>
+                  ) : (
+                    'Load More'
+                  )}
                 </button>
               </div>
             )}

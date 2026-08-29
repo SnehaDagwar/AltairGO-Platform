@@ -58,16 +58,6 @@ export default function ProgressBar({
           }}
         />
       </div>
-      <style>{`
-        @keyframes altair-progress-indeterminate {
-          0% {
-            left: -40%;
-          }
-          100% {
-            left: 100%;
-          }
-        }
-      `}</style>
     </div>
   );
 }

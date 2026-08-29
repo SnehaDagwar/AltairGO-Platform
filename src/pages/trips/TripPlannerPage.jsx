@@ -5,8 +5,6 @@ import { ChevronRight, ChevronLeft, MapPin, Search, X, Plus, Minus, Sparkles, Ch
 import { getCountries, search as searchDestinations, recommend, generateItinerary } from '../../services/api.js';
 import toast from 'react-hot-toast';
 import Button from '../../components/common/Button.jsx';
-import Card from '../../components/common/Card.jsx';
-import Input from '../../components/common/Input.jsx';
 import Badge from '../../components/common/Badge.jsx';
 import styles from './TripPlannerPage.module.css';
 import heroBg from '../../assets/hero-page-image.webp';
@@ -32,8 +30,12 @@ const INTERESTS = [
 ];
 
 const getBudgetLabel = (budget, days, travelers) => {
-  if (!days || !travelers) return '';
-  const daily = budget / (days * travelers);
+  const safeBudget = Number(budget) || 0;
+  const safeDays = Math.max(1, Number(days) || 1);
+  const safeTravelers = Math.max(1, Number(travelers) || 1);
+  if (!safeBudget || !safeDays || !safeTravelers) return '';
+  const daily = safeBudget / (safeDays * safeTravelers);
+  if (!Number.isFinite(daily)) return '';
   if (daily < 1500) return 'Budget';
   if (daily < 4000) return 'Standard';
   return 'Luxury';
@@ -41,7 +43,7 @@ const getBudgetLabel = (budget, days, travelers) => {
 
 const TripPlannerPage = () => {
   const navigate = useNavigate();
-  const { user, token } = useAuth();
+  const { token } = useAuth();
   const [searchParams] = useSearchParams();
   const [step, setStep] = useState(1);
 
@@ -49,9 +51,8 @@ const TripPlannerPage = () => {
   const [searchQuery, setSearchQuery] = useState(searchParams.get('destination') || '');
   const [searchResults, setSearchResults] = useState([]);
   const [selectedDests, setSelectedDests] = useState([]);
-  const [countries, setCountries] = useState([]);
+  const [, setCountries] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState('India');
-  const [searchLoading, setSearchLoading] = useState(false);
   const [recommendLoading, setRecommendLoading] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
   const recommendInFlight = useRef(false);
@@ -82,26 +83,30 @@ const TripPlannerPage = () => {
 
   useEffect(() => {
     getCountries().then(setCountries).catch(() => {});
-    if (searchParams.get('destination')) {
-      setSelectedDests([{ name: searchParams.get('destination'), id: 'custom' }]);
+    const dest = searchParams.get('destination');
+    if (dest) {
+      setSelectedDests([{ name: dest, id: 'custom' }]);
     }
     const t = setTimeout(() => setHasMounted(true), 500);
     return () => clearTimeout(t);
-  }, []);
+  }, [searchParams]);
 
   // Debounced search
   useEffect(() => {
     if (searchQuery.length < 2) { setSearchResults([]); return; }
+    let stale = false;
+    const controller = new AbortController();
     const t = setTimeout(async () => {
-      setSearchLoading(true);
       try {
         const data = await searchDestinations(searchQuery, 'destination', 8);
+        if (stale || controller.signal.aborted) return;
         const items = Array.isArray(data) ? data : (data.results || data.destinations || []);
         setSearchResults(items.slice(0, 6));
-      } catch { setSearchResults([]); }
-      finally { setSearchLoading(false); }
+      } catch {
+        if (!stale) setSearchResults([]);
+      }
     }, 300);
-    return () => clearTimeout(t);
+    return () => { clearTimeout(t); stale = true; controller.abort(); };
   }, [searchQuery]);
 
   const handleRecommend = async () => {
@@ -140,7 +145,10 @@ const TripPlannerPage = () => {
   // Debounced live budget hint
   useEffect(() => {
     if (step !== 3 || !budget || !duration || !travelers) return;
-    const daily = Math.round(budget / (duration * travelers));
+    const safeDays = Math.max(1, Number(duration) || 1);
+    const safeTrav = Math.max(1, Number(travelers) || 1);
+    const daily = Math.round(Number(budget) / (safeDays * safeTrav));
+    if (!Number.isFinite(daily)) return;
     const tier = daily < 1500 ? 'budget' : daily < 4000 ? 'mid' : 'luxury';
     const tierLabel = tier === 'budget' ? 'Budget' : tier === 'mid' ? 'Standard' : 'Luxury';
     setBudgetHint({ daily, tier, tierLabel });
@@ -210,7 +218,7 @@ const TripPlannerPage = () => {
       <div className={styles.contentWrapper}>
 
         {/* Progress Steps */}
-        <div className={styles.stepperRow}>
+        <nav className={styles.stepperRow} aria-label="Trip planning progress">
           {STEPS.map((s, i) => {
             const isCompleted = step > s.num;
             const isActive = step === s.num;
@@ -219,6 +227,10 @@ const TripPlannerPage = () => {
                 <div
                   className={`${styles.stepNode} ${isActive ? styles.stepNodeActive : ''} ${isCompleted ? styles.stepNodeCompleted : ''}`}
                   onClick={() => s.num < step && setStep(s.num)}
+                  aria-current={isActive ? 'step' : undefined}
+                  role="button"
+                  tabIndex={s.num < step ? 0 : undefined}
+                  onKeyDown={(e) => { if ((e.key === 'Enter' || e.key === ' ') && s.num < step) { e.preventDefault(); setStep(s.num); }}}
                 >
                   <div className={styles.stepCircle}>
                     {isCompleted ? <Check size={16} strokeWidth={2.5} /> : s.num}
@@ -226,12 +238,12 @@ const TripPlannerPage = () => {
                   <span className={styles.stepLabel}>{s.label}</span>
                 </div>
                 {i < STEPS.length - 1 && (
-                  <div className={`${styles.stepConnector} ${step > s.num ? styles.stepConnectorActive : ''}`} />
+                  <div className={`${styles.stepConnector} ${step > s.num ? styles.stepConnectorActive : ''}`} aria-hidden="true" />
                 )}
               </React.Fragment>
             );
           })}
-        </div>
+        </nav>
 
         {/* Custom Card component for central planning form */}
         <div className={styles.planningCard}>
@@ -438,7 +450,10 @@ const TripPlannerPage = () => {
                   <input
                     type="number"
                     value={budget}
-                    onChange={(e) => setBudget(Math.max(500, Number(e.target.value)))}
+                    onChange={(e) => {
+                      const v = e.target.value === '' ? 500 : Number(e.target.value);
+                      setBudget(Number.isFinite(v) ? Math.max(500, v) : 500);
+                    }}
                     min={500}
                     style={{ 
                       width: '100%', 
@@ -455,13 +470,13 @@ const TripPlannerPage = () => {
                     }}
                   />
                 </div>
-                <input
-                  type="range"
-                  min={500}
-                  max={500000}
-                  step={1000}
-                  value={budget}
-                  onChange={(e) => setBudget(Number(e.target.value))}
+                  <input
+                    type="range"
+                    min={500}
+                    max={500000}
+                    step={1000}
+                    value={budget}
+                    onChange={(e) => setBudget(Math.max(500, Number(e.target.value) || 500))}
                   style={{ width: '100%', accentColor: 'var(--color-teal)' }}
                 />
 

@@ -82,8 +82,8 @@ export default function ItineraryTab({
           No itinerary data available.
         </div>
       ) : (
-        days.map((day) => {
-          const dayNum = day.day || day.day_number;
+        days.map((day, idx) => {
+          const dayNum = day.day ?? day.day_number ?? idx + 1;
           const isExpanded = expandedDays.has(dayNum);
           const activities = day.activities || [];
           const pacing = day.pacing_level || 'moderate';

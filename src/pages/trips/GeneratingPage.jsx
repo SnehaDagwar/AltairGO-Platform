@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Sparkles, AlertCircle } from 'lucide-react';
 import { getItineraryStatus, saveTrip } from '../../services/api.js';
+import { API_BASE_URL } from '../../config.js';
 import toast from 'react-hot-toast';
 
-const BASE = import.meta.env.VITE_API_URL || '';
+const BASE = API_BASE_URL;
 
 const MESSAGES = [
   'Analyzing your travel preferences...',
@@ -14,13 +15,14 @@ const MESSAGES = [
   'Calculating real-time budget breakdowns...',
   'Checking weather and local events...',
   'Crafting AI-powered descriptions for each spot...',
-  'Adding local secrets and insider tips...',
-  'Generating your personalized trip title...',
-  'Building smart travel insights...',
-  'Packing tips tailored to your destination...',
-  'Cross-checking itinerary quality...',
-  'Finalizing your personalized itinerary...',
-  'Almost ready! Putting on the finishing touches...',
+  "Connecting to India's smartest travel engine...",
+  "Analyzing regional weather and season patterns...",
+  "Balancing train routes and scenic drives...",
+  "Curating hand-picked stays and experiences...",
+  "Optimizing daily pace and travel budget...",
+  "Crafting your personalized itinerary...",
+  "Adding local dining and hidden gems...",
+  "Finalizing your dream travel plan..."
 ];
 
 const GeneratingPage = () => {
@@ -29,19 +31,18 @@ const GeneratingPage = () => {
   const location = useLocation();
   const [messageIndex, setMessageIndex] = useState(0);
   const [progress, setProgress] = useState(5);
-  const [status, setStatus] = useState('processing');
   const [error, setError] = useState(null);
   const savedRef = useRef(false);
-  const pollRef = useRef(null);
+  const pollIntervalRef = useRef(null);
+  const esRef = useRef(null);
   const pollErrorCount = useRef(0);
 
-  const stateData = location.state || {};
-
-  const handleCompleted = async (result, msgInterval) => {
+  const handleCompleted = useCallback(async (result, msgInterval) => {
     if (savedRef.current) return;
     savedRef.current = true;
     setProgress(100);
     clearInterval(msgInterval);
+    const stateData = location.state || {};
     try {
       const itinerary = result;
       const savePayload = {
@@ -56,16 +57,46 @@ const GeneratingPage = () => {
         setTimeout(() => navigate(`/trip/${tripId}`), 500);
         return;
       }
-    } catch {
-      // not logged in — fall through
+    } catch (err) {
+      if (err.status && err.status !== 401) {
+        toast.error('Your trip was generated but could not be saved to your account.');
+      }
     }
     setTimeout(() => navigate(`/trip/preview`, { state: { itinerary: result } }), 500);
-  };
+  }, [navigate, location.state]);
+
+  const startPolling = useCallback((msgInterval) => {
+    const poll = async () => {
+      try {
+        const data = await getItineraryStatus(jobId);
+        pollErrorCount.current = 0;
+        if (data.status === 'completed') {
+          clearInterval(pollIntervalRef.current);
+          pollIntervalRef.current = null;
+          await handleCompleted(data.result, msgInterval);
+        } else if (data.status === 'failed') {
+          clearInterval(pollIntervalRef.current);
+          pollIntervalRef.current = null;
+          clearInterval(msgInterval);
+          setError(data.error_message || 'Generation failed. Please try again.');
+        }
+      } catch {
+        pollErrorCount.current += 1;
+        if (pollErrorCount.current >= 5) {
+          clearInterval(pollIntervalRef.current);
+          pollIntervalRef.current = null;
+          clearInterval(msgInterval);
+          setError('Lost connection to the server. Please check your network and try again.');
+        }
+      }
+    };
+    poll();
+    pollIntervalRef.current = setInterval(poll, 2000);
+  }, [jobId, handleCompleted]);
 
   useEffect(() => {
     const msgInterval = setInterval(() => {
       setMessageIndex(i => (i + 1) % MESSAGES.length);
-      // Slow progress after 60% so the bar doesn't pin at 90% for 80+ seconds with local AI
       setProgress(p => {
         if (p < 60) return Math.min(p + 8, 60);
         if (p < 85) return Math.min(p + 2, 85);
@@ -73,22 +104,23 @@ const GeneratingPage = () => {
       });
     }, 3500);
 
-    // ── Try SSE stream first ──────────────────────────────────────────────────
+    // Try SSE stream first
     if (typeof EventSource !== 'undefined') {
       const es = new EventSource(`${BASE}/get-itinerary-status/${jobId}/stream`);
-      pollRef.current = es;
+      esRef.current = es;
 
       es.onmessage = async (e) => {
         try {
           const data = JSON.parse(e.data);
           if (data.heartbeat) return;
           const s = data.status;
-          setStatus(s);
           if (s === 'completed') {
             es.close();
+            esRef.current = null;
             await handleCompleted(data.result, msgInterval);
           } else if (s === 'failed') {
             es.close();
+            esRef.current = null;
             clearInterval(msgInterval);
             setError(data.error_message || 'Generation failed. Please try again.');
           }
@@ -97,49 +129,35 @@ const GeneratingPage = () => {
 
       es.onerror = () => {
         es.close();
-        // Fall back to polling
+        esRef.current = null;
         startPolling(msgInterval);
       };
 
       return () => {
         es.close();
+        esRef.current = null;
         clearInterval(msgInterval);
+        if (pollIntervalRef.current) {
+          clearInterval(pollIntervalRef.current);
+          pollIntervalRef.current = null;
+        }
       };
     }
 
-    // ── Polling fallback ──────────────────────────────────────────────────────
+    // Polling fallback
     startPolling(msgInterval);
     return () => {
       clearInterval(msgInterval);
-      if (pollRef.current) clearInterval(pollRef.current);
-    };
-  }, [jobId, navigate]);
-
-  const startPolling = (msgInterval) => {
-    const poll = async () => {
-      try {
-        const data = await getItineraryStatus(jobId);
-        setStatus(data.status);
-        if (data.status === 'completed') {
-          clearInterval(pollRef.current);
-          await handleCompleted(data.result, msgInterval);
-        } else if (data.status === 'failed') {
-          clearInterval(pollRef.current);
-          clearInterval(msgInterval);
-          setError(data.error_message || 'Generation failed. Please try again.');
-        }
-      } catch {
-        pollErrorCount.current += 1;
-        if (pollErrorCount.current >= 5) {
-          clearInterval(pollRef.current);
-          clearInterval(msgInterval);
-          setError('Lost connection to the server. Please check your network and try again.');
-        }
+      if (pollIntervalRef.current) {
+        clearInterval(pollIntervalRef.current);
+        pollIntervalRef.current = null;
+      }
+      if (esRef.current) {
+        esRef.current.close();
+        esRef.current = null;
       }
     };
-    poll();
-    pollRef.current = setInterval(poll, 2000);
-  };
+  }, [jobId, handleCompleted, startPolling]);
 
   if (error) {
     return (

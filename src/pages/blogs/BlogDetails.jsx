@@ -70,17 +70,26 @@ const BlogDetails = () => {
   });
 
   useEffect(() => {
-    setFetchError(false);
-    setLoading(true);
+    let ignore = false;
     getBlog(id)
       .then(data => {
-        setBlog(data);
+        if (!ignore) {
+          setBlog(data);
+          setFetchError(false);
+          setLoading(false);
+        }
       })
       .catch((err) => {
         console.error("Error fetching blog details:", err);
-        setFetchError(true);
-      })
-      .finally(() => setLoading(false));
+        if (!ignore) {
+          setFetchError(true);
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      ignore = true;
+    };
   }, [id]);
 
   useEffect(() => {
@@ -178,11 +187,15 @@ const BlogDetails = () => {
                 src={blog.image}
                 alt={blog.title}
                 className={styles.heroImage}
-                onError={(e) => { e.target.style.display = 'none'; }}
+                loading="lazy"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  const fallback = e.target.nextElementSibling;
+                  if (fallback) fallback.style.display = 'block';
+                }}
               />
-            ) : (
-              <div style={{ height: '100%', background: 'linear-gradient(135deg, #141413 0%, #30302e 100%)' }} />
-            )}
+            ) : null}
+            <div style={{ display: blog.image ? 'none' : 'block', height: '100%', background: 'linear-gradient(135deg, #141413 0%, #30302e 100%)', borderRadius: '24px' }} aria-hidden="true" />
             <div className={styles.heroOverlay} />
           </motion.div>
 
@@ -205,7 +218,7 @@ const BlogDetails = () => {
                 if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
                   try {
                     parsedContent = JSON.parse(trimmed);
-                  } catch (e) {
+                  } catch {
                     // Fail gracefully
                   }
                 }
@@ -233,7 +246,8 @@ const BlogDetails = () => {
                               src={section.image}
                               alt={section.heading || ''}
                               className={styles.sectionImage}
-                              onError={(e) => { e.target.style.display = 'none'; }}
+                              loading="lazy"
+                              onError={(e) => { e.target.closest(`.${styles.sectionImageWrapper}`)?.style.setProperty('display','none'); }}
                             />
                           </div>
                         )}

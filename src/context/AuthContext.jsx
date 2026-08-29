@@ -1,10 +1,12 @@
-import React, { createContext, useState, useEffect, useRef, useContext } from 'react';
+import React, { createContext, useState, useEffect, useRef, useContext, useCallback, useMemo } from 'react';
 import { API_BASE_URL } from '../config';
 
-// Decode JWT payload without a library
+// Decode JWT payload without a library (handles base64url padding)
 function jwtExpiry(token) {
   try {
-    const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+    let b64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    b64 += '='.repeat((4 - (b64.length % 4)) % 4);
+    const payload = JSON.parse(atob(b64));
     return payload.exp ? payload.exp * 1000 : null; // ms
   } catch { return null; }
 }
@@ -23,8 +25,8 @@ const AuthContext = createContext({
 
 const safeLS = {
   get: (k) => { try { return window.localStorage.getItem(k); } catch { return null; } },
-  set: (k, v) => { try { window.localStorage.setItem(k, v); } catch {} },
-  del: (k) => { try { window.localStorage.removeItem(k); } catch {} },
+  set: (k, v) => { try { window.localStorage.setItem(k, v); } catch { /* quota exceeded */ } },
+  del: (k) => { try { window.localStorage.removeItem(k); } catch { /* ignore */ } },
 };
 
 export const AuthProvider = ({ children }) => {
@@ -34,11 +36,11 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const refreshTimerRef = useRef(null);
 
-  const scheduleRefresh = (accessToken) => {
+  const scheduleRefresh = useCallback((accessToken) => {
     clearTimeout(refreshTimerRef.current);
     const expiry = jwtExpiry(accessToken);
     if (!expiry) return;
-    // Refresh 3 minutes before expiry (but at least 10s from now)
+    // Refresh 5 minutes before expiry (but at least 10s from now)
     const delay = Math.max(expiry - Date.now() - 5 * 60 * 1000, 10_000);
     refreshTimerRef.current = setTimeout(async () => {
       const refreshToken = safeLS.get('ag_refresh_token');
@@ -64,7 +66,31 @@ export const AuthProvider = ({ children }) => {
         }
       } catch { /* network error — will retry on next token use */ }
     }, delay);
-  };
+  }, []);
+
+  const fetchUser = useCallback(async (authToken) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/auth/me`, {
+        headers: { Authorization: `Bearer ${authToken}` }
+      });
+      if (res.ok) {
+        const userData = await res.json();
+        setUser(userData);
+      } else if (res.status === 401) {
+        // Token is invalid or expired — clear session
+        clearTimeout(refreshTimerRef.current);
+        setToken(null);
+        setUser(null);
+        safeLS.del('ag_token');
+        safeLS.del('ag_refresh_token');
+      }
+      // Any other status (5xx, etc.) — keep session, might be a transient server error
+    } catch {
+      // Network error (server down, timeout) — keep session, do not log user out
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     const handleUnauth = () => {
@@ -72,6 +98,7 @@ export const AuthProvider = ({ children }) => {
       setToken(null);
       setUser(null);
       safeLS.del('ag_token');
+      safeLS.del('ag_refresh_token');
     };
     window.addEventListener('ag:unauthorized', handleUnauth);
     return () => window.removeEventListener('ag:unauthorized', handleUnauth);
@@ -85,45 +112,25 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     }
     return () => clearTimeout(refreshTimerRef.current);
-  }, [token]);
+  }, [token, fetchUser, scheduleRefresh]);
 
-  const fetchUser = async (authToken) => {
-    try {
-      const res = await fetch(`${API_BASE_URL}/auth/me`, {
-        headers: { Authorization: `Bearer ${authToken}` }
-      });
-      if (res.ok) {
-        const userData = await res.json();
-        setUser(userData);
-      } else if (res.status === 401) {
-        // Token is invalid or expired — clear session
-        logout();
-      }
-      // Any other status (5xx, etc.) — keep session, might be a transient server error
-    } catch {
-      // Network error (server down, timeout) — keep session, do not log user out
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const login = async (email, password) => {
+  const login = useCallback(async (email, password) => {
     const res = await fetch(`${API_BASE_URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Login failed');
+    if (!res.ok || !data.token) throw new Error(data.error || 'Login failed');
     setToken(data.token);
     setUser(data.user);
     safeLS.set('ag_token', data.token);
     if (data.refresh_token) safeLS.set('ag_refresh_token', data.refresh_token);
     scheduleRefresh(data.token);
     return data;
-  };
+  }, [scheduleRefresh]);
 
-  const register = async (name, email, password) => {
+  const register = useCallback(async (name, email, password) => {
     const res = await fetch(`${API_BASE_URL}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -137,16 +144,19 @@ export const AuthProvider = ({ children }) => {
       safeLS.set('ag_token', data.token);
     }
     return data;
-  };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
+    clearTimeout(refreshTimerRef.current);
     setToken(null);
     setUser(null);
     safeLS.del('ag_token');
     safeLS.del('ag_refresh_token');
-  };
+    safeLS.del('ag_admin_token');
+    setIsAdmin(false);
+  }, []);
 
-  const adminLogin = async (key) => {
+  const adminLogin = useCallback(async (key) => {
     const res = await fetch(`${API_BASE_URL}/api/admin/verify-key`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -157,29 +167,32 @@ export const AuthProvider = ({ children }) => {
     safeLS.set('ag_admin_token', data.token);
     setIsAdmin(true);
     return data;
-  };
+  }, []);
 
-  const adminLogout = () => {
+  const adminLogout = useCallback(() => {
     safeLS.del('ag_admin_token');
     setIsAdmin(false);
-  };
+  }, []);
+
+  const value = useMemo(() => ({
+    user,
+    token,
+    isAdmin,
+    isAuthenticated: !!user,
+    loading,
+    login,
+    register,
+    logout,
+    adminLogin,
+    adminLogout,
+  }), [user, token, isAdmin, loading, login, register, logout, adminLogin, adminLogout]);
 
   return (
-    <AuthContext.Provider value={{
-      user,
-      token,
-      isAdmin,
-      isAuthenticated: !!user,
-      loading,
-      login,
-      register,
-      logout,
-      adminLogin,
-      adminLogout,
-    }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);

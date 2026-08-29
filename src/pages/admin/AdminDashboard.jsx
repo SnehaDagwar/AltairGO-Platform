@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import DOMPurify from 'dompurify';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
@@ -6,7 +6,8 @@ import {
   Activity, Users, MapPin, Zap, RefreshCw, BarChart2, Clock, CheckCircle, AlertCircle,
   Shield, LogOut, Play, TrendingUp, Database, BookOpen, Plus, Pencil, Trash2, Eye, EyeOff, X, Save, ArrowLeft, User, Calendar
 } from 'lucide-react';
-import { adminGetOpsSummary, adminTriggerJob, adminGetStats, adminGetEngineConfig, adminUpdateEngineConfig, adminGetBlogs, adminCreateBlog, adminUpdateBlog, adminDeleteBlog, adminGetFeatureFlags, adminCreateFeatureFlag, adminUpdateFeatureFlag, adminDeleteFeatureFlag, resolveBlogImage } from '../../services/api.js';
+import { adminGetOpsSummary, adminTriggerJob, adminGetStats, adminGetEngineConfig, adminUpdateEngineConfig, adminGetBlogs, adminCreateBlog, adminUpdateBlog, adminDeleteBlog, adminGetFeatureFlags, adminCreateFeatureFlag, adminUpdateFeatureFlag, adminDeleteFeatureFlag } from '../../services/api.js';
+import { resolveBlogImage } from '../../utils/blogHelpers.js';
 import toast from 'react-hot-toast';
 
 const StatCard = ({ icon, title, value, sub, color = '#141413' }) => (
@@ -34,6 +35,8 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('overview');
   const [liveEvents, setLiveEvents] = useState([]);
+  const [sseConnected, setSseConnected] = useState(false);
+  const liveEventIdRef = useRef(0);
   const [engineConfig, setEngineConfig] = useState({});
   const [configSaving, setConfigSaving] = useState(false);
   const eventSourceRef = useRef(null);
@@ -60,6 +63,7 @@ const AdminDashboard = () => {
     loadData();
     setupSSE();
     return () => { if (eventSourceRef.current) eventSourceRef.current.close(); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAdmin]);
 
   const loadData = async () => {
@@ -83,13 +87,15 @@ const AdminDashboard = () => {
     // as a query param. Ensure the backend treats this endpoint as short-lived and
     // rate-limits it. Use HTTPS in production to prevent token exposure in plaintext.
     const es = new EventSource(`/api/ops/live-metrics?token=${encodeURIComponent(token)}`);
+    es.onopen = () => setSseConnected(true);
     es.onmessage = (e) => {
       try {
         const data = JSON.parse(e.data);
-        setLiveEvents(prev => [{ ...data, id: Date.now() }, ...prev].slice(0, 50));
-      } catch {}
+        setLiveEvents(prev => [{ ...data, id: ++liveEventIdRef.current }, ...prev].slice(0, 50));
+      } catch (_e) { /* ignore parse errors */ }
     };
-    es.onerror = () => es.close();
+    // Let EventSource auto-reconnect on transient failures; only mark the badge
+    es.onerror = () => setSseConnected(false);
     eventSourceRef.current = es;
   };
 
@@ -475,9 +481,9 @@ const AdminDashboard = () => {
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
                   <h2 style={{ color: 'white', fontWeight: 700, fontSize: '1.2rem' }}>Live Metrics Stream</h2>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: '#5ac576' }}>
-                    <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#5ac576', animation: 'pulse 2s infinite' }} />
-                    Live
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: sseConnected ? '#5ac576' : '#ef4444' }}>
+                    <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: sseConnected ? '#5ac576' : '#ef4444', animation: sseConnected ? 'pulse 2s infinite' : 'none' }} />
+                    {sseConnected ? 'Live' : 'Disconnected'}
                   </div>
                 </div>
                 <div style={{ background: '#141413', borderRadius: '16px', padding: '1.5rem', border: '1px solid rgba(255,255,255,0.06)', maxHeight: '600px', overflowY: 'auto' }}>

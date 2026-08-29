@@ -7,13 +7,7 @@ const shimmerStyle = {
   overflow: 'hidden',
 };
 
-const shimmerAfter = `
-  @keyframes shimmer { 100% { transform: translateX(100%); } }
-`;
-
 export const Skeleton = ({ width = '100%', height = '1rem', style = {}, borderRadius = '8px' }) => (
-  <>
-    <style>{shimmerAfter}</style>
     <div style={{
       ...shimmerStyle,
       width,
@@ -32,7 +26,6 @@ export const Skeleton = ({ width = '100%', height = '1rem', style = {}, borderRa
         animation: 'shimmer 1.5s infinite',
       }} />
     </div>
-  </>
 );
 
 export const CardSkeleton = () => (

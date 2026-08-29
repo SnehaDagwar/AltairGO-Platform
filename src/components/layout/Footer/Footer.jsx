@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate, useLocation, useParams } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 import { 
@@ -29,7 +29,9 @@ const Footer = () => {
 
   const handleWaitlistSubmit = (e) => {
     e.preventDefault();
-    if (!email || !email.trim() || !email.includes('@')) {
+    const trimmed = email.trim();
+    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed);
+    if (!trimmed || !emailValid) {
       toast.error('Please enter a valid email address.');
       return;
     }
@@ -48,7 +50,7 @@ const Footer = () => {
     path.startsWith('/destination/') || 
     path.startsWith('/blogs/');
 
-  // Standard directories setup
+  // Standard directories setup ('#' = page not yet built, render as inert placeholder)
   const exploreLinks = [
     { label: 'Destinations', link: '/discover' },
     { label: 'AI Planner', link: '/planner' },
@@ -69,6 +71,20 @@ const Footer = () => {
     { label: 'Terms & Conditions', link: '#' },
     { label: 'Early Access', link: '/' }
   ];
+
+  const renderFooterLink = (it, idx) => {
+    if (it.link === '#') {
+      return (
+        <span key={idx} className={styles.footerLink} style={{ opacity: 0.5, cursor: 'default' }} aria-disabled="true">
+          {it.label}
+        </span>
+      );
+    }
+    if (it.link.startsWith('mailto')) {
+      return <a key={idx} href={it.link} className={styles.footerLink}>{it.label}</a>;
+    }
+    return <Link key={idx} to={it.link} className={styles.footerLink}>{it.label}</Link>;
+  };
 
   return (
     <>
@@ -122,39 +138,21 @@ const Footer = () => {
           <div className={styles.linksCol}>
             <div className={styles.colTitle}>Explore</div>
             <div className={styles.linksList}>
-              {exploreLinks.map((it, idx) => (
-                <Link key={idx} to={it.link} className={styles.footerLink}>
-                  {it.label}
-                </Link>
-              ))}
+              {exploreLinks.map(renderFooterLink)}
             </div>
           </div>
 
           <div className={styles.linksCol}>
             <div className={styles.colTitle}>Company</div>
             <div className={styles.linksList}>
-              {companyLinks.map((it, idx) => (
-                it.link.startsWith('mailto') ? (
-                  <a key={idx} href={it.link} className={styles.footerLink}>
-                    {it.label}
-                  </a>
-                ) : (
-                  <Link key={idx} to={it.link} className={styles.footerLink}>
-                    {it.label}
-                  </Link>
-                )
-              ))}
+              {companyLinks.map(renderFooterLink)}
             </div>
           </div>
 
           <div className={styles.linksCol}>
             <div className={styles.colTitle}>Resources</div>
             <div className={styles.linksList}>
-              {resourcesLinks.map((it, idx) => (
-                <Link key={idx} to={it.link} className={styles.footerLink}>
-                  {it.label}
-                </Link>
-              ))}
+              {resourcesLinks.map(renderFooterLink)}
             </div>
           </div>
 

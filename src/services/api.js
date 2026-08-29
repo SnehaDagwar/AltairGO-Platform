@@ -1,64 +1,10 @@
-import imgMeghalaya from '../assets/meghalaya-bridges.jpg';
-import imgKashmir from '../assets/kashmir.jpg';
-import imgAndaman from '../assets/andaman-islands.jpg';
-import imgVaranasi from '../assets/journal_varanasi.png';
-import imgLuxury from '../assets/luxury-resort.jpg';
-import imgMunnar from '../assets/munnar-tea.jpg';
-import imgJaipur from '../assets/jaipur-hawa.jpg';
-import imgTrain from '../assets/journal_himachal.png';
-import imgRishikesh from '../assets/rishikesh-yoga.jpg';
+import { resolveBlogImage, formatDate } from '../utils/blogHelpers.js';
+import { API_BASE_URL as BASE } from '../config.js';
 
-const BASE = import.meta.env.VITE_API_URL || '';
-
-const BLOG_IMAGES = {
-  'meghalaya-bridges.jpg': imgMeghalaya,
-  'kashmir.jpg': imgKashmir,
-  'andaman-islands.jpg': imgAndaman,
-  'journal_varanasi.png': imgVaranasi,
-  'luxury-resort.jpg': imgLuxury,
-  'munnar-tea.jpg': imgMunnar,
-  'jaipur-hawa.jpg': imgJaipur,
-  'journal_himachal.png': imgTrain,
-  'rishikesh-yoga.jpg': imgRishikesh,
-};
-
-export const resolveBlogImage = (imageName) => {
-  if (!imageName) return imageName;
-  if (imageName.startsWith('http://') || imageName.startsWith('https://')) return imageName;
-  const filename = imageName.split('/').pop();
-  return BLOG_IMAGES[filename] || imageName;
-};
-
-export const formatDate = (dateStr) => {
-  if (!dateStr) return '';
-  if (/^[A-Za-z]{3}\s\d{1,2},\s\d{4}$/.test(dateStr.trim())) return dateStr;
-  
-  try {
-    const match = dateStr.trim().match(/^(\d{4})-(\d{2})-(\d{2})$/);
-    if (match) {
-      const [_, year, month, day] = match;
-      const date = new Date(year, month - 1, day);
-      return date.toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric'
-      });
-    }
-    const parsed = Date.parse(dateStr);
-    if (isNaN(parsed)) return dateStr;
-    const date = new Date(parsed);
-    return date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    });
-  } catch (e) {
-    return dateStr;
-  }
-};
-
-function getToken() { return localStorage.getItem('ag_token'); }
-function getAdminToken() { return localStorage.getItem('ag_admin_token'); }
+const safeGet = (k) => { try { return localStorage.getItem(k); } catch { return null; } };
+const safeRemove = (k) => { try { localStorage.removeItem(k); } catch { /* ignore */ } };
+function getToken() { return safeGet('ag_token'); }
+function getAdminToken() { return safeGet('ag_admin_token'); }
 
 async function req(path, opts = {}) {
   const { admin = false, body, method, auth = true, signal } = opts;
@@ -77,10 +23,11 @@ async function req(path, opts = {}) {
   if (res.status === 401) {
     if (admin) {
       // Admin token expired — only clear admin token, never touch user session
-      localStorage.removeItem('ag_admin_token');
+      safeRemove('ag_admin_token');
     } else if (auth) {
       // Authenticated user request got 401 — session expired, log out
-      localStorage.removeItem('ag_token');
+      safeRemove('ag_token');
+      safeRemove('ag_refresh_token');
       window.dispatchEvent(new Event('ag:unauthorized'));
     }
     // auth:false calls (public endpoints, login attempts, admin verify-key) return
@@ -89,9 +36,14 @@ async function req(path, opts = {}) {
 
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw Object.assign(new Error(data.error || data.message || 'Request failed'), { status: res.status, data });
-  // Unwrap the {success, data:[...]} envelope the backend normalizer adds to list responses
+  // Unwrap the {success, data:[...], pagination:{}} envelope the backend normalizer adds — preserve pagination meta
   if (data !== null && typeof data === 'object' && !Array.isArray(data)
       && 'success' in data && 'data' in data && Array.isArray(data.data)) {
+    if (data.pagination) {
+      const wrapped = [...data.data];
+      wrapped.pagination = data.pagination;
+      return wrapped;
+    }
     return data.data;
   }
   return data;
@@ -121,218 +73,25 @@ export const getDestinations = (params = {}) => {
 };
 export const getDestination = (id) => req(`/destinations/${id}`, { auth: false });
 
-// Mock blog data for high-fidelity fallback
-const MOCK_BLOGS = [
-  {
-    id: '1',
-    title: 'Hidden Valleys of Meghalaya',
-    excerpt: 'A journey into the untouched beauty of the Northeast.',
-    category: 'Adventure',
-    date: 'May 18, 2024',
-    readTime: '8 min read',
-    image: imgMeghalaya,
-    author: 'Rohan Das',
-    content: `
-      <p>Meghalaya, the "abode of clouds," is a land of jaw-dropping landscapes, misty canyons, and ancient green forests. Hidden deep within its valleys are some of the most remarkable natural and man-made wonders of the Indian subcontinent.</p>
-      
-      <h3>The Living Root Bridges</h3>
-      <p>In the wettest regions of Cherrapunji (Sohra) and Mawlynnong, the indigenous Khasi and Jaintia tribes have perfected a unique form of bio-engineering. Over generations, they have trained the roots of the <i>Ficus elastica</i> tree to grow across wild mountain torrents, forming sturdy living bridges that grow stronger with time. The double-decker living root bridge in Nongriat village is a testament to this harmonious relationship between humanity and nature, requiring a descent of over 3,000 steps through lush jungle.</p>
+// Blogs — served exclusively by the backend (managed via the Admin Blog CMS)
+const decorateBlog = (b) => ({
+  ...b,
+  image: resolveBlogImage(b.image),
+  date: formatDate(b.date)
+});
 
-      <h3>Mawlynnong: Asia's Cleanest Village</h3>
-      <p>Mawlynnong is a picturesque village renowned for its extreme cleanliness, floral gardens, and community-led eco-tourism. Strolling through the village, you will see bamboo dustbins at every corner, manicured pathways, and friendly locals who take immense pride in preserving their natural heritage.</p>
-
-      <h3>Dawki and the Umngot River</h3>
-      <p>Further south, bordering Bangladesh, lies Dawki. Here, the Umngot River boasts waters so incredibly clear that boats floating on it appear as if they are suspended in mid-air. The emerald water, contrasting against the dark riverbed and surrounding cliffs, offers a surreal experience that stays with travelers forever.</p>
-    `,
-    tags: ['Northeast', 'Trekking', 'Eco-tourism', 'Nature']
-  },
-  {
-    id: '2',
-    title: '10 Breathtaking Lakes You Must See Before You Die',
-    excerpt: 'Discover the serene, crystal-clear, and high-altitude lakes of India that offer magical views and peace.',
-    category: 'Grande Drive',
-    date: 'May 12, 2024',
-    readTime: '6 min read',
-    image: imgKashmir,
-    author: 'Aisha Sen',
-    content: `
-      <p>From the high-altitude water bodies of the Himalayas to the tranquil backwaters of the south, India is home to some of the most spectacular lakes on Earth. Here is our selection of the top ten lakes that should be on every traveler's bucket list.</p>
-      
-      <h3>1. Pangong Tso, Ladakh</h3>
-      <p>Situated at a height of 4,225 meters, Pangong Tso is a long narrow basin of inland drainage that changes colors from deep blue to turquoise and light green throughout the day. It spans from India to Tibet and is one of the most photographed lakes in Asia.</p>
-
-      <h3>2. Gurudongmar Lake, Sikkim</h3>
-      <p>One of the highest lakes in the world, Gurudongmar is sacred to Buddhists, Sikhs, and Hindus alike. Surrounded by snow-clad peaks, a part of the lake never freezes even in the coldest winter, which is believed to be a blessing from Guru Padmasambhava.</p>
-
-      <h3>3. Dal Lake, Jammu & Kashmir</h3>
-      <p>Known as the "Jewel in the crown of Kashmir," Dal Lake is iconic for its houseboats and shikaras (wooden boats). The floating gardens and floating markets offer a glimpse into the traditional lifestyle of Srinagar.</p>
-    `,
-    tags: ['Lakes', 'Himalayas', 'Ladakh', 'Kashmir', 'Scenic']
-  },
-  {
-    id: '3',
-    title: 'Coastal Bliss: Best Beaches in India for Your Next Escape',
-    excerpt: 'From the pristine sands of Andaman to the vibrant shores of Goa, explore the ultimate coastal retreats.',
-    category: 'Beach Escapes',
-    date: 'May 10, 2024',
-    readTime: '5 min read',
-    image: imgAndaman,
-    author: 'Vikram Malhotra',
-    content: `
-      <p>With a coastline stretching over 7,500 kilometers, India offers an incredible variety of beach destinations. Whether you are looking for vibrant beach parties, adventurous water sports, or secluded, quiet sands, there is a beach for you.</p>
-
-      <h3>Radhanagar Beach, Havelock Island</h3>
-      <p>Consistently rated as one of the best beaches in Asia, Radhanagar Beach in the Andaman and Nicobar Islands is famous for its powder-soft white sand, turquoise waters, and lush green forest canopy that runs right up to the shoreline.</p>
-
-      <h3>Varkala Beach, Kerala</h3>
-      <p>Varkala is unique for its dramatic red cliffs that overlook the Arabian Sea. It is a popular spot for yoga retreats, sunset views, and enjoying fresh seafood at cliffside cafes.</p>
-
-      <h3>Palolem Beach, Goa</h3>
-      <p>Located in South Goa, Palolem is a crescent-shaped beach lined with coconut palms and colorful beach shacks. Its calm waters make it perfect for swimming and kayaking.</p>
-    `,
-    tags: ['Beaches', 'Andaman', 'Goa', 'Coastal']
-  },
-  {
-    id: '4',
-    title: 'Cultural Journeys That Connect You Deeper',
-    excerpt: 'Immerse yourself in India’s ancient traditions, spiritual centers, and historic architectures.',
-    category: 'Culture',
-    date: 'May 8, 2024',
-    readTime: '7 min read',
-    image: imgVaranasi,
-    author: 'Meera Iyer',
-    content: `
-      <p>India is a living museum of ancient cultures, deep spiritual practices, and legendary architectures. A cultural journey here is not just about visiting monuments; it is about connecting with living traditions.</p>
-
-      <h3>Varanasi: The Spiritual Heart</h3>
-      <p>Varanasi, one of the oldest continuously inhabited cities in the world, is the spiritual capital of India. The evening Ganga Aarti ceremony at Dashashwamedh Ghat, with its synchronized brass lamps and chanting, is an intensely moving spectacle of devotion.</p>
-
-      <h3>Hampi: The Ruins of an Empire</h3>
-      <p>Hampi, the former capital of the Vijayanagara Empire, is a UNESCO World Heritage site scattered with hundreds of ancient temples, palaces, and ruins set amidst a surreal landscape of giant boulders and banana plantations.</p>
-    `,
-    tags: ['Culture', 'Varanasi', 'Heritage', 'History']
-  },
-  {
-    id: '5',
-    title: 'Luxury Retreats in India for the Soulful Traveler',
-    excerpt: 'Experience world-class hospitality, heritage palaces, and nature wellness sanctuaries.',
-    category: 'Luxury Stays',
-    date: 'May 5, 2024',
-    readTime: '6 min read',
-    image: imgLuxury,
-    author: 'Karan Oberoi',
-    content: `
-      <p>India is home to some of the most luxurious and iconic hotels in the world, many of which are historic palaces converted into ultra-luxury resorts that preserve their original royal splendor.</p>
-
-      <h3>Taj Lake Palace, Udaipur</h3>
-      <p>Floating in the middle of Lake Pichola, this white-marble palace is the epitome of romantic luxury. Originally built as a royal summer palace, it offers guests private butler service, royal boat rides, and stunning views of the City Palace.</p>
-
-      <h3>Ananda in the Himalayas, Rishikesh</h3>
-      <p>Located in the Himalayan foothills, Ananda is a world-renowned wellness sanctuary built around a Maharaja's palace estate. It offers personalized Ayurveda, yoga, and meditation programs to rejuvenate the body and mind.</p>
-    `,
-    tags: ['Luxury', 'Resorts', 'Palaces', 'Wellness']
-  },
-  {
-    id: '6',
-    title: 'Monsoon Magic: Best Places to Visit in India',
-    excerpt: 'Lush green valleys and mist-covered hills await during the Indian monsoons.',
-    category: 'Short Reads',
-    date: 'May 2, 2024',
-    readTime: '4 min read',
-    image: imgMunnar,
-    author: 'Ananya Rao',
-    content: `<p>Monsoons transform the Indian landscape into a vibrant green paradise. From the tea gardens of Munnar to the misty valleys of Coorg, experience the romance of the rains.</p>`,
-    tags: ['Monsoon', 'Nature', 'Munnar']
-  },
-  {
-    id: '7',
-    title: 'Weekend Getaways from Delhi Under 300 km',
-    excerpt: 'Quick weekend road trips to historic forts and scenic hills to escape the city.',
-    category: 'Short Reads',
-    date: 'April 28, 2024',
-    readTime: '4 min read',
-    image: imgJaipur,
-    author: 'Kabir Mehta',
-    content: `<p>Need a break from the hustle and bustle of Delhi? Discover historic cities like Jaipur, peaceful hill stations like Lansdowne, and bird sanctuaries like Bharatpur—all just a short drive away.</p>`,
-    tags: ['Weekend', 'Road Trips', 'Delhi', 'Jaipur']
-  },
-  {
-    id: '8',
-    title: 'Scenic Train Journeys You Shouldn\'t Miss',
-    excerpt: 'Take the slow route through stunning valleys, coastal bridges, and mountain passes.',
-    category: 'Short Reads',
-    date: 'April 25, 2024',
-    readTime: '5 min read',
-    image: imgTrain,
-    author: 'Arjun Sen',
-    content: `<p>Experience the romance of rail travel on India's most scenic routes. Climb the Nilgiri Mountain Railway toy train, cross the sea on the Pamban Bridge, or slide through the Konkan hills.</p>`,
-    tags: ['Train', 'Scenic', 'Travel']
-  },
-  {
-    id: '9',
-    title: 'Spiritual Trails Across Incredible India',
-    excerpt: 'Embark on a soulful journey through ancient temples, ashrams, and quiet mountain retreats.',
-    category: 'Short Reads',
-    date: 'April 20, 2024',
-    readTime: '4 min read',
-    image: imgRishikesh,
-    author: 'Swati Sharma',
-    content: `<p>Find peace and inner harmony along India's historic spiritual pathways. From the yoga ashrams of Rishikesh to the ancient temples of Madurai, discover destinations that inspire self-reflection.</p>`,
-    tags: ['Spiritual', 'Yoga', 'Rishikesh', 'Temples']
-  }
-];
-
-// Blogs
 export const getBlogs = async (params = {}) => {
-  try {
-    const { signal, ...rest } = params;
-    const qs = new URLSearchParams(rest).toString();
-    const data = await req(`/blogs${qs ? '?' + qs : ''}`, { auth: false, signal });
-    
-    let blogs = [];
-    if (Array.isArray(data)) {
-      blogs = data;
-    } else if (data && Array.isArray(data.blogs)) {
-      blogs = data.blogs;
-    } else {
-      blogs = MOCK_BLOGS;
-    }
-
-    return blogs.map(b => ({
-      ...b,
-      image: resolveBlogImage(b.image),
-      date: formatDate(b.date)
-    }));
-  } catch (err) {
-    console.warn("Failed to fetch blogs from server, falling back to mock data.", err);
-    return MOCK_BLOGS.map(b => ({
-      ...b,
-      image: resolveBlogImage(b.image),
-      date: formatDate(b.date)
-    }));
-  }
+  const { signal, ...rest } = params;
+  const qs = new URLSearchParams(rest).toString();
+  const data = await req(`/blogs${qs ? '?' + qs : ''}`, { auth: false, signal });
+  if (Array.isArray(data)) return data.map(decorateBlog);
+  if (data && Array.isArray(data.blogs)) return data.blogs.map(decorateBlog);
+  throw new Error('Unexpected /blogs response shape');
 };
 
 export const getBlog = async (id) => {
-  try {
-    const b = await req(`/blogs/${id}`, { auth: false });
-    return {
-      ...b,
-      image: resolveBlogImage(b.image),
-      date: formatDate(b.date)
-    };
-  } catch (err) {
-    console.warn(`Failed to fetch blog ${id} from server, falling back to mock data.`, err);
-    const mock = MOCK_BLOGS.find(b => String(b.id) === String(id));
-    if (mock) {
-      return {
-        ...mock,
-        image: resolveBlogImage(mock.image),
-        date: formatDate(mock.date)
-      };
-    }
-    throw err;
-  }
+  const b = await req(`/blogs/${id}`, { auth: false });
+  return decorateBlog(b);
 };
 export const createDestinationRequest = (data) => req('/api/destination-requests', { body: data });
 // Discovery
@@ -386,7 +145,7 @@ export const getHotelOptions = (id, params = {}) => {
 };
 export const swapHotel = (id, data) => req(`/api/trip/${id}/hotel`, { method: 'PUT', body: data });
 export const addActivity = (id, day, data) => req(`/api/trip/${id}/day/${day}/activity/add`, { body: data });
-export const removeActivity = (id, day, data) => req(`/api/trip/${id}/day/${day}/activity/remove`, { method: 'DELETE', body: data });
+export const removeActivity = (id, day, data) => req(`/api/trip/${id}/day/${day}/activity/remove`, { method: 'POST', body: data });
 export const editActivity = (id, day, data) => req(`/api/trip/${id}/day/${day}/activity/edit`, { method: 'PUT', body: data });
 export const reorderActivities = (id, day, data) => req(`/api/trip/${id}/day/${day}/reorder`, { method: 'PUT', body: data });
 export const updateTripNotes = (id, data) => req(`/api/trip/${id}/notes`, { method: 'PUT', body: data });

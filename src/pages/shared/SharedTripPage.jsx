@@ -1,21 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { MapPin, Clock, DollarSign, Calendar, ChevronDown, ChevronUp, Star, Sparkles } from 'lucide-react';
+import { useParams, Link, useLocation } from 'react-router-dom';
+import { MapPin, Clock, DollarSign, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
 import { getSharedTrip } from '../../services/api.js';
 
-const SharedTripPage = () => {
+const SharedTripPage = ({ preview = false }) => {
   const { token } = useParams();
+  const location = useLocation();
   const [trip, setTrip] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!preview);
   const [error, setError] = useState(null);
   const [expandedDays, setExpandedDays] = useState(new Set([1]));
 
   useEffect(() => {
+    if (preview) {
+      const previewItinerary = location.state?.itinerary;
+      if (previewItinerary) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setTrip(previewItinerary.itinerary_json ? previewItinerary : { itinerary_json: previewItinerary });
+        setLoading(false);
+      } else {
+        setError('No preview data. Please generate a trip again.');
+        setLoading(false);
+      }
+      return;
+    }
     getSharedTrip(token)
       .then(setTrip)
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
-  }, [token]);
+  }, [token, preview, location.state]);
 
   if (loading) return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}><div className="global-spinner" /></div>;
 
@@ -83,8 +96,8 @@ const SharedTripPage = () => {
 
         {/* Days */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {days.map((day) => {
-            const dayNum = day.day || day.day_number;
+          {days.map((day, idx) => {
+            const dayNum = day.day ?? day.day_number ?? idx + 1;
             const isExpanded = expandedDays.has(dayNum);
             const activities = day.activities || [];
 
